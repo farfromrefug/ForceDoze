@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import de.psdev.licensesdialog.LicensesDialog;
 import de.psdev.licensesdialog.licenses.ApacheSoftwareLicense20;
 import de.psdev.licensesdialog.licenses.MITLicense;
@@ -61,7 +63,7 @@ public class AboutAppActivity extends AppCompatActivity {
     }
 
     public void showTranslationCreditsDialog(View v) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
         builder.setTitle(getString(R.string.translation_credits_dialog_title));
         builder.setMessage(getString(R.string.translation_credits_dialog_text));
         builder.setPositiveButton(getString(R.string.okay_button_text), new DialogInterface.OnClickListener() {

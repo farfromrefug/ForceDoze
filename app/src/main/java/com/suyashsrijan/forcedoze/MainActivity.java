@@ -17,6 +17,8 @@ import android.service.quicksettings.TileService;
 
 import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.appcompat.app.AlertDialog;
@@ -68,9 +70,6 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setElevation(0.0f);
-        }
 
         CustomTabs.with(getApplicationContext()).warm();
         settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -189,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                         editor = settings.edit();
                         editor.putBoolean("isSuAvailable", false);
                         editor.apply();
-                        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle);
+                        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
                         builder.setTitle(getString(R.string.error_text));
                         builder.setMessage(getString(R.string.root_workaround_text));
                         builder.setPositiveButton(getString(R.string.close_button_text), null);
@@ -214,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                     editor = settings.edit();
                     editor.putBoolean("isSuAvailable", false);
                     editor.apply();
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle);
+                    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
                     builder.setTitle(getString(R.string.error_text));
                     builder.setMessage(getString(R.string.root_workaround_text));
                     builder.setPositiveButton(getString(R.string.close_button_text), null);
@@ -363,7 +362,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
     public void showDozeTunablesActivity() {
         if (serviceEnabled) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
             builder.setTitle("Warning");
             builder.setMessage("Modifying Doze tunables will turn off ForceDoze, as ForceDoze overrides Doze tunables by default in order to put your device immediately into Doze mode.\n\nAre you sure you want to continue?");
             builder.setPositiveButton(getString(R.string.yes_button_text), new DialogInterface.OnClickListener() {
@@ -396,7 +395,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     }
 
     public void showEnableDozeOnUnsupportedDeviceDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
         builder.setTitle(getString(R.string.doze_unsupported_more_info_title));
         builder.setMessage(getString(R.string.doze_unsupported_more_info));
         builder.setPositiveButton(getString(R.string.close_button_text), new DialogInterface.OnClickListener() {
@@ -426,7 +425,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     }
 
     public void showEnableXposedModuleDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
         builder.setTitle(getString(R.string.xposed_detected_dialog_title));
         builder.setMessage(getString(R.string.xposed_detected_dialog_text));
         builder.setPositiveButton(getString(R.string.close_button_text), new DialogInterface.OnClickListener() {
@@ -439,7 +438,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     }
 
     public void showRootWorkaroundInstructions() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
         builder.setTitle(getString(R.string.no_root_workaround_dialog_title));
         builder.setMessage(getString(R.string.no_root_workaround_dialog_text));
         builder.setPositiveButton(getString(R.string.okay_button_text), null);
@@ -463,7 +462,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         if (Float.valueOf(lockscreenTimeout) < 1.0f) {
             lockscreenTimeout = Float.toString(Float.valueOf(lockscreenTimeout) * 60.0f) + " seconds & 0";
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
         builder.setTitle(getString(R.string.lockscreen_timeout_dialog_title));
         builder.setMessage(getString(R.string.lockscreen_timeout_dialog_text_p1) + lockscreenTimeout + getString(R.string.lockscreen_timeout_dialog_text_p2) +
                 getString(R.string.lockscreen_timeout_dialog_text_p3) + lockscreenTimeout + getString(R.string.lockscreen_timeout_dialog_text_p4) +
@@ -482,33 +481,23 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     }
 
     public void showMoreInfoDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
         builder.setTitle(getString(R.string.more_info_text));
         builder.setMessage(getString(R.string.how_doze_works_dialog_text));
-        builder.setPositiveButton(getString(R.string.okay_button_text), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
+        builder.setPositiveButton(getString(R.string.okay_button_text), (dialogInterface, i) -> dialogInterface.dismiss());
         builder.show();
     }
 
     public void showForceDozeActiveDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
         builder.setTitle(getString(R.string.forcedoze_active_dialog_title));
         builder.setMessage(getString(R.string.forcedoze_active_dialog_text));
-        builder.setPositiveButton(getString(R.string.okay_button_text), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
+        builder.setPositiveButton(getString(R.string.okay_button_text), (dialogInterface, i) -> dialogInterface.dismiss());
         builder.show();
     }
 
     public void showDonateDevDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
         builder.setTitle(getString(R.string.donate_dialog_title));
         builder.setMessage(getString(R.string.donate_dialog_text));
         builder.setPositiveButton(getString(R.string.donate_dialog_button_text), new DialogInterface.OnClickListener() {

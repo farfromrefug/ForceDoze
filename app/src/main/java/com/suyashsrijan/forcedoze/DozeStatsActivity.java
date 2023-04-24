@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.nanotasks.BackgroundWork;
 import com.nanotasks.Completion;
 import com.nanotasks.Tasks;
@@ -113,7 +114,7 @@ public class DozeStatsActivity extends AppCompatActivity {
                     }
                     batteryConsumptionItems.clear();
                     batteryConsumptionAdapter.notifyDataSetChanged();
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle);
+                    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
                     builder.setTitle(getString(R.string.cleared_text));
                     builder.setMessage(getString(R.string.doze_battery_stats_clear_msg));
                     builder.setPositiveButton(getString(R.string.close_button_text), new DialogInterface.OnClickListener() {

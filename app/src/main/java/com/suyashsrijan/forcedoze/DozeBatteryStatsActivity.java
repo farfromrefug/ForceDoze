@@ -19,6 +19,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.dexafree.materialList.card.Card;
 import com.dexafree.materialList.card.CardProvider;
 import com.dexafree.materialList.view.MaterialListView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.nanotasks.BackgroundWork;
 import com.nanotasks.Completion;
 import com.nanotasks.Tasks;
@@ -155,7 +156,7 @@ public class DozeBatteryStatsActivity extends AppCompatActivity {
     }
 
     public void showMoreInfoDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
         builder.setTitle(getString(R.string.doze_stats_battery_icon_meaning_dialog_title));
         builder.setMessage(getString(R.string.doze_stats_battery_icon_meaning_dialog_text));
         builder.setPositiveButton(getString(R.string.close_button_text), new DialogInterface.OnClickListener() {
@@ -201,7 +202,7 @@ public class DozeBatteryStatsActivity extends AppCompatActivity {
                     }
                     mListView.getAdapter().clearAll();
                     mListView.getAdapter().notifyDataSetChanged();
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle);
+                    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
                     builder.setTitle(getString(R.string.cleared_text));
                     builder.setMessage(getString(R.string.doze_battery_stats_clear_msg));
                     builder.setPositiveButton(getString(R.string.close_button_text), new DialogInterface.OnClickListener() {

@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.widget.EditText;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.nanotasks.BackgroundWork;
 import com.nanotasks.Completion;
 import com.nanotasks.Tasks;
@@ -164,7 +165,7 @@ public class LogActivity extends AppCompatActivity {
                         }
                         getAndPrintLogcat();
                     } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(LogActivity.this, R.style.AppCompatAlertDialogStyle);
+                        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(LogActivity.this);
                         builder.setTitle(getString(R.string.error_text));
                         builder.setMessage(getString(R.string.read_logcat_su_not_avail_or_denied_error_text));
                         builder.setPositiveButton(getString(R.string.okay_button_text), new DialogInterface.OnClickListener() {

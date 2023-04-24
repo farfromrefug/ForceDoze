@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.jakewharton.processphoenix.ProcessPhoenix;
 import com.nanotasks.BackgroundWork;
 import com.nanotasks.Completion;
@@ -114,7 +115,7 @@ public class SettingsActivity extends AppCompatActivity {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
             resetForceDozePref.setOnPreferenceClickListener(preference -> {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle);
+                MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
                 builder.setTitle(getString(R.string.forcedoze_reset_initial_dialog_title));
                 builder.setMessage(getString(R.string.forcedoze_reset_initial_dialog_text));
                 builder.setPositiveButton(getString(R.string.yes_button_text), (dialogInterface, i) -> {
@@ -129,7 +130,7 @@ public class SettingsActivity extends AppCompatActivity {
             dozeDelay.setOnPreferenceChangeListener((preference, o) -> {
                 int delay = (int) o;
                 if (delay >= 5) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle);
+                    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
                     builder.setTitle(getString(R.string.doze_delay_warning_dialog_title));
                     builder.setMessage(getString(R.string.doze_delay_warning_dialog_text));
                     builder.setPositiveButton(getString(R.string.okay_button_text), (dialogInterface, i) -> dialogInterface.dismiss());
@@ -171,7 +172,7 @@ public class SettingsActivity extends AppCompatActivity {
                                 Intent intent = new Intent("reload-settings");
                                 LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                             }
-                            AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle);
+                            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
                             builder.setTitle(getString(R.string.cleared_text));
                             builder.setMessage(getString(R.string.doze_battery_stats_clear_msg));
                             builder.setPositiveButton(getString(R.string.close_button_text), (dialogInterface, i) -> dialogInterface.dismiss());
@@ -209,7 +210,7 @@ public class SettingsActivity extends AppCompatActivity {
                     Log.i(TAG, "Phone is rooted and SU permission granted");
                     executeCommand("chmod 664 /data/data/com.suyashsrijan.forcedoze/shared_prefs/com.suyashsrijan.forcedoze_preferences.xml");
                     executeCommand("chmod 755 /data/data/com.suyashsrijan.forcedoze/shared_prefs");
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle);
+                    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
                     builder.setTitle(getString(R.string.reboot_required_dialog_title));
                     builder.setMessage(getString(R.string.reboot_required_dialog_text));
                     builder.setPositiveButton(getString(R.string.okay_button_text), (dialogInterface, i) -> dialogInterface.dismiss());
@@ -217,7 +218,7 @@ public class SettingsActivity extends AppCompatActivity {
                     return true;
                 } else {
                     Log.i(TAG, "SU permission denied or not available");
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle);
+                    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
                     builder.setTitle(getString(R.string.error_text));
                     builder.setMessage(getString(R.string.su_perm_denied_msg));
                     builder.setPositiveButton(getString(R.string.close_button_text), (dialogInterface, i) -> dialogInterface.dismiss());
@@ -257,7 +258,7 @@ public class SettingsActivity extends AppCompatActivity {
                         return true;
                     } else {
                         Log.i(TAG, "SU permission denied or not available");
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle);
+                        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
                         builder.setTitle(getString(R.string.error_text));
                         builder.setMessage(getString(R.string.su_perm_denied_msg));
                         builder.setPositiveButton(getString(R.string.close_button_text), (dialogInterface, i) -> dialogInterface.dismiss());
@@ -273,7 +274,7 @@ public class SettingsActivity extends AppCompatActivity {
                     // we need to check if we have notifications permissions
                     Boolean hasPermission = NotificationService.Companion.getInstance() != null;
                     if (!hasPermission) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle);
+                        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
                         builder.setTitle(getString(R.string.notifications_permission));
                         builder.setMessage(getString(R.string.notifications_permission_explanation));
                         builder.setPositiveButton(getString(R.string.okay_button_text), (dialogInterface, i) -> {
@@ -331,7 +332,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         public void requestWriteSettingsPermission() {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle);
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
             builder.setTitle(getString(R.string.auto_rotate_brightness_fix_dialog_title));
             builder.setMessage(getString(R.string.auto_rotate_brightness_fix_dialog_text));
             builder.setPositiveButton(getString(R.string.authorize_button_text), (dialogInterface, i) -> {
@@ -368,7 +369,7 @@ public class SettingsActivity extends AppCompatActivity {
             executeCommand("pm revoke com.suyashsrijan.forcedoze android.permission.WRITE_SECURE_SETTINGS");
             executeCommand("pm revoke com.suyashsrijan.forcedoze android.permission.WRITE_SETTINGS");
             Log.i(TAG, "ForceDoze reset procedure complete");
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle);
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
             builder.setTitle(getString(R.string.reset_complete_dialog_title));
             builder.setMessage(getString(R.string.reset_complete_dialog_text));
             builder.setPositiveButton(getString(R.string.okay_button_text), (dialogInterface, i) -> {

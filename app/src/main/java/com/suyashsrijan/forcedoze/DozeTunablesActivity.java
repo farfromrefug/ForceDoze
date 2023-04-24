@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.nanotasks.BackgroundWork;
 import com.nanotasks.Completion;
 import com.nanotasks.Tasks;
@@ -180,7 +181,7 @@ public class DozeTunablesActivity extends AppCompatActivity {
     }
 
     public void showCopyTunableDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
         builder.setTitle(getString(R.string.adb_command_text));
         builder.setMessage("You can apply the new values using ADB by running the following command:\n\nadb shell settings put global device_idle_constants " + TUNABLE_STRING);
         builder.setPositiveButton(getString(R.string.close_button_text), new DialogInterface.OnClickListener() {
@@ -270,7 +271,7 @@ public class DozeTunablesActivity extends AppCompatActivity {
                             }
                         } else {
                             Log.i(TAG, "SU permission denied or not available");
-                            AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.AppCompatAlertDialogStyle);
+                            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
                             builder.setTitle(getString(R.string.error_text));
                             builder.setMessage(getString(R.string.tunables_su_not_available_error_text));
                             builder.setPositiveButton(getString(R.string.okay_button_text), new DialogInterface.OnClickListener() {

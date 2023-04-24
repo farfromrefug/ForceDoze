@@ -4,12 +4,14 @@
     <item
         android:id="@+id/action_apply_tunables"
         android:icon="@drawable/ic_check"
+        app:iconTint="?attr/colorControlNormal"
         android:orderInCategory="100"
         android:title="Apply"
         app:showAsAction="always"/>
     <item
         android:id="@+id/action_copy_tunables"
         android:icon="@drawable/ic_content_copy_white_24dp"
+        app:iconTint="?attr/colorControlNormal"
         android:orderInCategory="100"
         android:title="Copy tunable string"
         app:showAsAction="always"/>

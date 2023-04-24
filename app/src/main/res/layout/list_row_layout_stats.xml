@@ -18,6 +18,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/dozeStateTimestamp"
         android:layout_marginTop="5dip"
-        android:textColor="#343434"
+        android:textColor="?android:attr/textColorHint"
         android:textSize="12sp" />
 </RelativeLayout>

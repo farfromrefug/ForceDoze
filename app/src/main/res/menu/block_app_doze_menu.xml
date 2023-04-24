@@ -5,12 +5,14 @@
         android:id="@+id/action_add_app_doze_blocklist"
         android:orderInCategory="100"
         android:title="@string/add_menu_item"
+        app:iconTint="?attr/colorControlNormal"
         android:icon="@drawable/ic_add_white_24dp"
         app:showAsAction="always"/>
     <item
         android:id="@+id/action_remove_app_doze_blocklist"
         android:orderInCategory="100"
         android:title="@string/remove_menu_item"
+        app:iconTint="?attr/colorControlNormal"
         android:icon="@drawable/ic_remove_white_24dp"
         app:showAsAction="always"/>
     <item
@@ -27,6 +29,7 @@
     <item
         android:id="@+id/action_app_doze_blacklist_more_info"
         android:icon="@drawable/ic_info_outline_white_24dp"
+        app:iconTint="?attr/colorControlNormal"
         android:orderInCategory="100"
         android:title="@string/more_info_menu_item"
         app:showAsAction="always"/>
