@@ -1,5 +1,6 @@
 package com.suyashsrijan.forcedoze;
 
+import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -20,8 +21,12 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.LocalBroadcastManager;
+
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
@@ -33,6 +38,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -43,8 +49,8 @@ import static android.preference.PreferenceManager.getDefaultSharedPreferences;
 
 public class ForceDozeService extends Service {
 
-    private static String CHANNEL_STATS = "CHANNEL_STATS";
-    private static String CHANNEL_TIPS = "CHANNEL_TIPS";
+    private static final String CHANNEL_STATS = "CHANNEL_STATS";
+    private static final String CHANNEL_TIPS = "CHANNEL_TIPS";
 
     private static Shell.Interactive rootSession;
     private static Shell.Interactive nonRootSession;
@@ -296,10 +302,10 @@ public class ForceDozeService extends Service {
                 Intent notificationIntent = new Intent();
                 notificationIntent.setAction(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
                 PendingIntent intent = PendingIntent.getActivity(getApplicationContext(), 0,
-                        notificationIntent, 0);
+                        notificationIntent, PendingIntent.FLAG_IMMUTABLE);
                 Notification n = new NotificationCompat.Builder(this, CHANNEL_TIPS)
                         .setContentTitle("ForceDoze")
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText("ForceDoze needs to be added to the Doze whitelist in order to work reliably. Please click on this notification to open the battery optimisation view, click on 'ForceDoze' and select 'Don\'t' Optimize'"))
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText("ForceDoze needs to be added to the Doze whitelist in order to work reliably. Please click on this notification to open the battery optimisation view, click on 'ForceDoze' and select 'Don't' Optimize'"))
                         .setSmallIcon(R.drawable.ic_battery_health)
                         .setPriority(1)
                         .setContentIntent(intent)
@@ -383,25 +389,7 @@ public class ForceDozeService extends Service {
                 } else {
                     Log.i(TAG, "Xposed Sensor workaround selected, not disabling sensors");
                 }
-
-                if (turnOffWiFiInDoze) {
-                    wasWiFiTurnedOn = Utils.isWiFiEnabled(context);
-                    Log.i(TAG, "wasWiFiTurnedOn: " + wasWiFiTurnedOn);
-                    if (wasWiFiTurnedOn) {
-                        Log.i(TAG, "Disabling WiFi");
-                        disableWiFi();
-                    }
-
-                }
-
-                if (turnOffDataInDoze) {
-                    wasMobileDataTurnedOn = Utils.isMobileDataEnabled(context);
-                    Log.i(TAG, "wasDataTurnedOn: " + wasMobileDataTurnedOn);
-                    if (wasMobileDataTurnedOn) {
-                        Log.i(TAG, "Disabling mobile data");
-                        disableMobileData();
-                    }
-                }
+                enterDozeHandleNetwork(context);
 
             } else {
                 Log.i(TAG, "Screen is on, skip entering Doze");
@@ -487,76 +475,67 @@ public class ForceDozeService extends Service {
 
     }
 
-    public void executeCommand(final String command) {
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                if (nonRootSession != null) {
-                    nonRootSession.addCommand(command, 0, new Shell.OnCommandResultListener() {
-                        @Override
-                        public void onCommandResult(int commandCode, int exitCode, List<String> output) {
-                            printShellOutput(output);
-                        }
-                    });
-                } else {
-                    nonRootSession = new Shell.Builder().
-                            useSH().
-                            setWantSTDERR(true).
-                            setWatchdogTimeout(5).
-                            setMinimalLogging(true).
-                            open(new Shell.OnCommandResultListener() {
-                                @Override
-                                public void onCommandResult(int commandCode, int exitCode, List<String> output) {
-                                    if (exitCode != Shell.OnCommandResultListener.SHELL_RUNNING) {
-                                        Log.i(TAG, "Error opening shell: exitCode " + exitCode);
-                                    } else {
-                                        nonRootSession.addCommand(command, 0, new Shell.OnCommandResultListener() {
-                                            @Override
-                                            public void onCommandResult(int commandCode, int exitCode, List<String> output) {
-                                                printShellOutput(output);
-                                            }
-                                        });
+    public void executeCommand(final String command ) {
+        executeCommand(command, null);
+    }
+    public void executeCommand(final String command,Shell.OnCommandResultListener2 onResult ) {
+        AsyncTask.execute(() -> {
+            if (nonRootSession != null) {
+                nonRootSession.addCommand(command, 0, (Shell.OnCommandResultListener2) (commandCode, exitCode, STDOUT, STDERR) -> {
+                    if (onResult != null) {
+                        onResult.onCommandResult(commandCode, exitCode, STDOUT, STDERR);
+                    }
+                    printShellOutput(STDOUT);
+                });
+            } else {
+                nonRootSession = new Shell.Builder().
+                        useSH().
+                        setWatchdogTimeout(5).
+                        setMinimalLogging(true).
+                        open((success, reason) -> {
+                            if (reason != Shell.OnShellOpenResultListener.SHELL_RUNNING) {
+                                Log.i(TAG, "Error opening shell: exitCode " + reason);
+                            } else {
+                                nonRootSession.addCommand(command, 0, (Shell.OnCommandResultListener2) (commandCode, exitCode, STDOUT, STDERR) -> {
+                                    if (onResult != null) {
+                                        onResult.onCommandResult(commandCode, exitCode, STDOUT, STDERR);
                                     }
-                                }
-                            });
-                }
+                                    printShellOutput(STDOUT);
+                                });
+                            }
+                        });
             }
         });
     }
-
-    public void executeCommandWithRoot(final String command) {
-        AsyncTask.execute(new Runnable() {
-            @Override
-            public void run() {
-                if (rootSession != null) {
-                    rootSession.addCommand(command, 0, new Shell.OnCommandResultListener() {
-                        @Override
-                        public void onCommandResult(int commandCode, int exitCode, List<String> output) {
-                            printShellOutput(output);
-                        }
-                    });
-                } else {
-                    rootSession = new Shell.Builder().
-                            useSU().
-                            setWantSTDERR(true).
-                            setWatchdogTimeout(5).
-                            setMinimalLogging(true).
-                            open(new Shell.OnCommandResultListener() {
-                                @Override
-                                public void onCommandResult(int commandCode, int exitCode, List<String> output) {
-                                    if (exitCode != Shell.OnCommandResultListener.SHELL_RUNNING) {
-                                        Log.i(TAG, "Error opening root shell: exitCode " + exitCode);
-                                    } else {
-                                        rootSession.addCommand(command, 0, new Shell.OnCommandResultListener() {
-                                            @Override
-                                            public void onCommandResult(int commandCode, int exitCode, List<String> output) {
-                                                printShellOutput(output);
-                                            }
-                                        });
+    public void executeCommandWithRoot(final String command ) {
+        executeCommandWithRoot(command, null);
+    }
+    public void executeCommandWithRoot(final String command,Shell.OnCommandResultListener2 onResult ) {
+        AsyncTask.execute(() -> {
+            if (rootSession != null) {
+                rootSession.addCommand(command, 0, (Shell.OnCommandResultListener2) (commandCode, exitCode, STDOUT, STDERR) -> {
+                    if (onResult != null) {
+                        onResult.onCommandResult(commandCode, exitCode, STDOUT, STDERR);
+                    }
+                    printShellOutput(STDOUT);
+                });
+            } else {
+                rootSession = new Shell.Builder().
+                        useSU().
+                        setWatchdogTimeout(5).
+                        setMinimalLogging(true).
+                        open((success, reason) -> {
+                            if (reason != Shell.OnShellOpenResultListener.SHELL_RUNNING) {
+                                Log.i(TAG, "Error opening root shell: exitCode " + reason);
+                            } else {
+                                rootSession.addCommand(command, 0, (Shell.OnCommandResultListener2) (commandCode, exitCode, STDOUT, STDERR) -> {
+                                    if (onResult != null) {
+                                        onResult.onCommandResult(commandCode, exitCode, STDOUT, STDERR);
                                     }
-                                }
-                            });
-                }
+                                    printShellOutput(STDOUT);
+                                });
+                            }
+                        });
             }
         });
     }
@@ -581,7 +560,7 @@ public class ForceDozeService extends Service {
     public void autoRotateBrightnessFix() {
         if (useAutoRotateAndBrightnessFix && Utils.isWriteSettingsPermissionGranted(getApplicationContext())) {
             Log.i(TAG, "Executing auto-rotate fix by doing a toggle");
-            Log.i(TAG, "Current value: " + Boolean.toString(Utils.isAutoRotateEnabled(getApplicationContext())) + " to " + Boolean.toString(!Utils.isAutoRotateEnabled(getApplicationContext())));
+            Log.i(TAG, "Current value: " + (Utils.isAutoRotateEnabled(getApplicationContext())) + " to " + (!Utils.isAutoRotateEnabled(getApplicationContext())));
             Utils.setAutoRotateEnabled(getApplicationContext(), !Utils.isAutoRotateEnabled(getApplicationContext()));
             try {
                 Log.i(TAG, "Sleeping for 100ms");
@@ -589,7 +568,7 @@ public class ForceDozeService extends Service {
             } catch (InterruptedException e) {
                 Log.e(TAG, e.toString());
             }
-            Log.i(TAG, "Current value: " + Boolean.toString(Utils.isAutoRotateEnabled(getApplicationContext())) + " to " + Boolean.toString(!Utils.isAutoRotateEnabled(getApplicationContext())));
+            Log.i(TAG, "Current value: " + (Utils.isAutoRotateEnabled(getApplicationContext())) + " to " + !Utils.isAutoRotateEnabled(getApplicationContext()));
             Utils.setAutoRotateEnabled(getApplicationContext(), !Utils.isAutoRotateEnabled(getApplicationContext()));
             try {
                 Log.i(TAG, "Sleeping for 100ms");
@@ -598,7 +577,7 @@ public class ForceDozeService extends Service {
                 Log.e(TAG, e.toString());
             }
             Log.i(TAG, "Executing auto-brightness fix by doing a toggle");
-            Log.i(TAG, "Current value: " + Boolean.toString(Utils.isAutoBrightnessEnabled(getApplicationContext())) + " to " + Boolean.toString(!Utils.isAutoBrightnessEnabled(getApplicationContext())));
+            Log.i(TAG, "Current value: " + (Utils.isAutoBrightnessEnabled(getApplicationContext())) + " to " + (!Utils.isAutoBrightnessEnabled(getApplicationContext())));
             Utils.setAutoBrightnessEnabled(getApplicationContext(), !Utils.isAutoBrightnessEnabled(getApplicationContext()));
             try {
                 Log.i(TAG, "Sleeping for 100ms");
@@ -606,7 +585,7 @@ public class ForceDozeService extends Service {
             } catch (InterruptedException e) {
                 Log.e(TAG, e.toString());
             }
-            Log.i(TAG, "Current value: " + Boolean.toString(Utils.isAutoBrightnessEnabled(getApplicationContext())) + " to " + Boolean.toString(!Utils.isAutoBrightnessEnabled(getApplicationContext())));
+            Log.i(TAG, "Current value: " + (Utils.isAutoBrightnessEnabled(getApplicationContext())) + " to " + (!Utils.isAutoBrightnessEnabled(getApplicationContext())));
             Utils.setAutoBrightnessEnabled(getApplicationContext(), !Utils.isAutoBrightnessEnabled(getApplicationContext()));
         }
     }
@@ -615,7 +594,7 @@ public class ForceDozeService extends Service {
         Intent notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent intent = PendingIntent.getActivity(getApplicationContext(), 0,
-                notificationIntent, 0);
+                notificationIntent, PendingIntent.FLAG_IMMUTABLE);
         Notification n = mStatsBuilder
                 .setStyle(
                         new NotificationCompat.BigTextStyle()
@@ -632,7 +611,7 @@ public class ForceDozeService extends Service {
         Intent notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent intent = PendingIntent.getActivity(getApplicationContext(), 0,
-                notificationIntent, 0);
+                notificationIntent, PendingIntent.FLAG_IMMUTABLE);
         Notification n = mStatsBuilder
                 .setStyle(
                         new NotificationCompat.BigTextStyle()
@@ -659,15 +638,17 @@ public class ForceDozeService extends Service {
             SubscriptionManager mSubscriptionManager = (SubscriptionManager) context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE);
             for (int i = 0; i < mSubscriptionManager.getActiveSubscriptionInfoCountMax(); i++) {
                 if (transactionCode != null && transactionCode.length() > 0) {
-                    int subscriptionId = mSubscriptionManager.getActiveSubscriptionInfoList().get(i).getSubscriptionId();
+                    @SuppressLint("MissingPermission") int subscriptionId = mSubscriptionManager.getActiveSubscriptionInfoList().get(i).getSubscriptionId();
                     command = "service call phone " + transactionCode + " i32 " + subscriptionId + " i32 " + targetState;
-                    List<String> output = Shell.SU.run(command);
-                    if (output != null) {
+                    List<String> output = new ArrayList<>();
+                    List<String> err = new ArrayList<>();
+                    Shell.Pool.SU.run(command, output, err, false);
+                    if (err.isEmpty()) {
                         for (String s : output) {
                             Log.i(TAG, s);
                         }
                     } else {
-                        Log.i(TAG, "Error occurred while executing command (" + command + ")");
+                        Log.i(TAG, "Error occurred while executing command (" + err + ")");
                     }
                 }
             }
@@ -697,7 +678,7 @@ public class ForceDozeService extends Service {
     public void setNotificationEnabledForPackage(String packageName, boolean enabled) {
         int command = 0;
         try {
-            Field field = Class.forName("android.app.INotificationManager").getDeclaredClasses()[0].getDeclaredField("TRANSACTION_setNotificationsEnabledForPackage");
+            @SuppressLint("PrivateApi") Field field = Class.forName("android.app.INotificationManager").getDeclaredClasses()[0].getDeclaredField("TRANSACTION_setNotificationsEnabledForPackage");
             field.setAccessible(true);
             command = field.getInt(null);
         } catch (ClassNotFoundException e) {
@@ -729,38 +710,35 @@ public class ForceDozeService extends Service {
         if (Utils.isDeviceRunningOnN()) {
             if (isSuAvailable) {
                 if (rootSession != null) {
-                    rootSession.addCommand("dumpsys deviceidle", 0, new Shell.OnCommandResultListener() {
-                        @Override
-                        public void onCommandResult(int commandCode, int exitCode, List<String> output) {
-                            if (output != null && !output.isEmpty()) {
-                                String outputString = TextUtils.join(", ", output);
-                                if (outputString.contains("mState=ACTIVE")) {
-                                    state = "ACTIVE";
-                                } else if (outputString.contains("mState=INACTIVE")) {
-                                    state = "INACTIVE";
-                                } else if (outputString.contains("mState=IDLE_PENDING")) {
-                                    state = "IDLE_PENDING";
-                                } else if (outputString.contains("mState=SENSING")) {
-                                    state = "SENSING";
-                                } else if (outputString.contains("mState=LOCATING")) {
-                                    state = "LOCATING";
-                                } else if (outputString.contains("mState=IDLE")) {
-                                    state = "IDLE";
-                                } else if (outputString.contains("mState=IDLE_MAINTENANCE")) {
-                                    state = "IDLE_MAINTENANCE";
-                                } else if (outputString.contains("mState=PRE_IDLE")) {
-                                    state = "PRE_IDLE";
-                                } else if (outputString.contains("mState=WAITING_FOR_NETWORK")) {
-                                    state = "WAITING_FOR_NETWORK";
-                                } else if (outputString.contains("mState=OVERRIDE")) {
-                                    state = "OVERRIDE";
-                                }
+                    rootSession.addCommand("dumpsys deviceidle", 0, (Shell.OnCommandResultListener2) (commandCode, exitCode, output, stderr) -> {
+                        if (!output.isEmpty()) {
+                            String outputString = TextUtils.join(", ", output);
+                            if (outputString.contains("mState=ACTIVE")) {
+                                state = "ACTIVE";
+                            } else if (outputString.contains("mState=INACTIVE")) {
+                                state = "INACTIVE";
+                            } else if (outputString.contains("mState=IDLE_PENDING")) {
+                                state = "IDLE_PENDING";
+                            } else if (outputString.contains("mState=SENSING")) {
+                                state = "SENSING";
+                            } else if (outputString.contains("mState=LOCATING")) {
+                                state = "LOCATING";
+                            } else if (outputString.contains("mState=IDLE")) {
+                                state = "IDLE";
+                            } else if (outputString.contains("mState=IDLE_MAINTENANCE")) {
+                                state = "IDLE_MAINTENANCE";
+                            } else if (outputString.contains("mState=PRE_IDLE")) {
+                                state = "PRE_IDLE";
+                            } else if (outputString.contains("mState=WAITING_FOR_NETWORK")) {
+                                state = "WAITING_FOR_NETWORK";
+                            } else if (outputString.contains("mState=OVERRIDE")) {
+                                state = "OVERRIDE";
+                            }
+                        } else {
+                            if (pm.isDeviceIdleMode()) {
+                                state = "IDLE";
                             } else {
-                                if (pm.isDeviceIdleMode()) {
-                                    state = "IDLE";
-                                } else {
-                                    state = "ACTIVE";
-                                }
+                                state = "ACTIVE";
                             }
                         }
                     });
@@ -773,7 +751,13 @@ public class ForceDozeService extends Service {
                 }
             }
         } else {
-            List<String> output = Shell.SH.run("dumpsys deviceidle");
+            List<String> output = new ArrayList<>();
+            List<String> err = new ArrayList<>();
+            try {
+                Shell.Pool.SU.run("dumpsys deviceidle", output, err, false);
+            } catch (Shell.ShellDiedException e) {
+                e.printStackTrace();
+            }
             String outputString = TextUtils.join(", ", output);
             if (outputString.contains("mState=ACTIVE")) {
                 state = "ACTIVE";
@@ -797,11 +781,19 @@ public class ForceDozeService extends Service {
 
 
     public void disableMobileData() {
-        setMobileNetwork(getApplicationContext(), 0);
+        executeCommandWithRoot("svc data disable", (commandCode, exitCode, STDOUT, STDERR) -> {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                Log.i(TAG, "disableMobileData: " + Utils.isMobileDataEnabled(getApplicationContext()));
+            }
+        });
     }
 
     public void enableMobileData() {
-        setMobileNetwork(getApplicationContext(), 1);
+        executeCommandWithRoot("svc data enable", (commandCode, exitCode, STDOUT, STDERR) -> {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                Log.i(TAG, "enableMobileData: " + Utils.isMobileDataEnabled(getApplicationContext()));
+            }
+        });
     }
 
     public void disableWiFi() {
@@ -901,9 +893,9 @@ public class ForceDozeService extends Service {
                     exitDoze();
                 } else {
                     if (ignoreLockscreenTimeout) {
-                        Log.i(TAG, "Cancelling enterDoze() because user turned on screen and " + Integer.toString(delay) + "ms has not passed OR disableWhenCharging=true");
+                        Log.i(TAG, "Cancelling enterDoze() because user turned on screen and " + (delay) + "ms has not passed OR disableWhenCharging=true");
                     } else {
-                        Log.i(TAG, "Cancelling enterDoze() because user turned on screen and " + Integer.toString(time) + "ms has not passed OR disableWhenCharging=true");
+                        Log.i(TAG, "Cancelling enterDoze() because user turned on screen and " + (time) + "ms has not passed OR disableWhenCharging=true");
                     }
                     enterDozeTimer.cancel();
                 }
@@ -923,10 +915,10 @@ public class ForceDozeService extends Service {
                             Log.i(TAG, "Ignoring lockscreen timeout value and entering Doze immediately");
                             enterDoze(context);
                         } else {
-                            Log.i(TAG, "Waiting for " + Integer.toString(delay) + "ms and then entering Doze");
-                            tempWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "ForceDozeTempWakelock");
+                            Log.i(TAG, "Waiting for " + (delay) + "ms and then entering Doze");
+                            tempWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "forcedoze:tempWakelock");
                             Log.i(TAG, "Acquiring temporary wakelock (ForceDozeTempWakelock)");
-                            tempWakeLock.acquire();
+                            tempWakeLock.acquire(10*60*1000L /*10 minutes*/);
                             enterDozeTimer = new Timer();
                             enterDozeTimer.schedule(new TimerTask() {
                                 @Override
@@ -936,11 +928,11 @@ public class ForceDozeService extends Service {
                             }, delay);
                         }
                     } else {
-                        Log.i(TAG, "Waiting for " + Integer.toString(time) + "ms and then entering Doze");
+                        Log.i(TAG, "Waiting for " + (time) + "ms and then entering Doze");
                         if (Utils.isLockscreenTimeoutValueTooHigh(getContentResolver())) {
-                            tempWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "ForceDozeTempWakelock");
+                            tempWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "forcedoze:tempWakelock");
                             Log.i(TAG, "Acquiring temporary wakelock (ForceDozeTempWakelock)");
-                            tempWakeLock.acquire();
+                            tempWakeLock.acquire(10*60*1000L /*10 minutes*/);
                         }
                         enterDozeTimer = new Timer();
                         enterDozeTimer.schedule(new TimerTask() {
@@ -1019,7 +1011,7 @@ public class ForceDozeService extends Service {
                     if (!setPendingDozeEnterAlarm) {
                         if (!Utils.isScreenOn(context) && (!getDeviceIdleState().equals("IDLE") || !getDeviceIdleState().equals("IDLE_MAINTENANCE"))) {
                             Log.i(TAG, "Device gone out of Doze, scheduling pendingIntent for enterDoze in 15 mins");
-                            reenterDozePendingIntent = PendingIntent.getBroadcast(context, 1, new Intent(context, ReenterDoze.class), PendingIntent.FLAG_CANCEL_CURRENT);
+                            reenterDozePendingIntent = PendingIntent.getBroadcast(context, 1, new Intent(context, ReenterDoze.class), PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
                             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 900000, reenterDozePendingIntent);
                             setPendingDozeEnterAlarm = true;
                         }

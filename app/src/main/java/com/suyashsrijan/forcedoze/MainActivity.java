@@ -14,12 +14,14 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.preference.PreferenceManager;
 import android.service.quicksettings.TileService;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SwitchCompat;
+
+import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,6 +38,7 @@ import java.util.List;
 
 import de.cketti.library.changelog.ChangeLog;
 import eu.chainfire.libsuperuser.Shell;
+import eu.chainfire.libsuperuser.StreamGobbler;
 
 public class MainActivity extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
 
@@ -111,35 +114,32 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                     .progress(true, 0)
                     .show();
             Log.i(TAG, "Check if SU is available, and request SU permission if it is");
-            Tasks.executeInBackground(MainActivity.this, new BackgroundWork<Boolean>() {
-                @Override
-                public Boolean doInBackground() throws Exception {
-                    if (rootSession != null) {
-                        if (rootSession.isRunning()) {
-                            return true;
-                        } else {
-                            dispose();
-                        }
-                    }
-
-                    mCallbackThread = new HandlerThread("SU callback");
-                    mCallbackThread.start();
-
-                    mCommandRunning = true;
-                    rootSession = new Shell.Builder().useSU()
-                            .setHandler(new Handler(mCallbackThread.getLooper()))
-                            .setOnSTDERRLineListener(mStderrListener)
-                            .open(mOpenListener);
-
-                    waitForCommandFinished();
-
-                    if (mLastExitCode != Shell.OnCommandResultListener.SHELL_RUNNING) {
+            Tasks.executeInBackground(MainActivity.this, () -> {
+                if (rootSession != null) {
+                    if (rootSession.isRunning()) {
+                        return true;
+                    } else {
                         dispose();
-                        return false;
                     }
-
-                    return true;
                 }
+
+                mCallbackThread = new HandlerThread("SU callback");
+                mCallbackThread.start();
+
+                mCommandRunning = true;
+                rootSession = new Shell.Builder().useSU()
+                        .setHandler(new Handler(mCallbackThread.getLooper()))
+                        .setOnSTDERRLineListener(mStderrListener)
+                        .open(mOpenListener);
+
+                waitForCommandFinished();
+
+                if (mLastExitCode != Shell.OnShellOpenResultListener.SHELL_RUNNING) {
+                    dispose();
+                    return false;
+                }
+
+                return true;
             }, new Completion<Boolean>() {
                 @Override
                 public void onSuccess(Context context, Boolean result) {
@@ -535,37 +535,44 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 
 
 
-    private final Shell.OnCommandResultListener mOpenListener = new Shell.OnCommandResultListener() {
+    private final Shell.OnShellOpenResultListener mOpenListener = new Shell.OnShellOpenResultListener() {
         @Override
-        public void onCommandResult(int commandCode, int exitCode, List<String> output) {
-            mStdoutListener.onCommandResult(commandCode, exitCode);
-        }
-    };
-
-    private final Shell.OnCommandLineListener mStdoutListener = new Shell.OnCommandLineListener() {
-        public void onLine(String line) {
-            Log.i(TAG, line);
-        }
-
-        @Override
-        public void onCommandResult(int commandCode, int exitCode) {
-            mLastExitCode = exitCode;
+        public void onOpenResult(boolean success, int reason) {
+            mLastExitCode = reason;
             synchronized (mCallbackThread) {
                 mCommandRunning = false;
                 mCallbackThread.notifyAll();
             }
         }
+
     };
 
-    private final Shell.OnCommandLineListener mStderrListener = new Shell.OnCommandLineListener() {
+//    private final Shell.OnCommandLineListener mStdoutListener = new Shell.OnCommandLineListener() {
+//
+//        @Override
+//        public void onSTDOUT(@NonNull String line) {
+//            Log.i(TAG, line);
+//        }
+//
+//        @Override
+//        public void onSTDERR(@NonNull String line) {
+//            Log.e(TAG, line);
+//        }
+//
+//        @Override
+//        public void onCommandResult(int commandCode, int exitCode) {
+//            mLastExitCode = exitCode;
+//            synchronized (mCallbackThread) {
+//                mCommandRunning = false;
+//                mCallbackThread.notifyAll();
+//            }
+//        }
+//    };
+
+    private final StreamGobbler.OnLineListener mStderrListener = new StreamGobbler.OnLineListener() {
         @Override
         public void onLine(String line) {
             Log.i(TAG, line);
-        }
-
-        @Override
-        public void onCommandResult(int commandCode, int exitCode) {
-
         }
     };
 
@@ -628,22 +635,18 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                 } else {
                     rootSession = new Shell.Builder().
                             useSU().
-                            setWantSTDERR(true).
                             setWatchdogTimeout(5).
                             setMinimalLogging(true).
-                            open(new Shell.OnCommandResultListener() {
-                                @Override
-                                public void onCommandResult(int commandCode, int exitCode, List<String> output) {
-                                    if (exitCode != Shell.OnCommandResultListener.SHELL_RUNNING) {
-                                        Log.i(TAG, "Error opening root shell: exitCode " + exitCode);
-                                    } else {
-                                        rootSession.addCommand(command, 0, new Shell.OnCommandResultListener() {
-                                            @Override
-                                            public void onCommandResult(int commandCode, int exitCode, List<String> output) {
-                                                printShellOutput(output);
-                                            }
-                                        });
-                                    }
+                            open((success, reason) -> {
+                                if (reason != Shell.OnShellOpenResultListener.SHELL_RUNNING) {
+                                    Log.i(TAG, "Error opening root shell: exitCode " + reason);
+                                } else {
+                                    rootSession.addCommand(command, 0, new Shell.OnCommandResultListener() {
+                                        @Override
+                                        public void onCommandResult(int commandCode, int exitCode, List<String> output) {
+                                            printShellOutput(output);
+                                        }
+                                    });
                                 }
                             });
                 }
@@ -665,24 +668,21 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                 } else {
                     nonRootSession = new Shell.Builder().
                             useSH().
-                            setWantSTDERR(true).
                             setWatchdogTimeout(5).
                             setMinimalLogging(true).
-                            open(new Shell.OnCommandResultListener() {
-                                @Override
-                                public void onCommandResult(int commandCode, int exitCode, List<String> output) {
-                                    if (exitCode != Shell.OnCommandResultListener.SHELL_RUNNING) {
-                                        Log.i(TAG, "Error opening shell: exitCode " + exitCode);
+                            open((success, reason) -> {
+                                if (reason != Shell.OnShellOpenResultListener.SHELL_RUNNING) {
+                                        Log.i(TAG, "Error opening shell: exitCode " + reason);
                                     } else {
-                                        nonRootSession.addCommand(command, 0, new Shell.OnCommandResultListener() {
+                                        nonRootSession.addCommand(command, 0, new Shell.OnCommandResultListener2() {
                                             @Override
-                                            public void onCommandResult(int commandCode, int exitCode, List<String> output) {
-                                                printShellOutput(output);
+                                            public void onCommandResult(int commandCode, int exitCode, @NonNull List<String> STDOUT, @NonNull List<String> STDERR) {
+                                                printShellOutput(STDOUT);
                                             }
                                         });
                                     }
                                 }
-                            });
+                            );
                 }
             }
         });
