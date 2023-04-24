@@ -64,6 +64,7 @@ public class ForceDozeService extends Service {
     boolean useNonRootSensorWorkaround = false;
     boolean turnOffWiFiInDoze = false;
     boolean turnOffDataInDoze = false;
+    boolean whitelistMusicAppNetwork = false;
     boolean wasWiFiTurnedOn = false;
     boolean wasMobileDataTurnedOn = false;
     boolean maintenance = false;
@@ -147,6 +148,7 @@ public class ForceDozeService extends Service {
         this.registerReceiver(localDozeReceiver, filter);
         turnOffDataInDoze = getDefaultSharedPreferences(getApplicationContext()).getBoolean("turnOffDataInDoze", false);
         turnOffWiFiInDoze = getDefaultSharedPreferences(getApplicationContext()).getBoolean("turnOffWiFiInDoze", false);
+        whitelistMusicAppNetwork = getDefaultSharedPreferences(getApplicationContext()).getBoolean("whitelistMusicAppNetwork", false);
         ignoreLockscreenTimeout = getDefaultSharedPreferences(getApplicationContext()).getBoolean("ignoreLockscreenTimeout", true);
         useXposedSensorWorkaround = getDefaultSharedPreferences(getApplicationContext()).getBoolean("useXposedSensorWorkaround", false);
         useNonRootSensorWorkaround = getDefaultSharedPreferences(getApplicationContext()).getBoolean("useNonRootSensorWorkaround", false);
@@ -235,6 +237,8 @@ public class ForceDozeService extends Service {
         Log.i(TAG, "turnOffDataInDoze: " + turnOffDataInDoze);
         turnOffWiFiInDoze = getDefaultSharedPreferences(getApplicationContext()).getBoolean("turnOffWiFiInDoze", false);
         Log.i(TAG, "turnOffWiFiInDoze: " + turnOffWiFiInDoze);
+        whitelistMusicAppNetwork = getDefaultSharedPreferences(getApplicationContext()).getBoolean("whitelistMusicAppNetwork", false);
+        Log.i(TAG, "whitelistMusicAppNetwork: " + whitelistMusicAppNetwork);
         ignoreLockscreenTimeout = getDefaultSharedPreferences(getApplicationContext()).getBoolean("ignoreLockscreenTimeout", false);
         Log.i(TAG, "ignoreLockscreenTimeout: " + ignoreLockscreenTimeout);
         dozeEnterDelay = getDefaultSharedPreferences(getApplicationContext()).getInt("dozeEnterDelay", 0);
@@ -847,6 +851,57 @@ public class ForceDozeService extends Service {
         }
     }
 
+    public void actualEnterDozeHandleNetwork(Context context, String packageName) {
+        Log.i(TAG, "playingPackageName: " + packageName);
+        wasWiFiTurnedOn = Utils.isWiFiEnabled(context);
+        wasMobileDataTurnedOn = Utils.isMobileDataEnabled(context);
+
+
+        if (turnOffWiFiInDoze && wasWiFiTurnedOn && packageName == null) {
+            Log.i(TAG, "Disabling WiFi");
+            disableWiFi();
+        }
+
+        if (turnOffDataInDoze && wasMobileDataTurnedOn && (packageName == null || wasWiFiTurnedOn)) {
+            Log.i(TAG, "Disabling mobile data");
+            disableMobileData();
+        }
+    }
+    public void enterDozeHandleNetwork(Context context) {
+        if (whitelistMusicAppNetwork) {
+
+            Objects.requireNonNull(NotificationService.Companion.getInstance()).getPlayingPackageName((String packageName)->{
+                actualEnterDozeHandleNetwork(context, packageName);
+                return null;
+            });
+        } else {
+            actualEnterDozeHandleNetwork(context, null);
+        }
+
+
+    }
+
+    public void leaveDozeHandleNetwork(Context context) {
+        if (turnOffWiFiInDoze) {
+            Log.i(TAG, "wasWiFiTurnedOn: " + wasWiFiTurnedOn);
+            if (wasWiFiTurnedOn) {
+                Log.i(TAG, "Enabling WiFi");
+                enableWiFi();
+                wasWiFiTurnedOn = false;
+            }
+
+        }
+
+        if (turnOffDataInDoze) {
+            Log.i(TAG, "wasDataTurnedOn: " + wasMobileDataTurnedOn);
+            if (wasMobileDataTurnedOn) {
+                Log.i(TAG, "Enabling mobile data");
+                enableMobileData();
+                wasMobileDataTurnedOn = false;
+            }
+        }
+    }
+
     class DozeReceiver extends BroadcastReceiver {
 
         @Override
@@ -869,24 +924,7 @@ public class ForceDozeService extends Service {
                     }
                 }
 
-                if (turnOffWiFiInDoze) {
-                    Log.i(TAG, "wasWiFiTurnedOn: " + wasWiFiTurnedOn);
-                    if (wasWiFiTurnedOn) {
-                        Log.i(TAG, "Enabling WiFi");
-                        enableWiFi();
-                        wasWiFiTurnedOn = false;
-                    }
-
-                }
-
-                if (turnOffDataInDoze) {
-                    Log.i(TAG, "wasDataTurnedOn: " + wasMobileDataTurnedOn);
-                    if (wasMobileDataTurnedOn) {
-                        Log.i(TAG, "Enabling mobile data");
-                        enableMobileData();
-                        wasMobileDataTurnedOn = false;
-                    }
-                }
+                leaveDozeHandleNetwork(context);
 
                 if (!getDeviceIdleState().equals("ACTIVE") || !lastKnownState.equals("ACTIVE")) {
                     Log.i(TAG, "Exiting Doze");
@@ -963,21 +1001,7 @@ public class ForceDozeService extends Service {
                         dozeUsageData.add(Long.toString(System.currentTimeMillis()).concat(",").concat(Float.toString(Utils.getBatteryLevel(getApplicationContext()))).concat(",").concat("EXIT_MAINTENANCE"));
                         saveDozeDataStats();
 
-                        if (turnOffDataInDoze) {
-                            if (wasMobileDataTurnedOn) {
-                                Log.i(TAG, "Enabling mobile data");
-                                enableMobileData();
-                                wasMobileDataTurnedOn = false;
-                            }
-                        }
-                        if (turnOffWiFiInDoze) {
-                            if (wasWiFiTurnedOn) {
-                                Log.i(TAG, "Enabling WiFi");
-                                enableWiFi();
-                                wasWiFiTurnedOn = false;
-                            }
-                        }
-
+                        leaveDozeHandleNetwork(context);
                         maintenance = true;
                     }
                 } else if (!Utils.isScreenOn(context) && getDeviceIdleState().equals("IDLE")) {
@@ -985,24 +1009,7 @@ public class ForceDozeService extends Service {
                         Log.i(TAG, "Device entered Doze after maintenance");
                         dozeUsageData.add(Long.toString(System.currentTimeMillis()).concat(",").concat(Float.toString(Utils.getBatteryLevel(getApplicationContext()))).concat(",").concat("ENTER_MAINTENANCE"));
                         saveDozeDataStats();
-
-                        if (turnOffWiFiInDoze) {
-                            wasWiFiTurnedOn = Utils.isWiFiEnabled(context);
-                            if (wasWiFiTurnedOn) {
-                                Log.i(TAG, "Disabling WiFi");
-                                disableWiFi();
-                            }
-
-                        }
-
-                        if (turnOffDataInDoze) {
-                            wasMobileDataTurnedOn = Utils.isMobileDataEnabled(context);
-                            if (wasMobileDataTurnedOn) {
-                                Log.i(TAG, "Disabling mobile data");
-                                disableMobileData();
-                            }
-                        }
-
+                        enterDozeHandleNetwork(context);
                         maintenance = false;
                     }
                 }

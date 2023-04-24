@@ -48,6 +48,11 @@
             android:title="@string/disable_data_during_doze_setting_title" />
         <CheckBoxPreference
             android:defaultValue="false"
+            android:key="whitelistMusicAppNetwork"
+            android:summary="@string/whitelist_music_app_network_setting_summary"
+            android:title="@string/whitelist_music_app_network_setting_title" />
+        <CheckBoxPreference
+            android:defaultValue="false"
             android:key="useNonRootSensorWorkaround"
             android:summary="@string/motion_sensing_disable_non_root_setting_summary"
             android:title="@string/motion_sensing_disable_non_root_setting_title" />

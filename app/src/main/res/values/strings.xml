@@ -154,4 +154,10 @@
 
     <string name="notification_channel_tips_name">Informations</string>
     <string name="notification_channel_tips_description">Informations about compatibility problems</string>
+
+    <string name="notifications_permission">Notifications Permission</string>
+    <string name="notifications_permission_explanation">To detect Apps which are playing music this app needs to read currently showing notifications, and thus needs the permission</string>
+
+    <string name="whitelist_music_app_network_setting_title">Whitelist music app</string>
+    <string name="whitelist_music_app_network_setting_summary">Don\'t turn off all networks if music is playing</string>
 </resources>

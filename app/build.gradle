@@ -1,6 +1,15 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('/Volumes/dev/android/ForceDoze/upload.keystore')
+            storePassword 'akylas'
+            keyAlias 'key0'
+            keyPassword 'akylas'
+        }
+    }
     compileSdkVersion 33
 
     defaultConfig {
@@ -9,6 +18,7 @@ android {
         targetSdkVersion 33
         versionCode 68
         versionName "1.4.0"
+        signingConfig signingConfigs.debug
     }
     buildTypes {
         release {
@@ -31,6 +41,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.browser:browser:1.5.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.media2:media2-session:1.2.1'
     implementation 'eu.chainfire:libsuperuser:1.1.0.+'
     implementation 'com.fabiendevos:nanotasks:1.1.0'
     implementation 'com.jakewharton:process-phoenix:1.0.2'

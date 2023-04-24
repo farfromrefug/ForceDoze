@@ -107,6 +107,7 @@ public class SettingsActivity extends AppCompatActivity {
             final Preference nonRootSensorWorkaround = (Preference) findPreference("useNonRootSensorWorkaround");
             final Preference enableSensors = (Preference) findPreference("enableSensors");
             Preference turnOffDataInDoze = (Preference) findPreference("turnOffDataInDoze");
+            Preference whitelistMusicAppNetwork = (Preference) findPreference("whitelistMusicAppNetwork");
             final Preference autoRotateBrightnessFix = (Preference) findPreference("autoRotateAndBrightnessFix");
             CheckBoxPreference autoRotateFixPref = (CheckBoxPreference) findPreference("autoRotateAndBrightnessFix");
 
@@ -266,8 +267,29 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             });
 
+            whitelistMusicAppNetwork.setOnPreferenceChangeListener((preference, o) -> {
+                final boolean newValue = (boolean) o;
+                if (newValue) {
+                    // we need to check if we have notifications permissions
+                    Boolean hasPermission = NotificationService.Companion.getInstance() != null;
+                    if (!hasPermission) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AppCompatAlertDialogStyle);
+                        builder.setTitle(getString(R.string.notifications_permission));
+                        builder.setMessage(getString(R.string.notifications_permission_explanation));
+                        builder.setPositiveButton(getString(R.string.okay_button_text), (dialogInterface, i) -> {
+                            Intent settingsIntent = null;
+                            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                                settingsIntent = new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
+                                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                        .putExtra(Settings.EXTRA_APP_PACKAGE, getActivity().getPackageName());
+                            }
+                            getActivity().startActivity(settingsIntent);
+                            dialogInterface.dismiss();
+                        });
+                        builder.show();
                     }
                 }
+                return true;
             });
 
             if (!Utils.isXposedInstalled(getContext())) {
