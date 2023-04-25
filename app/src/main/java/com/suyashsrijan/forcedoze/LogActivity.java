@@ -1,5 +1,7 @@
 package com.suyashsrijan.forcedoze;
 
+import static com.suyashsrijan.forcedoze.Utils.logToLogcat;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -33,6 +35,10 @@ public class LogActivity extends AppCompatActivity {
     public List<String> log;
     boolean isSuAvailable;
     MaterialDialog progressDialog = null;
+
+    private static void log(String message) {
+        logToLogcat(TAG, message);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,7 +140,7 @@ public class LogActivity extends AppCompatActivity {
                 if (result != null) {
                     saveAndShareFullLog(result);
                 } else {
-                    Log.i(TAG, "Unable to get full logcat");
+                    log("Unable to get full logcat");
                 }
             }
 
@@ -196,7 +202,7 @@ public class LogActivity extends AppCompatActivity {
                 if (output != null) {
                     printShellOutput(output);
                 } else {
-                    Log.i(TAG, "Error occurred while executing command (" + command + ")");
+                    log("Error occurred while executing command (" + command + ")");
                 }
             }
         });
@@ -205,7 +211,7 @@ public class LogActivity extends AppCompatActivity {
     public void printShellOutput(List<String> output) {
         if (!output.isEmpty()) {
             for (String s : output) {
-                Log.i(TAG, s);
+                log(s);
             }
         }
     }

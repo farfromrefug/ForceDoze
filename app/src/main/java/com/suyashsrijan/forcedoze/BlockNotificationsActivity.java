@@ -1,5 +1,7 @@
 package com.suyashsrijan.forcedoze;
 
+import static com.suyashsrijan.forcedoze.Utils.logToLogcat;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -34,6 +36,10 @@ public class BlockNotificationsActivity extends AppCompatActivity {
     public static String TAG = "ForceDoze";
     boolean isSuAvailable = false;
     MaterialDialog progressDialog = null;
+
+    private static void log(String message) {
+        logToLogcat(TAG, message);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +116,7 @@ public class BlockNotificationsActivity extends AppCompatActivity {
     }
 
     public void loadPackagesFromBlockList() {
-        Log.i(TAG, "Loading blocked packages...");
+        log("Loading blocked packages...");
         progressDialog = new MaterialDialog.Builder(this)
                 .title(getString(R.string.please_wait_text))
                 .autoDismiss(false)
@@ -151,7 +157,7 @@ public class BlockNotificationsActivity extends AppCompatActivity {
                     blockNotificationApps.notifyDataSetChanged();
                 }
 
-                Log.i(TAG, "Blocked packages: " + listData.size() + " packages in total");
+                log("Blocked packages: " + listData.size() + " packages in total");
             }
 
             @Override
@@ -209,12 +215,12 @@ public class BlockNotificationsActivity extends AppCompatActivity {
 
     public void modifyBlockList(String packageName, boolean remove) {
         if (remove) {
-            Log.i(TAG, "Removing app " + packageName + " to Notification blocklist");
+            log("Removing app " + packageName + " to Notification blocklist");
             blockedPackages.remove(packageName);
             sharedPreferences.edit().putStringSet("notificationBlockList", new LinkedHashSet<>(blockedPackages)).apply();
         } else {
             blockedPackages.add(packageName);
-            Log.i(TAG, "Adding app " + packageName + " to Notification blocklist");
+            log("Adding app " + packageName + " to Notification blocklist");
             sharedPreferences.edit().putStringSet("notificationBlockList", new LinkedHashSet<>(blockedPackages)).apply();
         }
     }

@@ -1,5 +1,7 @@
 package com.suyashsrijan.forcedoze;
 
+import static com.suyashsrijan.forcedoze.Utils.logToLogcat;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -39,6 +41,10 @@ public class SettingsActivity extends AppCompatActivity {
     static MaterialDialog progressDialog1 = null;
     private static Shell.Interactive rootSession;
     private static Shell.Interactive nonRootSession;
+
+    private static void log(String message) {
+            logToLogcat(TAG, message);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -155,7 +161,7 @@ public class SettingsActivity extends AppCompatActivity {
                         .progress(true, 0)
                         .show();
                 Tasks.executeInBackground(getActivity(), () -> {
-                    Log.i(TAG, "Clearing Doze stats");
+                    log("Clearing Doze stats");
                     SharedPreferences sharedPreferences13 = PreferenceManager.getDefaultSharedPreferences(getContext());
                     SharedPreferences.Editor editor = sharedPreferences13.edit();
                     editor.remove("dozeUsageDataAdvanced");
@@ -167,7 +173,7 @@ public class SettingsActivity extends AppCompatActivity {
                             progressDialog1.dismiss();
                         }
                         if (result) {
-                            Log.i(TAG, "Doze stats successfully cleared");
+                            log("Doze stats successfully cleared");
                             if (Utils.isMyServiceRunning(ForceDozeService.class, context)) {
                                 Intent intent = new Intent("reload-settings");
                                 LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
@@ -207,7 +213,7 @@ public class SettingsActivity extends AppCompatActivity {
                         autoRotateBrightnessFix.setEnabled(true);
                         nonRootSensorWorkaround.setEnabled(true);
                     }
-                    Log.i(TAG, "Phone is rooted and SU permission granted");
+                    log("Phone is rooted and SU permission granted");
                     executeCommand("chmod 664 /data/data/com.suyashsrijan.forcedoze/shared_prefs/com.suyashsrijan.forcedoze_preferences.xml");
                     executeCommand("chmod 755 /data/data/com.suyashsrijan.forcedoze/shared_prefs");
                     MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
@@ -217,7 +223,7 @@ public class SettingsActivity extends AppCompatActivity {
                     builder.show();
                     return true;
                 } else {
-                    Log.i(TAG, "SU permission denied or not available");
+                    log("SU permission denied or not available");
                     MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
                     builder.setTitle(getString(R.string.error_text));
                     builder.setMessage(getString(R.string.su_perm_denied_msg));
@@ -252,12 +258,12 @@ public class SettingsActivity extends AppCompatActivity {
                     return true;
                 } else {
                     if (isSuAvailable) {
-                        Log.i(TAG, "Phone is rooted and SU permission granted");
-                        Log.i(TAG, "Granting android.permission.READ_PHONE_STATE to com.suyashsrijan.forcedoze");
+                        log("Phone is rooted and SU permission granted");
+                        log("Granting android.permission.READ_PHONE_STATE to com.suyashsrijan.forcedoze");
                         executeCommand("pm grant com.suyashsrijan.forcedoze android.permission.READ_PHONE_STATE");
                         return true;
                     } else {
-                        Log.i(TAG, "SU permission denied or not available");
+                        log("SU permission denied or not available");
                         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
                         builder.setTitle(getString(R.string.error_text));
                         builder.setMessage(getString(R.string.su_perm_denied_msg));
@@ -345,14 +351,14 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         public void resetForceDoze() {
-            Log.i(TAG, "Starting ForceDoze reset procedure");
+            log("Starting ForceDoze reset procedure");
             if (Utils.isMyServiceRunning(ForceDozeService.class, getActivity())) {
-                Log.i(TAG, "Stopping ForceDozeService");
+                log("Stopping ForceDozeService");
                 getActivity().stopService(new Intent(getActivity(), ForceDozeService.class));
             }
-            Log.i(TAG, "Enabling sensors, just in case they are disabled");
+            log("Enabling sensors, just in case they are disabled");
             executeCommand("dumpsys sensorservice enable");
-            Log.i(TAG, "Disabling and re-enabling Doze mode");
+            log("Disabling and re-enabling Doze mode");
             if (Utils.isDeviceRunningOnN()) {
                 executeCommand("dumpsys deviceidle disable all");
                 executeCommand("dumpsys deviceidle enable all");
@@ -360,15 +366,15 @@ public class SettingsActivity extends AppCompatActivity {
                 executeCommand("dumpsys deviceidle disable");
                 executeCommand("dumpsys deviceidle enable");
             }
-            Log.i(TAG, "Resetting app preferences");
+            log("Resetting app preferences");
             PreferenceManager.getDefaultSharedPreferences(getActivity()).edit().clear().apply();
-            Log.i(TAG, "Trying to revoke android.permission.DUMP");
+            log("Trying to revoke android.permission.DUMP");
             executeCommand("pm revoke com.suyashsrijan.forcedoze android.permission.DUMP");
             executeCommand("pm revoke com.suyashsrijan.forcedoze android.permission.READ_LOGS");
             executeCommand("pm revoke com.suyashsrijan.forcedoze android.permission.READ_PHONE_STATE");
             executeCommand("pm revoke com.suyashsrijan.forcedoze android.permission.WRITE_SECURE_SETTINGS");
             executeCommand("pm revoke com.suyashsrijan.forcedoze android.permission.WRITE_SETTINGS");
-            Log.i(TAG, "ForceDoze reset procedure complete");
+            log("ForceDoze reset procedure complete");
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
             builder.setTitle(getString(R.string.reset_complete_dialog_title));
             builder.setMessage(getString(R.string.reset_complete_dialog_text));
@@ -423,7 +429,7 @@ public class SettingsActivity extends AppCompatActivity {
                             setMinimalLogging(true).
                             open((success, reason) -> {
                                 if (reason != Shell.OnShellOpenResultListener.SHELL_RUNNING) {
-                                    Log.i(TAG, "Error opening root shell: exitCode " + reason);
+                                    log("Error opening root shell: exitCode " + reason);
                                     isSuAvailable = false;
                                     toggleRootFeatures(false);
                                 } else {
@@ -449,7 +455,7 @@ public class SettingsActivity extends AppCompatActivity {
                             setMinimalLogging(true).
                             open((success, reason) -> {
                                 if (reason != Shell.OnShellOpenResultListener.SHELL_RUNNING) {
-                                    Log.i(TAG, "Error opening shell: exitCode " + reason);
+                                    log("Error opening shell: exitCode " + reason);
                                     isSuAvailable = false;
                                 } else {
                                     nonRootSession.addCommand(command, 0, (Shell.OnCommandResultListener2) (commandCode, exitCode, STDOUT, STDERR) -> {
@@ -465,7 +471,7 @@ public class SettingsActivity extends AppCompatActivity {
         public void printShellOutput(List<String> output) {
             if (!output.isEmpty()) {
                 for (String s : output) {
-                    Log.i(TAG, s);
+                    log(s);
                 }
             }
         }

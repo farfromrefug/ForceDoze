@@ -1,5 +1,7 @@
 package com.suyashsrijan.forcedoze;
 
+import static com.suyashsrijan.forcedoze.Utils.logToLogcat;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,10 +11,14 @@ import android.util.Log;
 public class AutoRestartOnUpdate extends BroadcastReceiver {
     public static String TAG = "ForceDoze";
 
+    private static void log(String message) {
+        logToLogcat(TAG, message);
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(Intent.ACTION_PACKAGE_REPLACED) && intent.getDataString().contains(context.getPackageName())) {
-            Log.i(TAG, "Application updated, restarting service if enabled");
+            log("Application updated, restarting service if enabled");
             boolean isServiceEnabled = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("serviceEnabled", false);
             if (isServiceEnabled) {
                 if (Utils.isMyServiceRunning(ForceDozeService.class, context)) {
@@ -22,7 +28,7 @@ public class AutoRestartOnUpdate extends BroadcastReceiver {
                     context.startService(new Intent(context, ForceDozeService.class));
                 }
             } else {
-                Log.i(TAG, "Service not enabled, skip restarting");
+                log("Service not enabled, skip restarting");
             }
         }
     }

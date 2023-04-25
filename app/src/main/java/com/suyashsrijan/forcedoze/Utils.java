@@ -2,6 +2,7 @@ package com.suyashsrijan.forcedoze;
 
 import android.Manifest;
 import android.app.ActivityManager;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,15 +18,20 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.Display;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static android.content.Context.BATTERY_SERVICE;
+import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 public class Utils {
 
@@ -217,5 +223,33 @@ public class Utils {
             }
         }
         return false;
+    }
+    static class ReloadSettingsReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            reloadSettings();
+        }
+    }
+    static ReloadSettingsReceiver reloadSettingsReceiver;
+    static boolean disableLogcat = false;
+    static Context applicationContext;
+    static {
+        init();
+    }
+    private static void init() {
+        applicationContext = MyApplication.getAppContext();
+        reloadSettingsReceiver = new ReloadSettingsReceiver();
+        LocalBroadcastManager.getInstance(applicationContext).registerReceiver(reloadSettingsReceiver, new IntentFilter("reload-settings"));
+        disableLogcat = getDefaultSharedPreferences(applicationContext).getBoolean("disableLogcat", false);
+    }
+
+    public static void reloadSettings() {
+        disableLogcat = getDefaultSharedPreferences(applicationContext).getBoolean("disableLogcat", false);
+    }
+
+    public static void logToLogcat(String TAG, String message) {
+        if (!disableLogcat) {
+            Log.i(TAG, message);
+        }
     }
 }

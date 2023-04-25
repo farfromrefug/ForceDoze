@@ -1,5 +1,7 @@
 package com.suyashsrijan.forcedoze;
 
+import static com.suyashsrijan.forcedoze.Utils.logToLogcat;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -36,7 +38,9 @@ public class WhitelistAppsActivity extends AppCompatActivity {
     public static String TAG = "ForceDoze";
     boolean showDozeWhitelistWarning = true;
     boolean isSuAvailable = false;
-    MaterialDialog progressDialog = null;
+    MaterialDialog progressDialog = null;private static void log(String message) {
+        logToLogcat(TAG, message);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +118,7 @@ public class WhitelistAppsActivity extends AppCompatActivity {
     }
 
     public void loadPackagesFromWhitelist() {
-        Log.i(TAG, "Loading whitelisted packages...");
+        log("Loading whitelisted packages...");
         progressDialog = new MaterialDialog.Builder(this)
                 .title(getString(R.string.please_wait_text))
                 .autoDismiss(false)
@@ -161,7 +165,7 @@ public class WhitelistAppsActivity extends AppCompatActivity {
                     whitelistAppsAdapter.notifyDataSetChanged();
                 }
 
-                Log.i(TAG, "Whitelisted packages: " + listData.size() + " packages in total");
+                log("Whitelisted packages: " + listData.size() + " packages in total");
             }
 
             @Override
@@ -219,10 +223,10 @@ public class WhitelistAppsActivity extends AppCompatActivity {
 
     public void modifyWhitelist(String packageName, boolean remove) {
         if (remove) {
-            Log.i(TAG, "Removing app " + packageName + " from Doze whitelist");
+            log("Removing app " + packageName + " from Doze whitelist");
             executeCommand("dumpsys deviceidle whitelist -" + packageName);
         } else {
-            Log.i(TAG, "Adding app " + packageName + " to Doze whitelist");
+            log("Adding app " + packageName + " to Doze whitelist");
             executeCommand("dumpsys deviceidle whitelist +" + packageName);
         }
     }

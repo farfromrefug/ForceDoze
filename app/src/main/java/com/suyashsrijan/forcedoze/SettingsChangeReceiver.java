@@ -1,5 +1,7 @@
 package com.suyashsrijan.forcedoze;
 
+import static com.suyashsrijan.forcedoze.Utils.logToLogcat;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,11 +10,13 @@ import android.util.Log;
 
 public class SettingsChangeReceiver extends BroadcastReceiver {
 
-    public static String TAG = "ForceDoze";
+    public static String TAG = "ForceDoze";private static void log(String message) {
+        logToLogcat(TAG, message);
+    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.i(TAG, "com.suyashsrijan.forcedoze.CHANGE_SETTING broadcast intent received");
+        log("com.suyashsrijan.forcedoze.CHANGE_SETTING broadcast intent received");
         final String settingName = intent.getStringExtra("settingName");
         final String settingValue = intent.getStringExtra("settingValue");
 
@@ -32,10 +36,10 @@ public class SettingsChangeReceiver extends BroadcastReceiver {
                     }
                 }
             } else {
-                Log.i(TAG, "Setting does not exist or not updatable");
+                log("Setting does not exist or not updatable");
             }
         } else {
-            Log.i(TAG, "settingName and/or settingValue null");
+            log("settingName and/or settingValue null");
         }
     }
 }

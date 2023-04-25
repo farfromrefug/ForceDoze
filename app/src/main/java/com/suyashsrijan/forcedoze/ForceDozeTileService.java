@@ -1,5 +1,7 @@
 package com.suyashsrijan.forcedoze;
 
+import static com.suyashsrijan.forcedoze.Utils.logToLogcat;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -16,14 +18,18 @@ import android.util.Log;
 @RequiresApi(api = Build.VERSION_CODES.N)
 public class ForceDozeTileService extends TileService {
 
-    String TAG = "ForceDozeTileService";
+    static String TAG = "ForceDozeTileService";
     SharedPreferences settings;
     boolean serviceEnabled;
+
+    private static void log(String message) {
+        logToLogcat(TAG, message);
+    }
 
     @Override
     public void onTileAdded() {
         super.onTileAdded();
-        Log.i(TAG, "QuickTile added");
+        log("QuickTile added");
         settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         serviceEnabled = settings.getBoolean("serviceEnabled", false);
         if (serviceEnabled) {
@@ -36,7 +42,7 @@ public class ForceDozeTileService extends TileService {
     @Override
     public void onTileRemoved() {
         super.onTileRemoved();
-        Log.i(TAG, "QuickTile removed");
+        log("QuickTile removed");
     }
 
     @Override
@@ -57,11 +63,11 @@ public class ForceDozeTileService extends TileService {
         settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         serviceEnabled = settings.getBoolean("serviceEnabled", false);
         if (serviceEnabled) {
-            Log.i(TAG, "Disabling ForceDoze");
+            log("Disabling ForceDoze");
             stopService(new Intent(this, ForceDozeService.class));
             updateTileState(false);
         } else {
-            Log.i(TAG, "Enabling ForceDoze");
+            log("Enabling ForceDoze");
             startService(new Intent(this, ForceDozeService.class));
             updateTileState(true);
         }

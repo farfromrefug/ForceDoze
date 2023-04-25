@@ -1,5 +1,7 @@
 package com.suyashsrijan.forcedoze;
 
+import static com.suyashsrijan.forcedoze.Utils.logToLogcat;
+
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -66,6 +68,10 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     TextView textViewStatus;
     CoordinatorLayout coordinatorLayout;
 
+    private static void log(String message) {
+        logToLogcat(TAG, message);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,10 +105,10 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         toggleForceDozeSwitch.setOnCheckedChangeListener(this);
 
         if (!Utils.isDeviceRunningOnN() && isDumpPermGranted) {
-            Log.i(TAG, "android.permission.DUMP already granted and user not on Nougat, skipping SU check");
+            log("android.permission.DUMP already granted and user not on Nougat, skipping SU check");
             doAfterSuCheckSetup();
         } else if (Utils.isDeviceRunningOnN() && isDumpPermGranted && isWriteSecureSettingsPermGranted) {
-            Log.i(TAG, "android.permission.DUMP & android.permission.WRITE_SECURE_SETTINGS already granted and user on Nougat, skipping SU check");
+            log("android.permission.DUMP & android.permission.WRITE_SECURE_SETTINGS already granted and user on Nougat, skipping SU check");
             doAfterSuCheckSetup();
         } else {
             progressDialog = new MaterialDialog.Builder(this)
@@ -112,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                     .content(R.string.requesting_su_access_text)
                     .progress(true, 0)
                     .show();
-            Log.i(TAG, "Check if SU is available, and request SU permission if it is");
+            log("Check if SU is available, and request SU permission if it is");
             Tasks.executeInBackground(MainActivity.this, () -> {
                 if (rootSession != null) {
                     if (rootSession.isRunning()) {
@@ -146,34 +152,34 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                         progressDialog.dismiss();
                     }
                     isSuAvailable = result;
-                    Log.i(TAG, "SU available: " + Boolean.toString(result));
+                    log("SU available: " + Boolean.toString(result));
                     if (isSuAvailable) {
-                        Log.i(TAG, "Phone is rooted and SU permission granted");
+                        log("Phone is rooted and SU permission granted");
                         editor = settings.edit();
                         editor.putBoolean("isSuAvailable", true);
                         editor.apply();
                         if (!Utils.isDumpPermissionGranted(getApplicationContext())) {
-                                Log.i(TAG, "Granting android.permission.DUMP to com.suyashsrijan.forcedoze");
+                                log("Granting android.permission.DUMP to com.suyashsrijan.forcedoze");
                                 executeCommand("pm grant com.suyashsrijan.forcedoze android.permission.DUMP");
                         }
                         if (!Utils.isReadPhoneStatePermissionGranted(getApplicationContext())) {
-                            Log.i(TAG, "Granting android.permission.READ_PHONE_STATE to com.suyashsrijan.forcedoze");
+                            log("Granting android.permission.READ_PHONE_STATE to com.suyashsrijan.forcedoze");
                             executeCommand("pm grant com.suyashsrijan.forcedoze android.permission.READ_PHONE_STATE");
                         }
                         if (!Utils.isSecureSettingsPermissionGranted(getApplicationContext()) && Utils.isDeviceRunningOnN()) {
-                            Log.i(TAG, "Granting android.permission.WRITE_SECURE_SETTINGS to com.suyashsrijan.forcedoze");
+                            log("Granting android.permission.WRITE_SECURE_SETTINGS to com.suyashsrijan.forcedoze");
                             executeCommand("pm grant com.suyashsrijan.forcedoze android.permission.WRITE_SECURE_SETTINGS");
                         }
                         if (serviceEnabled) {
                             toggleForceDozeSwitch.setChecked(true);
                             if (!Utils.isMyServiceRunning(ForceDozeService.class, MainActivity.this)) {
-                                Log.i(TAG, "Starting ForceDozeService");
+                                log("Starting ForceDozeService");
                                 startService(new Intent(context, ForceDozeService.class));
                             } else {
-                                Log.i(TAG, "Service already running");
+                                log("Service already running");
                             }
                         } else {
-                            Log.i(TAG, "Service not enabled");
+                            log("Service not enabled");
                         }
 
                         ChangeLog cl = new ChangeLog(MainActivity.this);
@@ -181,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                             cl.getFullLogDialog().show();
                         }
                     } else {
-                        Log.i(TAG, "SU permission denied or not available");
+                        log("SU permission denied or not available");
                         toggleForceDozeSwitch.setChecked(false);
                         toggleForceDozeSwitch.setEnabled(false);
                         textViewStatus.setText(R.string.service_disabled);
@@ -206,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                 @Override
                 public void onError(Context context, Exception e) {
                     Log.e(TAG, "Error querying SU: " + e.getMessage());
-                    Log.i(TAG, "SU permission denied or not available");
+                    log("SU permission denied or not available");
                     toggleForceDozeSwitch.setChecked(false);
                     toggleForceDozeSwitch.setEnabled(false);
                     textViewStatus.setText(R.string.service_disabled);
@@ -263,10 +269,10 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
             toggleForceDozeSwitch.setChecked(true);
             textViewStatus.setText(R.string.service_active);
             if (!Utils.isMyServiceRunning(ForceDozeService.class, MainActivity.this)) {
-                Log.i(TAG, "Starting ForceDozeService");
+                log("Starting ForceDozeService");
                 startService(new Intent(this, ForceDozeService.class));
             } else {
-                Log.i(TAG, "Service already running");
+                log("Service already running");
             }
             if (isSuAvailable) {
                 executeCommand("chmod 664 /data/data/com.suyashsrijan.forcedoze/shared_prefs/com.suyashsrijan.forcedoze_preferences.xml");
@@ -274,7 +280,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
             }
         } else {
             textViewStatus.setText(R.string.service_inactive);
-            Log.i(TAG, "Service not enabled");
+            log("Service not enabled");
         }
         ChangeLog cl = new ChangeLog(this);
         if (cl.isFirstRun()) {
@@ -339,7 +345,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
             serviceEnabled = true;
             textViewStatus.setText(R.string.service_active);
             if (!Utils.isMyServiceRunning(ForceDozeService.class, MainActivity.this)) {
-                Log.i(TAG, "Enabling ForceDoze");
+                log("Enabling ForceDoze");
                 startService(new Intent(MainActivity.this, ForceDozeService.class));
             }
             showForceDozeActiveDialog();
@@ -350,7 +356,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
             serviceEnabled = false;
             textViewStatus.setText(R.string.service_inactive);
             if (Utils.isMyServiceRunning(ForceDozeService.class, MainActivity.this)) {
-                Log.i(TAG, "Disabling ForceDoze");
+                log("Disabling ForceDoze");
                 stopService(new Intent(MainActivity.this, ForceDozeService.class));
             }
         }
@@ -540,7 +546,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
 //
 //        @Override
 //        public void onSTDOUT(@NonNull String line) {
-//            Log.i(TAG, line);
+//            log(line);
 //        }
 //
 //        @Override
@@ -561,7 +567,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     private final StreamGobbler.OnLineListener mStderrListener = new StreamGobbler.OnLineListener() {
         @Override
         public void onLine(String line) {
-            Log.i(TAG, line);
+            log(line);
         }
     };
 
@@ -572,10 +578,10 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                     mCallbackThread.wait();
                 } catch (Exception e)  {
                     if (e instanceof InterruptedException) {
-                        Log.i(TAG, "InterruptedException occurred while waiting for command to finish");
+                        log("InterruptedException occurred while waiting for command to finish");
                         e.printStackTrace();
                     } else if (e instanceof NullPointerException) {
-                        Log.i(TAG, "NPE occurred while waiting for command to finish");
+                        log("NPE occurred while waiting for command to finish");
                         e.printStackTrace();
                     }
                 }
@@ -628,7 +634,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                             setMinimalLogging(true).
                             open((success, reason) -> {
                                 if (reason != Shell.OnShellOpenResultListener.SHELL_RUNNING) {
-                                    Log.i(TAG, "Error opening root shell: exitCode " + reason);
+                                    log("Error opening root shell: exitCode " + reason);
                                 } else {
                                     rootSession.addCommand(command, 0, new Shell.OnCommandResultListener() {
                                         @Override
@@ -661,7 +667,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                             setMinimalLogging(true).
                             open((success, reason) -> {
                                 if (reason != Shell.OnShellOpenResultListener.SHELL_RUNNING) {
-                                        Log.i(TAG, "Error opening shell: exitCode " + reason);
+                                        log("Error opening shell: exitCode " + reason);
                                     } else {
                                         nonRootSession.addCommand(command, 0, new Shell.OnCommandResultListener2() {
                                             @Override
@@ -680,7 +686,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     public void printShellOutput(List<String> output) {
         if (output != null && !output.isEmpty()) {
             for (String s : output) {
-                Log.i(TAG, s);
+                log(s);
             }
         }
     }
@@ -688,7 +694,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     class UpdateForceDozeEnabledState extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.i(TAG, "User toggled the QuickTile, now updating the state in app");
+            log("User toggled the QuickTile, now updating the state in app");
             toggleForceDozeSwitch.setChecked(intent.getBooleanExtra("isActive", false));
         }
     }

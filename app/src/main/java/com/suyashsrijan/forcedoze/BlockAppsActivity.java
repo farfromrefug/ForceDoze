@@ -1,5 +1,7 @@
 package com.suyashsrijan.forcedoze;
 
+import static com.suyashsrijan.forcedoze.Utils.logToLogcat;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -34,6 +36,10 @@ public class BlockAppsActivity extends AppCompatActivity {
     public static String TAG = "ForceDoze";
     boolean isSuAvailable = false;
     MaterialDialog progressDialog = null;
+
+    private static void log(String message) {
+        logToLogcat(TAG, message);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +116,7 @@ public class BlockAppsActivity extends AppCompatActivity {
     }
 
     public void loadPackagesFromBlockList() {
-        Log.i(TAG, "Loading blocked packages...");
+        log("Loading blocked packages...");
         progressDialog = new MaterialDialog.Builder(this)
                 .title(getString(R.string.please_wait_text))
                 .autoDismiss(false)
@@ -151,7 +157,7 @@ public class BlockAppsActivity extends AppCompatActivity {
                     blockDozeApps.notifyDataSetChanged();
                 }
 
-                Log.i(TAG, "Blocked packages: " + listData.size() + " packages in total");
+                log("Blocked packages: " + listData.size() + " packages in total");
             }
 
             @Override
@@ -209,12 +215,12 @@ public class BlockAppsActivity extends AppCompatActivity {
 
     public void modifyBlockList(String packageName, boolean remove) {
         if (remove) {
-            Log.i(TAG, "Removing app " + packageName + " to Doze app blocklist");
+            log("Removing app " + packageName + " to Doze app blocklist");
             blockedPackages.remove(packageName);
             sharedPreferences.edit().putStringSet("dozeAppBlockList", new LinkedHashSet<>(blockedPackages)).apply();
         } else {
             blockedPackages.add(packageName);
-            Log.i(TAG, "Adding app " + packageName + " to Doze app blocklist");
+            log("Adding app " + packageName + " to Doze app blocklist");
             sharedPreferences.edit().putStringSet("dozeAppBlockList", new LinkedHashSet<>(blockedPackages)).apply();
         }
     }

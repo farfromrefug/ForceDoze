@@ -1,5 +1,7 @@
 package com.suyashsrijan.forcedoze;
 
+import static com.suyashsrijan.forcedoze.Utils.logToLogcat;
+
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -60,6 +62,10 @@ public class DozeTunablesActivity extends AppCompatActivity {
     private long MMS_TEMP_APP_WHITELIST_DURATION = 60 * 1000L;
     private long SMS_TEMP_APP_WHITELIST_DURATION = 20 * 1000L;
     private long NOTIFICATION_WHITELIST_DURATION = 30 * 1000L;
+
+    private static void log(String message) {
+        logToLogcat(TAG, message);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,7 +181,7 @@ public class DozeTunablesActivity extends AppCompatActivity {
     public void applyTunables() {
         loadTunables();
         TUNABLE_STRING = getTunableString();
-        Log.i(TAG, "Setting device_idle_constants=" + TUNABLE_STRING);
+        log("Setting device_idle_constants=" + TUNABLE_STRING);
         executeCommand("settings put global device_idle_constants " + TUNABLE_STRING);
         Toast.makeText(this, getString(R.string.applied_success_text), Toast.LENGTH_SHORT).show();
     }
@@ -210,7 +216,7 @@ public class DozeTunablesActivity extends AppCompatActivity {
                 if (output != null) {
                     printShellOutput(output);
                 } else {
-                    Log.i(TAG, "Error occurred while executing command (" + command + ")");
+                    log("Error occurred while executing command (" + command + ")");
                 }
             }
         });
@@ -219,7 +225,7 @@ public class DozeTunablesActivity extends AppCompatActivity {
     public void printShellOutput(List<String> output) {
         if (!output.isEmpty()) {
             for (String s : output) {
-                Log.i(TAG, s);
+                log(s);
             }
         }
     }
@@ -249,7 +255,7 @@ public class DozeTunablesActivity extends AppCompatActivity {
                         .content(getString(R.string.requesting_su_access_text))
                         .progress(true, 0)
                         .show();
-                Log.i(TAG, "Check if SU is available, and request SU permission if it is");
+                log("Check if SU is available, and request SU permission if it is");
                 Tasks.executeInBackground(getActivity(), new BackgroundWork<Boolean>() {
                     @Override
                     public Boolean doInBackground() throws Exception {
@@ -263,14 +269,14 @@ public class DozeTunablesActivity extends AppCompatActivity {
                         }
                         isSuAvailable = result;
                         suAvailable = isSuAvailable;
-                        Log.i(TAG, "SU available: " + Boolean.toString(result));
+                        log("SU available: " + Boolean.toString(result));
                         if (isSuAvailable) {
-                            Log.i(TAG, "Phone is rooted and SU permission granted");
+                            log("Phone is rooted and SU permission granted");
                             if (!Utils.isSecureSettingsPermissionGranted(getActivity())) {
                                 executeCommand("pm grant com.suyashsrijan.forcedoze android.permission.WRITE_SECURE_SETTINGS");
                             }
                         } else {
-                            Log.i(TAG, "SU permission denied or not available");
+                            log("SU permission denied or not available");
                             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
                             builder.setTitle(getString(R.string.error_text));
                             builder.setMessage(getString(R.string.tunables_su_not_available_error_text));
@@ -302,7 +308,7 @@ public class DozeTunablesActivity extends AppCompatActivity {
                     if (output != null) {
                         printShellOutput(output);
                     } else {
-                        Log.i(TAG, "Error occurred while executing command (" + command + ")");
+                        log("Error occurred while executing command (" + command + ")");
                     }
                 }
             });
@@ -311,7 +317,7 @@ public class DozeTunablesActivity extends AppCompatActivity {
         public void printShellOutput(List<String> output) {
             if (!output.isEmpty()) {
                 for (String s : output) {
-                    Log.i(TAG, s);
+                    log(s);
                 }
             }
         }

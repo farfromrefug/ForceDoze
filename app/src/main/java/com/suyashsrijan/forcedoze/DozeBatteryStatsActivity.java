@@ -1,5 +1,7 @@
 package com.suyashsrijan.forcedoze;
 
+import static com.suyashsrijan.forcedoze.Utils.logToLogcat;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -40,6 +42,10 @@ public class DozeBatteryStatsActivity extends AppCompatActivity {
     SharedPreferences.Editor editor;
     public static String TAG = "ForceDoze";
 
+    private static void log(String message) {
+        logToLogcat(TAG, message);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,18 +63,18 @@ public class DozeBatteryStatsActivity extends AppCompatActivity {
             sortedDozeUsageStats = new ArrayList<>(dozeUsageStats);
             Collections.sort(sortedDozeUsageStats);
             Collections.reverse(sortedDozeUsageStats);
-            Log.i(TAG, "Size: " + sortedDozeUsageStats.size());
+            log("Size: " + sortedDozeUsageStats.size());
 
             if (sharedPreferences.contains("dozeUsageData")) {
-                Log.i(TAG, "Found old stats data, deleting..");
+                log("Found old stats data, deleting..");
                 editor.remove("dozeUsageData").commit();
             } else if (sharedPreferences.contains("dozeUsageDataNew")) {
-                Log.i(TAG, "Found old stats data, deleting..");
+                log("Found old stats data, deleting..");
                 editor.remove("dozeUsageDataNew").commit();
             }
 
             if (sortedDozeUsageStats.size() > 100) {
-                Log.i(TAG, "Trimming stats data to most recent 100 entries...");
+                log("Trimming stats data to most recent 100 entries...");
                 int newSize = sortedDozeUsageStats.size() % 2 == 0 ? sortedDozeUsageStats.size() / 2 : (sortedDozeUsageStats.size() / 2) + 1;
                 ArrayList<String> tempArrayList1 = new ArrayList<>(sortedDozeUsageStats.subList(0, newSize));
                 ArrayList<String> tempArrayList2 = new ArrayList<>(sortedDozeUsageStats);
@@ -84,9 +90,9 @@ public class DozeBatteryStatsActivity extends AppCompatActivity {
 
                 for (int i = 0; i < sortedDozeUsageStats.size(); ) {
                     String[] exit_data = sortedDozeUsageStats.get(i).split(",");
-                    Log.i(TAG, "Exit data : [" + Arrays.toString(exit_data) + "]");
+                    log("Exit data : [" + Arrays.toString(exit_data) + "]");
                     String[] enter_data = sortedDozeUsageStats.get(i + 1).split(",");
-                    Log.i(TAG, "Enter data: [" + Arrays.toString(enter_data) + "]");
+                    log("Enter data: [" + Arrays.toString(enter_data) + "]");
 
                     if (enter_data[2].equals("ENTER") && exit_data[2].equals("EXIT")) {
                         Card card = new Card.Builder(this)
@@ -121,7 +127,7 @@ public class DozeBatteryStatsActivity extends AppCompatActivity {
                     }
                 }
             } else {
-                Log.i(TAG, "Missing log entries, redirecting users to old stats activity");
+                log("Missing log entries, redirecting users to old stats activity");
                 startActivity(new Intent(this, DozeStatsActivity.class));
                 finish();
             }
@@ -184,7 +190,7 @@ public class DozeBatteryStatsActivity extends AppCompatActivity {
         Tasks.executeInBackground(DozeBatteryStatsActivity.this, new BackgroundWork<Boolean>() {
             @Override
             public Boolean doInBackground() throws Exception {
-                Log.i(TAG, "Clearing Doze stats");
+                log("Clearing Doze stats");
                 editor.remove("dozeUsageDataAdvanced");
                 return editor.commit();
             }
@@ -195,7 +201,7 @@ public class DozeBatteryStatsActivity extends AppCompatActivity {
                     progressDialog.dismiss();
                 }
                 if (result) {
-                    Log.i(TAG, "Doze stats successfully cleared");
+                    log("Doze stats successfully cleared");
                     if (Utils.isMyServiceRunning(ForceDozeService.class, context)) {
                         Intent intent = new Intent("reload-settings");
                         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);

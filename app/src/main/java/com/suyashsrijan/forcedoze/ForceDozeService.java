@@ -46,6 +46,7 @@ import java.util.TimerTask;
 import eu.chainfire.libsuperuser.Shell;
 
 import static android.preference.PreferenceManager.getDefaultSharedPreferences;
+import static com.suyashsrijan.forcedoze.Utils.logToLogcat;
 
 public class ForceDozeService extends Service {
 
@@ -69,6 +70,8 @@ public class ForceDozeService extends Service {
     boolean wasMobileDataTurnedOn = false;
     boolean maintenance = false;
     boolean setPendingDozeEnterAlarm = false;
+    boolean disableStats = false;
+    boolean disableLogcat = false;
     int dozeEnterDelay = 0;
     Timer enterDozeTimer;
     Timer disableSensorsTimer;
@@ -95,6 +98,10 @@ public class ForceDozeService extends Service {
     int lastDozeExitBatteryLife = 0;
     String TAG = "ForceDozeService";
     String lastKnownState = "null";
+    
+    private void log(String message) {
+       logToLogcat(TAG, message);
+    }
 
     public ForceDozeService() {
     }
@@ -156,6 +163,8 @@ public class ForceDozeService extends Service {
         useAutoRotateAndBrightnessFix = getDefaultSharedPreferences(getApplicationContext()).getBoolean("autoRotateAndBrightnessFix", false);
         sensorWhitelistPackage = getDefaultSharedPreferences(getApplicationContext()).getString("sensorWhitelistPackage", "");
         enableSensors = getDefaultSharedPreferences(getApplicationContext()).getBoolean("enableSensors", false);
+        disableStats = getDefaultSharedPreferences(getApplicationContext()).getBoolean("disableStats", false);
+        disableLogcat = getDefaultSharedPreferences(getApplicationContext()).getBoolean("disableLogcat", false);
         disableWhenCharging = getDefaultSharedPreferences(getApplicationContext()).getBoolean("disableWhenCharging", true);
         isSuAvailable = getDefaultSharedPreferences(getApplicationContext()).getBoolean("isSuAvailable", false);
         showPersistentNotif = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("showPersistentNotif", true);
@@ -200,7 +209,7 @@ public class ForceDozeService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i(TAG, "Stopping service and enabling sensors");
+        log("Stopping service and enabling sensors");
         this.unregisterReceiver(localDozeReceiver);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(reloadSettingsReceiver);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(pendingIntentDozeReceiver);
@@ -220,7 +229,7 @@ public class ForceDozeService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        Log.i(TAG, "Service has now started");
+        log("Service has now started");
         if (showPersistentNotif) {
             showPersistentNotification();
         }
@@ -230,79 +239,83 @@ public class ForceDozeService extends Service {
     }
 
     public void reloadSettings() {
-        Log.i(TAG, "ForceDoze settings reloaded ----------------------------------");
+        log("ForceDoze settings reloaded ----------------------------------");
         dozeUsageData = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getStringSet("dozeUsageDataAdvanced", new LinkedHashSet<String>());
-        Log.i(TAG, "dozeUsageData: " + "Total Entries -> " + dozeUsageData.size());
+        log("dozeUsageData: " + "Total Entries -> " + dozeUsageData.size());
         turnOffDataInDoze = getDefaultSharedPreferences(getApplicationContext()).getBoolean("turnOffDataInDoze", false);
-        Log.i(TAG, "turnOffDataInDoze: " + turnOffDataInDoze);
+        log("turnOffDataInDoze: " + turnOffDataInDoze);
         turnOffWiFiInDoze = getDefaultSharedPreferences(getApplicationContext()).getBoolean("turnOffWiFiInDoze", false);
-        Log.i(TAG, "turnOffWiFiInDoze: " + turnOffWiFiInDoze);
+        log("turnOffWiFiInDoze: " + turnOffWiFiInDoze);
         whitelistMusicAppNetwork = getDefaultSharedPreferences(getApplicationContext()).getBoolean("whitelistMusicAppNetwork", false);
-        Log.i(TAG, "whitelistMusicAppNetwork: " + whitelistMusicAppNetwork);
+        log("whitelistMusicAppNetwork: " + whitelistMusicAppNetwork);
         ignoreLockscreenTimeout = getDefaultSharedPreferences(getApplicationContext()).getBoolean("ignoreLockscreenTimeout", false);
-        Log.i(TAG, "ignoreLockscreenTimeout: " + ignoreLockscreenTimeout);
+        log("ignoreLockscreenTimeout: " + ignoreLockscreenTimeout);
         dozeEnterDelay = getDefaultSharedPreferences(getApplicationContext()).getInt("dozeEnterDelay", 0);
-        Log.i(TAG, "dozeEnterDelay: " + dozeEnterDelay);
+        log("dozeEnterDelay: " + dozeEnterDelay);
         useAutoRotateAndBrightnessFix = getDefaultSharedPreferences(getApplicationContext()).getBoolean("autoRotateAndBrightnessFix", false);
-        Log.i(TAG, "useAutoRotateAndBrightnessFix: " + useAutoRotateAndBrightnessFix);
+        log("useAutoRotateAndBrightnessFix: " + useAutoRotateAndBrightnessFix);
         sensorWhitelistPackage = getDefaultSharedPreferences(getApplicationContext()).getString("sensorWhitelistPackage", "");
-        Log.i(TAG, "sensorWhitelistPackage: " + sensorWhitelistPackage);
+        log("sensorWhitelistPackage: " + sensorWhitelistPackage);
         enableSensors = getDefaultSharedPreferences(getApplicationContext()).getBoolean("enableSensors", false);
-        Log.i(TAG, "enableSensors: " + enableSensors);
+        log("enableSensors: " + enableSensors);
+        disableStats = getDefaultSharedPreferences(getApplicationContext()).getBoolean("disableStats", false);
+        log("disableStats: " + disableStats);
+        disableLogcat = getDefaultSharedPreferences(getApplicationContext()).getBoolean("disableLogcat", false);
+        log("disableLogcat: " + disableLogcat);
         disableWhenCharging = getDefaultSharedPreferences(getApplicationContext()).getBoolean("disableWhenCharging", true);
-        Log.i(TAG, "disableWhenCharging: " + disableWhenCharging);
+        log("disableWhenCharging: " + disableWhenCharging);
         showPersistentNotif = getDefaultSharedPreferences(getApplicationContext()).getBoolean("showPersistentNotif", false);
-        Log.i(TAG, "showPersistentNotif: " + showPersistentNotif);
+        log("showPersistentNotif: " + showPersistentNotif);
         useXposedSensorWorkaround = getDefaultSharedPreferences(getApplicationContext()).getBoolean("useXposedSensorWorkaround", false);
-        Log.i(TAG, "useXposedSensorWorkaround: " + useXposedSensorWorkaround);
+        log("useXposedSensorWorkaround: " + useXposedSensorWorkaround);
         useNonRootSensorWorkaround = getDefaultSharedPreferences(getApplicationContext()).getBoolean("useNonRootSensorWorkaround", false);
-        Log.i(TAG, "useNonRootSensorWorkaround: " + useNonRootSensorWorkaround);
-        Log.i(TAG, "ForceDoze settings reloaded ----------------------------------");
+        log("useNonRootSensorWorkaround: " + useNonRootSensorWorkaround);
+        log("ForceDoze settings reloaded ----------------------------------");
     }
 
     public void reloadNotificationBlockList() {
-        Log.i(TAG, "Notification blocklist reloaded ----------------------------------");
+        log("Notification blocklist reloaded ----------------------------------");
         dozeNotificationBlocklist = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getStringSet("notificationBlockList", new LinkedHashSet<String>());
-        Log.i(TAG, "notificationBlockList: " + dozeNotificationBlocklist.size() + " items");
-        Log.i(TAG, "Notification blocklist reloaded ----------------------------------");
+        log("notificationBlockList: " + dozeNotificationBlocklist.size() + " items");
+        log("Notification blocklist reloaded ----------------------------------");
     }
 
     public void reloadAppsBlockList() {
-        Log.i(TAG, "Apps blocklist reloaded ----------------------------------");
+        log("Apps blocklist reloaded ----------------------------------");
         dozeAppBlocklist = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getStringSet("dozeAppBlockList", new LinkedHashSet<String>());
-        Log.i(TAG, "dozeAppBlockList: " + dozeAppBlocklist.size() + " items");
-        Log.i(TAG, "Apps blocklist reloaded ----------------------------------");
+        log("dozeAppBlockList: " + dozeAppBlocklist.size() + " items");
+        log("Apps blocklist reloaded ----------------------------------");
     }
 
     public void grantDumpPermission() {
-        Log.i(TAG, "Granting android.permission.DUMP to com.suyashsrijan.forcedoze");
+        log("Granting android.permission.DUMP to com.suyashsrijan.forcedoze");
         executeCommandWithRoot("pm grant com.suyashsrijan.forcedoze android.permission.DUMP");
     }
 
     public void grantSecureSettingsPermission() {
-        Log.i(TAG, "Granting android.permission.WRITRE_SECURE_SETTINGS to com.suyashsrijan.forcedoze");
+        log("Granting android.permission.WRITRE_SECURE_SETTINGS to com.suyashsrijan.forcedoze");
         executeCommandWithRoot("pm grant com.suyashsrijan.forcedoze android.permission.WRITE_SECURE_SETTINGS");
     }
 
     public void grantReadPhoneStatePermission() {
-        Log.i(TAG, "Granting android.permission.READ_PHONE_STATE to com.suyashsrijan.forcedoze");
+        log("Granting android.permission.READ_PHONE_STATE to com.suyashsrijan.forcedoze");
         executeCommandWithRoot("pm grant com.suyashsrijan.forcedoze android.permission.READ_PHONE_STATE");
     }
 
     public void addSelfToDozeWhitelist() {
-        Log.i(TAG, "Checking self-whitelist capability....");
-        Log.i(TAG, "Nougat: " + Utils.isDeviceRunningOnN());
-        Log.i(TAG, "SU available: " + isSuAvailable);
+        log("Checking self-whitelist capability....");
+        log("Nougat: " + Utils.isDeviceRunningOnN());
+        log("SU available: " + isSuAvailable);
         String packageName = getPackageName();
         if (!pm.isIgnoringBatteryOptimizations(packageName)) {
             if (!Utils.isDeviceRunningOnN()) {
-                Log.i(TAG, "Adding service to Doze whitelist for stability");
+                log("Adding service to Doze whitelist for stability");
                 executeCommand("dumpsys deviceidle whitelist +com.suyashsrijan.forcedoze");
             } else if (Utils.isDeviceRunningOnN() && isSuAvailable) {
-                Log.i(TAG, "Adding service to Doze whitelist for stability");
+                log("Adding service to Doze whitelist for stability");
                 executeCommandWithRoot("dumpsys deviceidle whitelist +com.suyashsrijan.forcedoze");
             } else {
-                Log.i(TAG, "Service cannot be added to Doze whitelist because user is on Nougat. Showing notification...");
+                log("Service cannot be added to Doze whitelist because user is on Nougat. Showing notification...");
                 Intent notificationIntent = new Intent();
                 notificationIntent.setAction(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS);
                 PendingIntent intent = PendingIntent.getActivity(getApplicationContext(), 0,
@@ -319,7 +332,7 @@ public class ForceDozeService extends Service {
                 notificationManager.notify(8765, n);
             }
         } else {
-            Log.i(TAG, "Service already in Doze whitelist for stability");
+            log("Service already in Doze whitelist for stability");
         }
     }
 
@@ -329,20 +342,20 @@ public class ForceDozeService extends Service {
                 lastKnownState = "IDLE";
                 if (tempWakeLock != null) {
                     if (tempWakeLock.isHeld()) {
-                        Log.i(TAG, "Releasing ForceDozeTempWakelock");
+                        log("Releasing ForceDozeTempWakelock");
                         tempWakeLock.release();
                     }
                 }
 
                 if (dozeAppBlocklist.size() != 0) {
-                    Log.i(TAG, "Disabling apps that are in the Doze app blocklist");
+                    log("Disabling apps that are in the Doze app blocklist");
                     for (String pkg : dozeAppBlocklist) {
                         setPackageState(pkg, false);
                     }
                 }
 
                 if (dozeNotificationBlocklist.size() != 0) {
-                    Log.i(TAG, "Disabling notifications for apps in the Notification blocklist");
+                    log("Disabling notifications for apps in the Notification blocklist");
                     for (String pkg : dozeNotificationBlocklist) {
                         if (!dozeAppBlocklist.contains(pkg)) {
                             setNotificationEnabledForPackage(pkg, false);
@@ -355,21 +368,23 @@ public class ForceDozeService extends Service {
                 } else {
                     lastDozeEnterBatteryLife = Utils.getBatteryLevel(getApplicationContext());
                 }
-                Log.i(TAG, "Entering Doze");
+                log("Entering Doze");
                 if (Utils.isDeviceRunningOnN()) {
                     if (isSuAvailable) {
                         executeCommandWithRoot("dumpsys deviceidle force-idle deep");
                     } else {
-                        Log.i(TAG, "Unrooted device, putting custom values in device_idle_constants...");
+                        log("Unrooted device, putting custom values in device_idle_constants...");
                         Settings.Global.putString(getContentResolver(), "device_idle_constants", "inactive_to=600000,light_after_inactive_to=300000,idle_after_inactive_to=5100,sensing_to=5100,locating_to=5100,location_accuracy=10000");
                     }
                 } else {
                     executeCommand("dumpsys deviceidle force-idle");
                 }
                 lastScreenOff = Utils.getDateCurrentTimeZone(System.currentTimeMillis());
-
-                dozeUsageData.add(Long.toString(System.currentTimeMillis()).concat(",").concat(Float.toString(Utils.isConnectedToCharger(getApplicationContext()) ? 0.0f : Utils.getBatteryLevel(getApplicationContext()))).concat(",").concat("ENTER"));
-                saveDozeDataStats();
+                
+                if (!disableStats) {
+                    dozeUsageData.add(Long.toString(System.currentTimeMillis()).concat(",").concat(Float.toString(Utils.isConnectedToCharger(getApplicationContext()) ? 0.0f : Utils.getBatteryLevel(getApplicationContext()))).concat(",").concat("ENTER"));
+                    saveDozeDataStats();
+                }
 
                 if (!useXposedSensorWorkaround) {
                     if (!enableSensors) {
@@ -377,29 +392,29 @@ public class ForceDozeService extends Service {
                         disableSensorsTimer.schedule(new TimerTask() {
                             @Override
                             public void run() {
-                                Log.i(TAG, "Disabling motion sensors");
+                                log("Disabling motion sensors");
                                 if (sensorWhitelistPackage.equals("")) {
                                     executeCommand("dumpsys sensorservice restrict");
                                 } else {
-                                    Log.i(TAG, "Package " + sensorWhitelistPackage + " is whitelisted from sensorservice");
-                                    Log.i(TAG, "Note: Packages that get whitelisted are supposed to request sensor access again, if the app doesn't work, email the dev of that app!");
+                                    log("Package " + sensorWhitelistPackage + " is whitelisted from sensorservice");
+                                    log("Note: Packages that get whitelisted are supposed to request sensor access again, if the app doesn't work, email the dev of that app!");
                                     executeCommand("dumpsys sensorservice restrict " + sensorWhitelistPackage);
                                 }
                             }
                         }, 2000);
                     } else {
-                        Log.i(TAG, "Not disabling motion sensors because enableSensors=true");
+                        log("Not disabling motion sensors because enableSensors=true");
                     }
                 } else {
-                    Log.i(TAG, "Xposed Sensor workaround selected, not disabling sensors");
+                    log("Xposed Sensor workaround selected, not disabling sensors");
                 }
                 enterDozeHandleNetwork(context);
 
             } else {
-                Log.i(TAG, "Screen is on, skip entering Doze");
+                log("Screen is on, skip entering Doze");
             }
         } else {
-            Log.i(TAG, "enterDoze() received but skipping because device is already Dozing");
+            log("enterDoze() received but skipping because device is already Dozing");
         }
     }
 
@@ -421,20 +436,22 @@ public class ForceDozeService extends Service {
             executeCommand("dumpsys deviceidle step");
         }
 
-        Log.i(TAG, "Current Doze state: " + getDeviceIdleState());
+        log("Current Doze state: " + getDeviceIdleState());
 
-        dozeUsageData.add(Long.toString(System.currentTimeMillis()).concat(",").concat(Float.toString(Utils.isConnectedToCharger(getApplicationContext()) ? 0.0f : Utils.getBatteryLevel(getApplicationContext()))).concat(",").concat("EXIT"));
-        saveDozeDataStats();
+        if (!disableStats) {
+            dozeUsageData.add(Long.toString(System.currentTimeMillis()).concat(",").concat(Float.toString(Utils.isConnectedToCharger(getApplicationContext()) ? 0.0f : Utils.getBatteryLevel(getApplicationContext()))).concat(",").concat("EXIT"));
+            saveDozeDataStats();
+        }
 
         if (dozeAppBlocklist.size() != 0) {
-            Log.i(TAG, "Re-enabling apps that are in the Doze app blocklist");
+            log("Re-enabling apps that are in the Doze app blocklist");
             for (String pkg : dozeAppBlocklist) {
                 setPackageState(pkg, true);
             }
         }
 
         if (dozeNotificationBlocklist.size() != 0) {
-            Log.i(TAG, "Re-enabling notifications for apps in the Notification blocklist");
+            log("Re-enabling notifications for apps in the Notification blocklist");
             for (String pkg : dozeNotificationBlocklist) {
                 if (!dozeAppBlocklist.contains(pkg)) {
                     setNotificationEnabledForPackage(pkg, true);
@@ -448,7 +465,7 @@ public class ForceDozeService extends Service {
                 enableSensorsTimer.schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        Log.i(TAG, "Re-enabling motion sensors");
+                        log("Re-enabling motion sensors");
                         executeCommand("dumpsys sensorservice enable");
                         autoRotateBrightnessFix();
                     }
@@ -498,7 +515,7 @@ public class ForceDozeService extends Service {
                         setMinimalLogging(true).
                         open((success, reason) -> {
                             if (reason != Shell.OnShellOpenResultListener.SHELL_RUNNING) {
-                                Log.i(TAG, "Error opening shell: exitCode " + reason);
+                                log("Error opening shell: exitCode " + reason);
                             } else {
                                 nonRootSession.addCommand(command, 0, (Shell.OnCommandResultListener2) (commandCode, exitCode, STDOUT, STDERR) -> {
                                     if (onResult != null) {
@@ -530,7 +547,7 @@ public class ForceDozeService extends Service {
                         setMinimalLogging(true).
                         open((success, reason) -> {
                             if (reason != Shell.OnShellOpenResultListener.SHELL_RUNNING) {
-                                Log.i(TAG, "Error opening root shell: exitCode " + reason);
+                                log("Error opening root shell: exitCode " + reason);
                             } else {
                                 rootSession.addCommand(command, 0, (Shell.OnCommandResultListener2) (commandCode, exitCode, STDOUT, STDERR) -> {
                                     if (onResult != null) {
@@ -547,7 +564,7 @@ public class ForceDozeService extends Service {
     public void printShellOutput(List<String> output) {
         if (output != null && !output.isEmpty()) {
             for (String s : output) {
-                Log.i(TAG, s);
+                log(s);
             }
         }
     }
@@ -563,33 +580,33 @@ public class ForceDozeService extends Service {
 
     public void autoRotateBrightnessFix() {
         if (useAutoRotateAndBrightnessFix && Utils.isWriteSettingsPermissionGranted(getApplicationContext())) {
-            Log.i(TAG, "Executing auto-rotate fix by doing a toggle");
-            Log.i(TAG, "Current value: " + (Utils.isAutoRotateEnabled(getApplicationContext())) + " to " + (!Utils.isAutoRotateEnabled(getApplicationContext())));
+            log("Executing auto-rotate fix by doing a toggle");
+            log("Current value: " + (Utils.isAutoRotateEnabled(getApplicationContext())) + " to " + (!Utils.isAutoRotateEnabled(getApplicationContext())));
             Utils.setAutoRotateEnabled(getApplicationContext(), !Utils.isAutoRotateEnabled(getApplicationContext()));
             try {
-                Log.i(TAG, "Sleeping for 100ms");
+                log("Sleeping for 100ms");
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 Log.e(TAG, e.toString());
             }
-            Log.i(TAG, "Current value: " + (Utils.isAutoRotateEnabled(getApplicationContext())) + " to " + !Utils.isAutoRotateEnabled(getApplicationContext()));
+            log("Current value: " + (Utils.isAutoRotateEnabled(getApplicationContext())) + " to " + !Utils.isAutoRotateEnabled(getApplicationContext()));
             Utils.setAutoRotateEnabled(getApplicationContext(), !Utils.isAutoRotateEnabled(getApplicationContext()));
             try {
-                Log.i(TAG, "Sleeping for 100ms");
+                log("Sleeping for 100ms");
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 Log.e(TAG, e.toString());
             }
-            Log.i(TAG, "Executing auto-brightness fix by doing a toggle");
-            Log.i(TAG, "Current value: " + (Utils.isAutoBrightnessEnabled(getApplicationContext())) + " to " + (!Utils.isAutoBrightnessEnabled(getApplicationContext())));
+            log("Executing auto-brightness fix by doing a toggle");
+            log("Current value: " + (Utils.isAutoBrightnessEnabled(getApplicationContext())) + " to " + (!Utils.isAutoBrightnessEnabled(getApplicationContext())));
             Utils.setAutoBrightnessEnabled(getApplicationContext(), !Utils.isAutoBrightnessEnabled(getApplicationContext()));
             try {
-                Log.i(TAG, "Sleeping for 100ms");
+                log("Sleeping for 100ms");
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 Log.e(TAG, e.toString());
             }
-            Log.i(TAG, "Current value: " + (Utils.isAutoBrightnessEnabled(getApplicationContext())) + " to " + (!Utils.isAutoBrightnessEnabled(getApplicationContext())));
+            log("Current value: " + (Utils.isAutoBrightnessEnabled(getApplicationContext())) + " to " + (!Utils.isAutoBrightnessEnabled(getApplicationContext())));
             Utils.setAutoBrightnessEnabled(getApplicationContext(), !Utils.isAutoBrightnessEnabled(getApplicationContext()));
         }
     }
@@ -649,15 +666,15 @@ public class ForceDozeService extends Service {
                     Shell.Pool.SU.run(command, output, err, false);
                     if (err.isEmpty()) {
                         for (String s : output) {
-                            Log.i(TAG, s);
+                            log(s);
                         }
                     } else {
-                        Log.i(TAG, "Error occurred while executing command (" + err + ")");
+                        log("Error occurred while executing command (" + err + ")");
                     }
                 }
             }
         } catch (Exception e) {
-            Log.i(TAG, "Failed to toggle mobile data: " + e.getMessage());
+            log("Failed to toggle mobile data: " + e.getMessage());
         }
     }
 
@@ -686,18 +703,18 @@ public class ForceDozeService extends Service {
             field.setAccessible(true);
             command = field.getInt(null);
         } catch (ClassNotFoundException e) {
-            Log.i(TAG, e.toString());
+            log(e.toString());
         } catch (NoSuchFieldException e2) {
-            Log.i(TAG, e2.toString());
+            log(e2.toString());
         } catch (IllegalAccessException e3) {
-            Log.i(TAG, e3.toString());
+            log(e3.toString());
         }
 
         ArrayList<PackageInfo> packageInfos = new ArrayList<>(getPackageManager().getInstalledPackages(PackageManager.GET_META_DATA));
 
         for (PackageInfo p : packageInfos) {
             if (p.packageName.equals(packageName)) {
-                Log.i(TAG, (enabled ? "Turning on " : "Turning off ") + "notifications for " + packageName);
+                log((enabled ? "Turning on " : "Turning off ") + "notifications for " + packageName);
                 String exec = String.format(Locale.US, "service call notification %d s16 %s i32 %d i32 %d", command, packageName, p.applicationInfo.uid, enabled ? 1 : 0);
                 executeCommandWithRoot(exec);
             }
@@ -705,12 +722,12 @@ public class ForceDozeService extends Service {
     }
 
     public void setPackageState(String packageName, boolean enabled) {
-        Log.i(TAG, (enabled ? "Enabling " : "Disabling ") + packageName);
+        log((enabled ? "Enabling " : "Disabling ") + packageName);
         executeCommandWithRoot("pm " + (enabled ? "enable " : "disable ") + packageName);
     }
 
     public String getDeviceIdleState() {
-        Log.i(TAG, "Fetching Device Idle state...");
+        log("Fetching Device Idle state...");
         if (Utils.isDeviceRunningOnN()) {
             if (isSuAvailable) {
                 if (rootSession != null) {
@@ -787,7 +804,7 @@ public class ForceDozeService extends Service {
     public void disableMobileData() {
         executeCommandWithRoot("svc data disable", (commandCode, exitCode, STDOUT, STDERR) -> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                Log.i(TAG, "disableMobileData: " + Utils.isMobileDataEnabled(getApplicationContext()));
+                log("disableMobileData: " + Utils.isMobileDataEnabled(getApplicationContext()));
             }
         });
     }
@@ -795,7 +812,7 @@ public class ForceDozeService extends Service {
     public void enableMobileData() {
         executeCommandWithRoot("svc data enable", (commandCode, exitCode, STDOUT, STDERR) -> {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                Log.i(TAG, "enableMobileData: " + Utils.isMobileDataEnabled(getApplicationContext()));
+                log("enableMobileData: " + Utils.isMobileDataEnabled(getApplicationContext()));
             }
         });
     }
@@ -813,7 +830,7 @@ public class ForceDozeService extends Service {
     class ReloadSettingsReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.i(TAG, "User changed a setting, loading new settings into service");
+            log("User changed a setting, loading new settings into service");
             reloadSettings();
         }
     }
@@ -821,7 +838,7 @@ public class ForceDozeService extends Service {
     class ReloadNotificationBlocklistReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.i(TAG, "User modified Notification blocklist, loading new packages into service");
+            log("User modified Notification blocklist, loading new packages into service");
             reloadNotificationBlockList();
         }
     }
@@ -829,7 +846,7 @@ public class ForceDozeService extends Service {
     class ReloadAppsBlocklistReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.i(TAG, "User modified Doze app blocklist, loading new packages into service");
+            log("User modified Doze app blocklist, loading new packages into service");
             reloadAppsBlockList();
         }
     }
@@ -837,7 +854,7 @@ public class ForceDozeService extends Service {
     class PendingIntentDozeReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.i(TAG, "Pending intent broadcast received");
+            log("Pending intent broadcast received");
             setPendingDozeEnterAlarm = false;
             if (Utils.isDeviceRunningOnN()) {
                 if (isSuAvailable) {
@@ -852,18 +869,18 @@ public class ForceDozeService extends Service {
     }
 
     public void actualEnterDozeHandleNetwork(Context context, String packageName) {
-        Log.i(TAG, "playingPackageName: " + packageName);
+        log("playingPackageName: " + packageName);
         wasWiFiTurnedOn = Utils.isWiFiEnabled(context);
         wasMobileDataTurnedOn = Utils.isMobileDataEnabled(context);
 
 
         if (turnOffWiFiInDoze && wasWiFiTurnedOn && packageName == null) {
-            Log.i(TAG, "Disabling WiFi");
+            log("Disabling WiFi");
             disableWiFi();
         }
 
         if (turnOffDataInDoze && wasMobileDataTurnedOn && (packageName == null || wasWiFiTurnedOn)) {
-            Log.i(TAG, "Disabling mobile data");
+            log("Disabling mobile data");
             disableMobileData();
         }
     }
@@ -883,9 +900,9 @@ public class ForceDozeService extends Service {
 
     public void leaveDozeHandleNetwork(Context context) {
         if (turnOffWiFiInDoze) {
-            Log.i(TAG, "wasWiFiTurnedOn: " + wasWiFiTurnedOn);
+            log("wasWiFiTurnedOn: " + wasWiFiTurnedOn);
             if (wasWiFiTurnedOn) {
-                Log.i(TAG, "Enabling WiFi");
+                log("Enabling WiFi");
                 enableWiFi();
                 wasWiFiTurnedOn = false;
             }
@@ -893,9 +910,9 @@ public class ForceDozeService extends Service {
         }
 
         if (turnOffDataInDoze) {
-            Log.i(TAG, "wasDataTurnedOn: " + wasMobileDataTurnedOn);
+            log("wasDataTurnedOn: " + wasMobileDataTurnedOn);
             if (wasMobileDataTurnedOn) {
-                Log.i(TAG, "Enabling mobile data");
+                log("Enabling mobile data");
                 enableMobileData();
                 wasMobileDataTurnedOn = false;
             }
@@ -914,12 +931,12 @@ public class ForceDozeService extends Service {
             time = time + delay;
 
             if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
-                Log.i(TAG, "Screen ON received");
-                Log.i(TAG, "Last known Doze state: " + lastKnownState);
+                log("Screen ON received");
+                log("Last known Doze state: " + lastKnownState);
 
                 if (tempWakeLock != null) {
                     if (tempWakeLock.isHeld()) {
-                        Log.i(TAG, "Releasing ForceDozeTempWakelock");
+                        log("Releasing ForceDozeTempWakelock");
                         tempWakeLock.release();
                     }
                 }
@@ -927,35 +944,35 @@ public class ForceDozeService extends Service {
                 leaveDozeHandleNetwork(context);
 
                 if (!getDeviceIdleState().equals("ACTIVE") || !lastKnownState.equals("ACTIVE")) {
-                    Log.i(TAG, "Exiting Doze");
+                    log("Exiting Doze");
                     exitDoze();
                 } else {
                     if (ignoreLockscreenTimeout) {
-                        Log.i(TAG, "Cancelling enterDoze() because user turned on screen and " + (delay) + "ms has not passed OR disableWhenCharging=true");
+                        log("Cancelling enterDoze() because user turned on screen and " + (delay) + "ms has not passed OR disableWhenCharging=true");
                     } else {
-                        Log.i(TAG, "Cancelling enterDoze() because user turned on screen and " + (time) + "ms has not passed OR disableWhenCharging=true");
+                        log("Cancelling enterDoze() because user turned on screen and " + (time) + "ms has not passed OR disableWhenCharging=true");
                     }
                     enterDozeTimer.cancel();
                 }
 
             } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
-                Log.i(TAG, "Screen OFF received");
+                log("Screen OFF received");
                 if (Utils.isConnectedToCharger(getApplicationContext()) && disableWhenCharging) {
-                    Log.i(TAG, "Connected to charger and disableWhenCharging=true, skip entering Doze");
+                    log("Connected to charger and disableWhenCharging=true, skip entering Doze");
                 } else if (Utils.isUserInCommunicationCall(context)) {
-                    Log.i(TAG, "User is in a VOIP call or an audio/video chat, skip entering Doze");
+                    log("User is in a VOIP call or an audio/video chat, skip entering Doze");
                 } else if (Utils.isUserInCall(context)) {
-                    Log.i(TAG, "User is in a phone call, skip entering Doze");
+                    log("User is in a phone call, skip entering Doze");
                 } else {
-                    Log.i(TAG, "Doze delay: " + delay + "ms");
+                    log("Doze delay: " + delay + "ms");
                     if (ignoreLockscreenTimeout) {
                         if (dozeEnterDelay == 0) {
-                            Log.i(TAG, "Ignoring lockscreen timeout value and entering Doze immediately");
+                            log("Ignoring lockscreen timeout value and entering Doze immediately");
                             enterDoze(context);
                         } else {
-                            Log.i(TAG, "Waiting for " + (delay) + "ms and then entering Doze");
+                            log("Waiting for " + (delay) + "ms and then entering Doze");
                             tempWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "forcedoze:tempWakelock");
-                            Log.i(TAG, "Acquiring temporary wakelock (ForceDozeTempWakelock)");
+                            log("Acquiring temporary wakelock (ForceDozeTempWakelock)");
                             tempWakeLock.acquire(10*60*1000L /*10 minutes*/);
                             enterDozeTimer = new Timer();
                             enterDozeTimer.schedule(new TimerTask() {
@@ -966,10 +983,10 @@ public class ForceDozeService extends Service {
                             }, delay);
                         }
                     } else {
-                        Log.i(TAG, "Waiting for " + (time) + "ms and then entering Doze");
+                        log("Waiting for " + (time) + "ms and then entering Doze");
                         if (Utils.isLockscreenTimeoutValueTooHigh(getContentResolver())) {
                             tempWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "forcedoze:tempWakelock");
-                            Log.i(TAG, "Acquiring temporary wakelock (ForceDozeTempWakelock)");
+                            log("Acquiring temporary wakelock (ForceDozeTempWakelock)");
                             tempWakeLock.acquire(10*60*1000L /*10 minutes*/);
                         }
                         enterDozeTimer = new Timer();
@@ -984,31 +1001,35 @@ public class ForceDozeService extends Service {
                 }
             } else if (intent.getAction().equals(Intent.ACTION_POWER_CONNECTED)) {
                 if ((getDeviceIdleState().equals("IDLE") || !Utils.isScreenOn(context)) && disableWhenCharging) {
-                    Log.i(TAG, "Charger connected, exiting Doze mode");
+                    log("Charger connected, exiting Doze mode");
                     enterDozeTimer.cancel();
                     exitDoze();
                 }
             } else if (intent.getAction().equals(PowerManager.ACTION_DEVICE_IDLE_MODE_CHANGED)) {
                 if (!Utils.isScreenOn(context)) {
-                    Log.i(TAG, "ACTION_DEVICE_IDLE_MODE_CHANGED received");
+                    log("ACTION_DEVICE_IDLE_MODE_CHANGED received");
                     lastKnownState = getDeviceIdleState();
-                    Log.i(TAG, "Current (Deep) state: " + getDeviceIdleState());
+                    log("Current (Deep) state: " + getDeviceIdleState());
                 }
 
                 if (!Utils.isScreenOn(context) && getDeviceIdleState().equals("IDLE_MAINTENANCE")) {
                     if (!maintenance) {
-                        Log.i(TAG, "Device exited Doze for maintenance");
-                        dozeUsageData.add(Long.toString(System.currentTimeMillis()).concat(",").concat(Float.toString(Utils.getBatteryLevel(getApplicationContext()))).concat(",").concat("EXIT_MAINTENANCE"));
-                        saveDozeDataStats();
+                        log("Device exited Doze for maintenance");
+                        if (!disableStats) {
+                            dozeUsageData.add(Long.toString(System.currentTimeMillis()).concat(",").concat(Float.toString(Utils.getBatteryLevel(getApplicationContext()))).concat(",").concat("EXIT_MAINTENANCE"));
+                            saveDozeDataStats();
+                        }
 
                         leaveDozeHandleNetwork(context);
                         maintenance = true;
                     }
                 } else if (!Utils.isScreenOn(context) && getDeviceIdleState().equals("IDLE")) {
                     if (maintenance) {
-                        Log.i(TAG, "Device entered Doze after maintenance");
-                        dozeUsageData.add(Long.toString(System.currentTimeMillis()).concat(",").concat(Float.toString(Utils.getBatteryLevel(getApplicationContext()))).concat(",").concat("ENTER_MAINTENANCE"));
-                        saveDozeDataStats();
+                        log("Device entered Doze after maintenance");
+                        if (!disableStats) {
+                            dozeUsageData.add(Long.toString(System.currentTimeMillis()).concat(",").concat(Float.toString(Utils.getBatteryLevel(getApplicationContext()))).concat(",").concat("ENTER_MAINTENANCE"));
+                            saveDozeDataStats();
+                        }
                         enterDozeHandleNetwork(context);
                         maintenance = false;
                     }
@@ -1017,7 +1038,7 @@ public class ForceDozeService extends Service {
                 if (useNonRootSensorWorkaround) {
                     if (!setPendingDozeEnterAlarm) {
                         if (!Utils.isScreenOn(context) && (!getDeviceIdleState().equals("IDLE") || !getDeviceIdleState().equals("IDLE_MAINTENANCE"))) {
-                            Log.i(TAG, "Device gone out of Doze, scheduling pendingIntent for enterDoze in 15 mins");
+                            log("Device gone out of Doze, scheduling pendingIntent for enterDoze in 15 mins");
                             reenterDozePendingIntent = PendingIntent.getBroadcast(context, 1, new Intent(context, ReenterDoze.class), PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE);
                             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 900000, reenterDozePendingIntent);
                             setPendingDozeEnterAlarm = true;
@@ -1026,8 +1047,8 @@ public class ForceDozeService extends Service {
                 }
             } else if (intent.getAction().equals("android.os.action.LIGHT_DEVICE_IDLE_MODE_CHANGED")) {
                 if (!Utils.isScreenOn(context)) {
-                    Log.i(TAG, "LIGHT_DEVICE_IDLE_MODE_CHANGED received");
-                    Log.i(TAG, "Current (Light) state: " + getDeviceIdleState());
+                    log("LIGHT_DEVICE_IDLE_MODE_CHANGED received");
+                    log("Current (Light) state: " + getDeviceIdleState());
                     lastKnownState = getDeviceIdleState();
                 }
             }

@@ -97,6 +97,16 @@
             android:title="@string/doze_sensors_xposed_setting_title" />
     </PreferenceCategory>-->
     <PreferenceCategory android:title="Other">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="disableStats"
+            android:summary="@string/disable_stats_setting_summary"
+            android:title="@string/disable_stats_setting_title" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="disableLogcat"
+            android:summary="@string/disable_logcat_setting_summary"
+            android:title="@string/disable_logcat_setting_title" />
         <Preference
             android:key="resetForceDoze"
             android:summary="@string/reset_forcedoze_setting_summary"

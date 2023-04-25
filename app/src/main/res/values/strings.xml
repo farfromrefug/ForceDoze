@@ -160,4 +160,8 @@
 
     <string name="whitelist_music_app_network_setting_title">Whitelist music app</string>
     <string name="whitelist_music_app_network_setting_summary">Don\'t turn off all networks if music is playing</string>
+    <string name="disable_stats_setting_summary">Disable ForceDoze statistics</string>
+    <string name="disable_stats_setting_title">Disable statistics</string>
+    <string name="disable_logcat_setting_summary">Prevent ForceDoze from logging to system logcat</string>
+    <string name="disable_logcat_setting_title">Disable Logcat</string>
 </resources>

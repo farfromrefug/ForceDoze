@@ -1,5 +1,7 @@
 package com.suyashsrijan.forcedoze;
 
+import static com.suyashsrijan.forcedoze.Utils.logToLogcat;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -35,6 +37,10 @@ public class DozeStatsActivity extends AppCompatActivity {
     BatteryConsumptionAdapter batteryConsumptionAdapter;
     MaterialDialog progressDialog = null;
     public static String TAG = "ForceDoze";
+
+    private static void log(String message) {
+        logToLogcat(TAG, message);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +100,7 @@ public class DozeStatsActivity extends AppCompatActivity {
         Tasks.executeInBackground(DozeStatsActivity.this, new BackgroundWork<Boolean>() {
             @Override
             public Boolean doInBackground() throws Exception {
-                Log.i(TAG, "Clearing Doze stats");
+                log("Clearing Doze stats");
                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.remove("dozeUsageDataAdvanced");
@@ -107,7 +113,7 @@ public class DozeStatsActivity extends AppCompatActivity {
                     progressDialog.dismiss();
                 }
                 if (result) {
-                    Log.i(TAG, "Doze stats successfully cleared");
+                    log("Doze stats successfully cleared");
                     if (Utils.isMyServiceRunning(ForceDozeService.class, context)) {
                         Intent intent = new Intent("reload-settings");
                         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);

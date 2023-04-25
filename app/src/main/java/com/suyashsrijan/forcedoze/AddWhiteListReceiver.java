@@ -1,5 +1,7 @@
 package com.suyashsrijan.forcedoze;
 
+import static com.suyashsrijan.forcedoze.Utils.logToLogcat;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,12 +14,14 @@ import eu.chainfire.libsuperuser.Shell;
 
 public class AddWhiteListReceiver extends BroadcastReceiver {
     public static String TAG = "ForceDoze";
-
+    private static void log(String message) {
+        logToLogcat(TAG, message);
+    }
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.i(TAG, "com.suyashsrijan.forcedoze.ADD_WHITELIST broadcast intent received");
+        log("com.suyashsrijan.forcedoze.ADD_WHITELIST broadcast intent received");
         final String packageName = intent.getStringExtra("packageName");
-        Log.i(TAG, "Package name received: " + packageName);
+        log("Package name received: " + packageName);
         if (packageName != null) {
             AsyncTask.execute(new Runnable() {
                 @Override
@@ -25,15 +29,15 @@ public class AddWhiteListReceiver extends BroadcastReceiver {
                     List<String> output = Shell.SH.run("dumpsys deviceidle whitelist +" + packageName);
                     if (output != null) {
                         for (String s : output) {
-                            Log.i(TAG, s);
+                            log(s);
                         }
                     } else {
-                        Log.i(TAG, "Error occurred while executing command (" + "dumpsys deviceidle whitelist +packagename" + ")");
+                        log("Error occurred while executing command (" + "dumpsys deviceidle whitelist +packagename" + ")");
                     }
                 }
             });
         } else {
-            Log.i(TAG, "Package name null or empty");
+            log("Package name null or empty");
         }
     }
 }
