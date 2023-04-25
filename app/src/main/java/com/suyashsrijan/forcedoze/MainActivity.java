@@ -40,7 +40,7 @@ import com.nanotasks.Tasks;
 
 import java.util.List;
 
-import de.cketti.library.changelog.ChangeLog;
+//import de.cketti.library.changelog.ChangeLog;
 import eu.chainfire.libsuperuser.Shell;
 import eu.chainfire.libsuperuser.StreamGobbler;
 
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     boolean isDumpPermGranted = false;
     boolean isWriteSecureSettingsPermGranted = false;
     boolean ignoreLockscreenTimeout = true;
-    boolean showDonateDevDialog = true;
+//    boolean showDonateDevDialog = true;
     SwitchCompat toggleForceDozeSwitch;
     MaterialDialog progressDialog = null;
     TextView textViewStatus;
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         CustomTabs.with(getApplicationContext()).warm();
         settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         isDozeEnabledByOEM = Utils.checkForAutoPowerModesFlag();
-        showDonateDevDialog = settings.getBoolean("showDonateDevDialog2", true);
+//        showDonateDevDialog = settings.getBoolean("showDonateDevDialog2", true);
         serviceEnabled = settings.getBoolean("serviceEnabled", false);
         isDozeDisabled = settings.getBoolean("isDozeDisabled", false);
         isSuAvailable = settings.getBoolean("isSuAvailable", false);
@@ -182,10 +182,10 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                             log("Service not enabled");
                         }
 
-                        ChangeLog cl = new ChangeLog(MainActivity.this);
-                        if (cl.isFirstRun()) {
-                            cl.getFullLogDialog().show();
-                        }
+//                        ChangeLog cl = new ChangeLog(MainActivity.this);
+//                        if (cl.isFirstRun()) {
+//                            cl.getFullLogDialog().show();
+//                        }
                     } else {
                         log("SU permission denied or not available");
                         toggleForceDozeSwitch.setChecked(false);
@@ -282,14 +282,14 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
             textViewStatus.setText(R.string.service_inactive);
             log("Service not enabled");
         }
-        ChangeLog cl = new ChangeLog(this);
-        if (cl.isFirstRun()) {
-            cl.getFullLogDialog().show();
-        } else {
-            if (showDonateDevDialog) {
-                showDonateDevDialog();
-            }
-        }
+//        ChangeLog cl = new ChangeLog(this);
+//        if (cl.isFirstRun()) {
+//            cl.getFullLogDialog().show();
+//        } else {
+//            if (showDonateDevDialog) {
+//                showDonateDevDialog();
+//            }
+//        }
     }
 
     @Override
@@ -502,31 +502,31 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
         builder.show();
     }
 
-    public void showDonateDevDialog() {
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
-        builder.setTitle(getString(R.string.donate_dialog_title));
-        builder.setMessage(getString(R.string.donate_dialog_text));
-        builder.setPositiveButton(getString(R.string.donate_dialog_button_text), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                editor = settings.edit();
-                editor.putBoolean("showDonateDevDialog2", false);
-                editor.apply();
-                dialogInterface.dismiss();
-                openDonatePage();
-            }
-        });
-        builder.setNegativeButton(getString(R.string.close_button_text), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                editor = settings.edit();
-                editor.putBoolean("showDonateDevDialog2", false);
-                editor.apply();
-                dialogInterface.dismiss();
-            }
-        });
-        builder.show();
-    }
+//    public void showDonateDevDialog() {
+//        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+//        builder.setTitle(getString(R.string.donate_dialog_title));
+//        builder.setMessage(getString(R.string.donate_dialog_text));
+//        builder.setPositiveButton(getString(R.string.donate_dialog_button_text), new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                editor = settings.edit();
+//                editor.putBoolean("showDonateDevDialog2", false);
+//                editor.apply();
+//                dialogInterface.dismiss();
+//                openDonatePage();
+//            }
+//        });
+//        builder.setNegativeButton(getString(R.string.close_button_text), new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                editor = settings.edit();
+//                editor.putBoolean("showDonateDevDialog2", false);
+//                editor.apply();
+//                dialogInterface.dismiss();
+//            }
+//        });
+//        builder.show();
+//    }
 
 
 
