@@ -45,7 +45,7 @@ dependencies {
     implementation 'androidx.preference:preference:1.2.0'
     implementation 'eu.chainfire:libsuperuser:1.1.0.+'
     implementation 'com.fabiendevos:nanotasks:1.1.0'
-    implementation 'com.jakewharton:process-phoenix:1.0.2'
+    implementation 'com.jakewharton:process-phoenix:2.1.2'
     implementation 'de.cketti.library.changelog:ckchangelog:1.2.2'
     implementation 'de.psdev.licensesdialog:licensesdialog:2.1.0'
     implementation 'com.github.dexafree:materiallist:3.2.1'
