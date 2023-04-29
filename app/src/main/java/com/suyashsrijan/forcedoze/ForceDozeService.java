@@ -888,11 +888,14 @@ public class ForceDozeService extends Service {
     }
     public void enterDozeHandleNetwork(Context context) {
         if (whitelistMusicAppNetwork) {
-
-            Objects.requireNonNull(NotificationService.Companion.getInstance()).getPlayingPackageName((String packageName)->{
-                actualEnterDozeHandleNetwork(context, packageName);
-                return null;
-            });
+            try {
+                Objects.requireNonNull(NotificationService.Companion.getInstance()).getPlayingPackageName((String packageName)->{
+                    actualEnterDozeHandleNetwork(context, packageName);
+                    return null;
+                });
+            } catch (Exception e) {
+                actualEnterDozeHandleNetwork(context, null);
+            }
         } else {
             actualEnterDozeHandleNetwork(context, null);
         }
