@@ -803,28 +803,30 @@ public class ForceDozeService extends Service {
 
     public void disableMobileData() {
         executeCommandWithRoot("svc data disable", (commandCode, exitCode, STDOUT, STDERR) -> {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                log("disableMobileData: " + Utils.isMobileDataEnabled(getApplicationContext()));
-            }
+            log("disableMobileData: " + Utils.isMobileDataEnabled(getApplicationContext()));
         });
     }
 
     public void enableMobileData() {
         executeCommandWithRoot("svc data enable", (commandCode, exitCode, STDOUT, STDERR) -> {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                log("enableMobileData: " + Utils.isMobileDataEnabled(getApplicationContext()));
-            }
+            log("enableMobileData: " + Utils.isMobileDataEnabled(getApplicationContext()));
         });
     }
 
     public void disableWiFi() {
-        WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        wifi.setWifiEnabled(false);
+        executeCommandWithRoot("svc wifi disable", (commandCode, exitCode, STDOUT, STDERR) -> {
+            log("disableWiFi: " + Utils.isWiFiEnabled(getApplicationContext()));
+        });
+//        WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+//        wifi.setWifiEnabled(false);
     }
 
     public void enableWiFi() {
-        WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        wifi.setWifiEnabled(true);
+        executeCommandWithRoot("svc wifi enable", (commandCode, exitCode, STDOUT, STDERR) -> {
+            log("enableWiFi: " + Utils.isWiFiEnabled(getApplicationContext()));
+        });
+//        WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+//        wifi.setWifiEnabled(true);
     }
 
     class ReloadSettingsReceiver extends BroadcastReceiver {
