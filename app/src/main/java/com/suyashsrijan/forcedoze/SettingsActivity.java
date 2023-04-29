@@ -135,7 +135,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             dozeDelay.setOnPreferenceChangeListener((preference, o) -> {
                 int delay = (int) o;
-                if (delay >= 5) {
+                if (delay >= 5 * 60) {
                     MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
                     builder.setTitle(getString(R.string.doze_delay_warning_dialog_title));
                     builder.setMessage(getString(R.string.doze_delay_warning_dialog_text));

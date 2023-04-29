@@ -894,6 +894,7 @@ public class ForceDozeService extends Service {
                     return null;
                 });
             } catch (Exception e) {
+                e.printStackTrace();
                 actualEnterDozeHandleNetwork(context, null);
             }
         } else {
@@ -932,7 +933,7 @@ public class ForceDozeService extends Service {
             if (time == 0) {
                 time = 1000;
             }
-            int delay = dozeEnterDelay * 60 * 1000;
+            int delay = dozeEnterDelay * 1000;
             time = time + delay;
 
             if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {

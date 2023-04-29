@@ -58,9 +58,9 @@
             android:title="@string/motion_sensing_disable_non_root_setting_title" />
         <com.suyashsrijan.forcedoze.NumberPickerPreference
             bindSummary="false"
-            max="30"
+            max="1800"
             min="0"
-            step="1"
+            step="30"
             android:defaultValue="0"
             android:key="dozeEnterDelay"
             android:summary="@string/doze_delay_setting_summary"
