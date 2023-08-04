@@ -164,7 +164,20 @@ public class Utils {
     }
 
     public static boolean isMobileDataEnabled(Context context) {
-        return Settings.Secure.getInt(context.getContentResolver(), "mobile_data", 1) == 1;
+        //reading "mobile_data" does not work on all devices
+        // return Settings.Secure.getInt(context.getContentResolver(), "mobile_data", 1) == 1;
+        boolean mobileYN = false;
+
+        TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        if (tm.getSimState() == TelephonyManager.SIM_STATE_READY) {
+            int dataState = tm.getDataState();
+            if(dataState != TelephonyManager.DATA_DISCONNECTED){
+                mobileYN = true;
+            }
+
+        }
+
+        return mobileYN;
     }
 
     public static boolean isWiFiEnabled(Context context) {
