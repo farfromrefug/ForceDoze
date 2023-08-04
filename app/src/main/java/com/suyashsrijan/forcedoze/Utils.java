@@ -21,6 +21,8 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Display;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -184,6 +186,19 @@ public class Utils {
         WifiManager wifi = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         return wifi.isWifiEnabled();
     }
+    public static boolean isHotspotEnabled(Context context) {
+        WifiManager wifi = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        Method method = null;
+        try {
+            method = wifi.getClass().getDeclaredMethod("getWifiApState");
+            method.setAccessible(true);
+            int actualState = (Integer) method.invoke(wifi, (Object[]) null);
+            return actualState == 12 || actualState == 13;
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     public static boolean isLockscreenTimeoutValueTooHigh(ContentResolver contentResolver) {
         return Settings.Secure.getInt(contentResolver, "lock_screen_lock_after_timeout", 5000) >= 5000;
@@ -194,7 +209,7 @@ public class Utils {
     }
 
     public static boolean doesSettingExist(String settingName) {
-        String[] updatableSettings = {"turnOffDataInDoze", "turnOffWiFiInDoze", "ignoreLockscreenTimeout",
+        String[] updatableSettings = {"ignoreIfHotspot", "turnOffDataInDoze", "turnOffWiFiInDoze", "ignoreLockscreenTimeout",
                 "dozeEnterDelay", "useAutoRotateAndBrightnessFix", "enableSensors", "disableWhenCharging",
                 "showPersistentNotif", "useXposedSensorWorkaround", "useNonRootSensorWorkaround"};
         return Arrays.asList(updatableSettings).contains(settingName);

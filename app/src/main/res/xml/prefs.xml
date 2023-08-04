@@ -47,6 +47,11 @@
             android:summary="@string/disable_data_during_doze_setting_summary"
             android:title="@string/disable_data_during_doze_setting_title" />
         <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="ignoreIfHotspot"
+            android:summary="@string/ignore_hospot_during_doze_setting_summary"
+            android:title="@string/ignore_hospot_during_doze_setting_title" />
+        <CheckBoxPreference
             android:defaultValue="false"
             android:key="whitelistMusicAppNetwork"
             android:summary="@string/whitelist_music_app_network_setting_summary"

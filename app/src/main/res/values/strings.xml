@@ -104,6 +104,8 @@
     <string name="disable_wifi_during_doze_setting_title">Disable WiFi during Doze</string>
     <string name="disable_data_during_doze_setting_summary">Turn off mobile data during Doze</string>
     <string name="disable_data_during_doze_setting_title">Disable mobile data during Doze</string>
+    <string name="ignore_hospot_during_doze_setting_summary">Disable to prevent disabling wifi/data during hotspot</string>
+    <string name="ignore_hospot_during_doze_setting_title">Ignore Hotspot state while entering Doze</string>
     <string name="motion_sensing_disable_non_root_setting_summary">Prevent device movement from turning off Doze (non-root, experimental)</string>
     <string name="motion_sensing_disable_non_root_setting_title">Disable motion sensing for Doze</string>
     <string name="tasker_broadcast_setting_title">Tasker broadcasts</string>

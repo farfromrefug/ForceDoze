@@ -64,10 +64,12 @@ public class ForceDozeService extends Service {
     boolean useXposedSensorWorkaround = false;
     boolean useNonRootSensorWorkaround = false;
     boolean turnOffWiFiInDoze = false;
+    boolean ignoreIfHotspot = false;
     boolean turnOffDataInDoze = false;
     boolean whitelistMusicAppNetwork = false;
     boolean wasWiFiTurnedOn = false;
     boolean wasMobileDataTurnedOn = false;
+    boolean wasHotSpotTurnedOn = false;
     boolean maintenance = false;
     boolean setPendingDozeEnterAlarm = false;
     boolean disableStats = false;
@@ -154,6 +156,7 @@ public class ForceDozeService extends Service {
         LocalBroadcastManager.getInstance(this).registerReceiver(pendingIntentDozeReceiver, new IntentFilter("reenter-doze"));
         this.registerReceiver(localDozeReceiver, filter);
         turnOffDataInDoze = getDefaultSharedPreferences(getApplicationContext()).getBoolean("turnOffDataInDoze", false);
+        ignoreIfHotspot = getDefaultSharedPreferences(getApplicationContext()).getBoolean("ignoreIfHotspot", true);
         turnOffWiFiInDoze = getDefaultSharedPreferences(getApplicationContext()).getBoolean("turnOffWiFiInDoze", false);
         whitelistMusicAppNetwork = getDefaultSharedPreferences(getApplicationContext()).getBoolean("whitelistMusicAppNetwork", false);
         ignoreLockscreenTimeout = getDefaultSharedPreferences(getApplicationContext()).getBoolean("ignoreLockscreenTimeout", true);
@@ -244,6 +247,8 @@ public class ForceDozeService extends Service {
         log("dozeUsageData: " + "Total Entries -> " + dozeUsageData.size());
         turnOffDataInDoze = getDefaultSharedPreferences(getApplicationContext()).getBoolean("turnOffDataInDoze", false);
         log("turnOffDataInDoze: " + turnOffDataInDoze);
+        ignoreIfHotspot = getDefaultSharedPreferences(getApplicationContext()).getBoolean("ignoreIfHotspot", true);
+        log("ignoreIfHotspot: " + ignoreIfHotspot);
         turnOffWiFiInDoze = getDefaultSharedPreferences(getApplicationContext()).getBoolean("turnOffWiFiInDoze", false);
         log("turnOffWiFiInDoze: " + turnOffWiFiInDoze);
         whitelistMusicAppNetwork = getDefaultSharedPreferences(getApplicationContext()).getBoolean("whitelistMusicAppNetwork", false);
@@ -337,7 +342,7 @@ public class ForceDozeService extends Service {
     }
 
     public void enterDoze(Context context) {
-        if (!getDeviceIdleState().equals("IDLE")) {
+        if (!getDeviceIdleState().equals("IDLE") || !lastKnownState.equals("IDLE")) {
             if (!Utils.isScreenOn(context)) {
                 lastKnownState = "IDLE";
                 if (tempWakeLock != null) {
@@ -874,14 +879,14 @@ public class ForceDozeService extends Service {
         log("playingPackageName: " + packageName);
         wasWiFiTurnedOn = Utils.isWiFiEnabled(context);
         wasMobileDataTurnedOn = Utils.isMobileDataEnabled(context);
+        wasHotSpotTurnedOn = Utils.isHotspotEnabled(context);
 
-
-        if (turnOffWiFiInDoze && wasWiFiTurnedOn && packageName == null) {
+        if (turnOffWiFiInDoze && (!ignoreIfHotspot || !wasHotSpotTurnedOn) && wasWiFiTurnedOn && packageName == null) {
             log("Disabling WiFi");
             disableWiFi();
         }
 
-        if (turnOffDataInDoze && wasMobileDataTurnedOn && (packageName == null || wasWiFiTurnedOn)) {
+        if (turnOffDataInDoze && wasMobileDataTurnedOn && (!ignoreIfHotspot || !wasHotSpotTurnedOn) && (packageName == null || wasWiFiTurnedOn)) {
             log("Disabling mobile data");
             disableMobileData();
         }
@@ -963,7 +968,7 @@ public class ForceDozeService extends Service {
 
             } else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
                 log("Screen OFF received");
-                if (Utils.isConnectedToCharger(getApplicationContext()) && disableWhenCharging) {
+                if (disableWhenCharging && Utils.isConnectedToCharger(getApplicationContext())) {
                     log("Connected to charger and disableWhenCharging=true, skip entering Doze");
                 } else if (Utils.isUserInCommunicationCall(context)) {
                     log("User is in a VOIP call or an audio/video chat, skip entering Doze");

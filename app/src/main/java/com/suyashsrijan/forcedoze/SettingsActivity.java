@@ -273,6 +273,27 @@ public class SettingsActivity extends AppCompatActivity {
                     }
                 }
             });
+turnOffDataInDoze.setOnPreferenceChangeListener((preference, o) -> {
+                final boolean newValue = (boolean) o;
+                if (!newValue) {
+                    return true;
+                } else {
+                    if (isSuAvailable) {
+                        log("Phone is rooted and SU permission granted");
+                        log("Granting android.permission.READ_PHONE_STATE to com.suyashsrijan.forcedoze");
+                        executeCommand("pm grant com.suyashsrijan.forcedoze android.permission.READ_PHONE_STATE");
+                        return true;
+                    } else {
+                        log("SU permission denied or not available");
+                        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
+                        builder.setTitle(getString(R.string.error_text));
+                        builder.setMessage(getString(R.string.su_perm_denied_msg));
+                        builder.setPositiveButton(getString(R.string.close_button_text), (dialogInterface, i) -> dialogInterface.dismiss());
+                        builder.show();
+                        return false;
+                    }
+                }
+            });
 
             whitelistMusicAppNetwork.setOnPreferenceChangeListener((preference, o) -> {
                 final boolean newValue = (boolean) o;
