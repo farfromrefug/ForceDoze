@@ -877,8 +877,8 @@ public class ForceDozeService extends Service {
 
     public void actualEnterDozeHandleNetwork(Context context, String packageName) {
         log("playingPackageName: " + packageName);
-        wasWiFiTurnedOn = Utils.isWiFiEnabled(context);
-        wasMobileDataTurnedOn = Utils.isMobileDataEnabled(context);
+        wasWiFiTurnedOn = wasWiFiTurnedOn || Utils.isWiFiEnabled(context);
+        wasMobileDataTurnedOn = wasMobileDataTurnedOn || Utils.isMobileDataEnabled(context) ;
         wasHotSpotTurnedOn = Utils.isHotspotEnabled(context);
 
         if (turnOffWiFiInDoze && (!ignoreIfHotspot || !wasHotSpotTurnedOn) && wasWiFiTurnedOn && packageName == null) {
@@ -915,7 +915,6 @@ public class ForceDozeService extends Service {
             if (wasWiFiTurnedOn) {
                 log("Enabling WiFi");
                 enableWiFi();
-                wasWiFiTurnedOn = false;
             }
 
         }
@@ -925,9 +924,10 @@ public class ForceDozeService extends Service {
             if (wasMobileDataTurnedOn) {
                 log("Enabling mobile data");
                 enableMobileData();
-                wasMobileDataTurnedOn = false;
             }
         }
+        wasWiFiTurnedOn = false;
+        wasMobileDataTurnedOn = false;
     }
 
     class DozeReceiver extends BroadcastReceiver {
