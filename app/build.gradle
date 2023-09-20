@@ -2,14 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
-    signingConfigs {
-        debug {
-            storeFile file('/Volumes/dev/android/ForceDoze/upload.keystore')
-            storePassword 'akylas'
-            keyAlias 'key0'
-            keyPassword 'akylas'
-        }
-    }
     compileSdkVersion 33
 
     defaultConfig {
