@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.hardware.display.DisplayManager;
 import android.media.AudioManager;
+import android.net.ConnectivityManager;
 import android.net.wifi.WifiManager;
 import android.os.BatteryManager;
 import android.os.Build;
@@ -190,10 +191,11 @@ public class Utils {
         WifiManager wifi = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         Method method = null;
         try {
+            ConnectivityManager conMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             method = wifi.getClass().getDeclaredMethod("getWifiApState");
             method.setAccessible(true);
             int actualState = (Integer) method.invoke(wifi, (Object[]) null);
-            return actualState == 12 || actualState == 13;
+            return conMgr.isActiveNetworkMetered() ||  actualState == 12 || actualState == 13;
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
             return false;
