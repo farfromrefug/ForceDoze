@@ -47,6 +47,7 @@ public class ForceDozeTileService extends TileService {
 
     @Override
     public void onStartListening() {
+        log("QuickTile onStartListening");
         settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         serviceEnabled = settings.getBoolean("serviceEnabled", false);
         if (serviceEnabled) {
@@ -90,15 +91,12 @@ public class ForceDozeTileService extends TileService {
                     tile.setState(active ? Tile.STATE_ACTIVE : Tile.STATE_INACTIVE);
                     tile.updateTile();
                 }
-                if (active) {
-                    settings.edit().putBoolean("serviceEnabled", true).apply();
-                    sendBroadcastToApp(active);
-
-                } else {
-                    settings.edit().putBoolean("serviceEnabled", false).apply();
+                boolean currentValue = settings.getBoolean("serviceEnabled", false);
+                if (currentValue != active) {
+                    settings.edit().putBoolean("serviceEnabled", active).apply();
                     sendBroadcastToApp(active);
                 }
             }
-        }, 1500);
+        }, 150);
     }
 }
