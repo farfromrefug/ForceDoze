@@ -14,6 +14,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ServiceInfo;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -630,7 +631,12 @@ public class ForceDozeService extends Service {
                 .setContentIntent(intent)
                 .setOngoing(true)
                 .build();
-        startForeground(1234, n);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            startForeground(1234, n);
+        } else {
+            startForeground(1234, n,
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE);
+        }
     }
 
     public void updatePersistentNotification(String lastScreenOff, int timeSpentDozing, int batteryUsage) {
