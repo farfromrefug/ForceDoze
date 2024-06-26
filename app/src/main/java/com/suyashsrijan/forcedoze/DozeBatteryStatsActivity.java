@@ -97,7 +97,7 @@ public class DozeBatteryStatsActivity extends AppCompatActivity {
                     if (enter_data[2].equals("ENTER") && exit_data[2].equals("EXIT")) {
                         Card card = new Card.Builder(this)
                                 .withProvider(new CardProvider())
-                                .setLayout(R.layout.material_small_image_card)
+                                .setLayout(com.dexafree.materialList.R.layout.material_small_image_card)
                                 .setTitle("Doze Session")
                                 .setDrawable(returnDrawableBattery(Float.valueOf(enter_data[1]).intValue() - Float.valueOf(exit_data[1]).intValue()))
                                 .setDescription("Start Time: " + Utils.getDateCurrentTimeZone(Long.valueOf(enter_data[0])) +
@@ -111,7 +111,7 @@ public class DozeBatteryStatsActivity extends AppCompatActivity {
                     } else if (enter_data[2].equals("ENTER_MAINTENANCE") && exit_data[2].equals("EXIT_MAINTENANCE")) {
                         Card card = new Card.Builder(this)
                                 .withProvider(new CardProvider())
-                                .setLayout(R.layout.material_small_image_card)
+                                .setLayout(com.dexafree.materialList.R.layout.material_small_image_card)
                                 .setTitle("Doze Session (Maintenance)")
                                 .setDrawable(returnDrawableBattery(Float.valueOf(enter_data[1]).intValue() - Float.valueOf(exit_data[1]).intValue()))
                                 .setDescription("Start Time: " + Utils.getDateCurrentTimeZone(Long.valueOf(enter_data[0])) +

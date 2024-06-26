@@ -2,12 +2,22 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 33
+    compileSdk 34
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 
     defaultConfig {
+        namespace "com.suyashsrijan.forcedoze"
         applicationId "com.suyashsrijan.forcedoze"
         minSdkVersion 23
-        targetSdkVersion 33
+        targetSdkVersion 34
         versionCode 68
         versionName "1.4.0"
         signingConfig signingConfigs.debug
@@ -22,6 +32,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
 }
 
 configurations.all {
@@ -33,17 +44,17 @@ dependencies {
     implementation ('com.afollestad.material-dialogs:core:0.9.3.0') {
         transitive = true
     }
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.8.0'
-    implementation 'androidx.browser:browser:1.5.0'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.media2:media2-session:1.2.1'
-    implementation 'androidx.preference:preference-ktx:1.2.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0-alpha03'
+    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'androidx.browser:browser:1.8.0-beta01'
+//    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.media2:media2-session:1.3.0'
+    implementation 'androidx.preference:preference-ktx:1.2.1'
     implementation 'eu.chainfire:libsuperuser:1.1.0.+'
     implementation 'com.fabiendevos:nanotasks:1.1.0'
     implementation 'com.jakewharton:process-phoenix:2.1.2'
-//    implementation 'de.cketti.library.changelog:ckchangelog:1.2.2'
     implementation 'de.psdev.licensesdialog:licensesdialog:2.1.0'
     implementation 'com.github.dexafree:materiallist:3.2.1'
+
     compileOnly 'de.robv.android.xposed:api:82'
 }
