@@ -55,6 +55,7 @@ dependencies {
     implementation 'com.jakewharton:process-phoenix:2.1.2'
     implementation 'de.psdev.licensesdialog:licensesdialog:2.1.0'
     implementation 'com.github.dexafree:materiallist:3.2.1'
+    implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0'
 
     compileOnly 'de.robv.android.xposed:api:82'
 }
