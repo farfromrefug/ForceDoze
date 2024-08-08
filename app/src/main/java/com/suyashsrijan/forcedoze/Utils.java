@@ -77,6 +77,11 @@ public class Utils {
             return true;
         else return false;
     }
+    public static boolean isSecureSensorPrivacyPermissionGranted(Context context) {
+        if (context.checkCallingOrSelfPermission("android.permission.MANAGE_SENSOR_PRIVACY") == PackageManager.PERMISSION_GRANTED)
+            return true;
+        else return false;
+    }
 
     public static boolean isConnectedToCharger(Context context) {
         Intent intent = context.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
@@ -195,7 +200,9 @@ public class Utils {
             method = wifi.getClass().getDeclaredMethod("getWifiApState");
             method.setAccessible(true);
             int actualState = (Integer) method.invoke(wifi, (Object[]) null);
-            return conMgr.isActiveNetworkMetered() ||  actualState == 12 || actualState == 13;
+            boolean isActiveNetworkMetered = conMgr.isActiveNetworkMetered();
+            return actualState == 12 || actualState == 13;
+//            return conMgr.isActiveNetworkMetered() ||  actualState == 12 || actualState == 13;
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
             return false;

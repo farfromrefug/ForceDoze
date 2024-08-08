@@ -12,7 +12,6 @@ import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 import androidx.annotation.RequiresApi;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
-import android.util.Log;
 
 
 @RequiresApi(api = Build.VERSION_CODES.N)
@@ -47,6 +46,7 @@ public class ForceDozeTileService extends TileService {
 
     @Override
     public void onStartListening() {
+        super.onStartListening();
         log("QuickTile onStartListening");
         settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         serviceEnabled = settings.getBoolean("serviceEnabled", false);

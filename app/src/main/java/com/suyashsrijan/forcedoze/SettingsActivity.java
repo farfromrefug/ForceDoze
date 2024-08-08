@@ -273,7 +273,7 @@ public class SettingsActivity extends AppCompatActivity {
                     }
                 }
             });
-turnOffDataInDoze.setOnPreferenceChangeListener((preference, o) -> {
+            turnOffDataInDoze.setOnPreferenceChangeListener((preference, o) -> {
                 final boolean newValue = (boolean) o;
                 if (!newValue) {
                     return true;

@@ -64,6 +64,8 @@ public class ForceDozeService extends Service {
     boolean ignoreLockscreenTimeout = false;
     boolean useXposedSensorWorkaround = false;
     boolean useNonRootSensorWorkaround = false;
+    boolean turnOffAllSensorsInDoze = false;
+    boolean turnOffFingerprintInDoze = false;
     boolean turnOffWiFiInDoze = false;
     boolean ignoreIfHotspot = false;
     boolean turnOffDataInDoze = false;
@@ -159,6 +161,8 @@ public class ForceDozeService extends Service {
         turnOffDataInDoze = getDefaultSharedPreferences(getApplicationContext()).getBoolean("turnOffDataInDoze", false);
         ignoreIfHotspot = getDefaultSharedPreferences(getApplicationContext()).getBoolean("ignoreIfHotspot", true);
         turnOffWiFiInDoze = getDefaultSharedPreferences(getApplicationContext()).getBoolean("turnOffWiFiInDoze", false);
+        turnOffAllSensorsInDoze = getDefaultSharedPreferences(getApplicationContext()).getBoolean("turnOffAllSensorsInDoze", false);
+        turnOffFingerprintInDoze = getDefaultSharedPreferences(getApplicationContext()).getBoolean("turnOffFingerprintInDoze", false);
         whitelistMusicAppNetwork = getDefaultSharedPreferences(getApplicationContext()).getBoolean("whitelistMusicAppNetwork", false);
         ignoreLockscreenTimeout = getDefaultSharedPreferences(getApplicationContext()).getBoolean("ignoreLockscreenTimeout", true);
         useXposedSensorWorkaround = getDefaultSharedPreferences(getApplicationContext()).getBoolean("useXposedSensorWorkaround", false);
@@ -252,6 +256,10 @@ public class ForceDozeService extends Service {
         log("ignoreIfHotspot: " + ignoreIfHotspot);
         turnOffWiFiInDoze = getDefaultSharedPreferences(getApplicationContext()).getBoolean("turnOffWiFiInDoze", false);
         log("turnOffWiFiInDoze: " + turnOffWiFiInDoze);
+        turnOffAllSensorsInDoze = getDefaultSharedPreferences(getApplicationContext()).getBoolean("turnOffAllSensorsInDoze", false);
+        log("turnOffAllSensorsInDoze: " + turnOffAllSensorsInDoze);
+        turnOffFingerprintInDoze = getDefaultSharedPreferences(getApplicationContext()).getBoolean("turnOffFingerprintInDoze", false);
+        log("turnOffFingerprintInDoze: " + turnOffFingerprintInDoze);
         whitelistMusicAppNetwork = getDefaultSharedPreferences(getApplicationContext()).getBoolean("whitelistMusicAppNetwork", false);
         log("whitelistMusicAppNetwork: " + whitelistMusicAppNetwork);
         ignoreLockscreenTimeout = getDefaultSharedPreferences(getApplicationContext()).getBoolean("ignoreLockscreenTimeout", false);
@@ -306,6 +314,10 @@ public class ForceDozeService extends Service {
     public void grantReadPhoneStatePermission() {
         log("Granting android.permission.READ_PHONE_STATE to com.suyashsrijan.forcedoze");
         executeCommandWithRoot("pm grant com.suyashsrijan.forcedoze android.permission.READ_PHONE_STATE");
+    }
+    public void grantSensorPrivacyPermission() {
+        log("Granting android.permission.MANAGE_SENSOR_PRIVACY to com.suyashsrijan.forcedoze");
+        executeCommandWithRoot("pm grant com.suyashsrijan.forcedoze android.permission.MANAGE_SENSOR_PRIVACY");
     }
 
     public void addSelfToDozeWhitelist() {
@@ -831,6 +843,59 @@ public class ForceDozeService extends Service {
 //        WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 //        wifi.setWifiEnabled(false);
     }
+    public void setAllSensorsState(Context context, boolean enabled) {
+
+        if (!Utils.isSecureSensorPrivacyPermissionGranted(context)) {
+            grantSensorPrivacyPermission();
+        }
+
+        String command;
+        try {
+            int transactionCode = 4;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                transactionCode = 9;
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                transactionCode = 8;
+            }
+            command = "service call sensor_privacy " + transactionCode + " i32 " +(enabled? 0:1);
+            List<String> output = new ArrayList<>();
+            List<String> err = new ArrayList<>();
+            Shell.Pool.SU.run(command, output, err, false);
+            if (err.isEmpty()) {
+                for (String s : output) {
+                    log(s);
+                }
+            } else {
+                log("Error occurred while executing command (" + err + ")");
+            }
+        } catch (Exception e) {
+            log("Failed to toggle sensor off: " + e.getMessage());
+        }
+    }
+
+    public void setFingerprintSensorState(Context context, boolean enabled) {
+
+        if (!Utils.isSecureSensorPrivacyPermissionGranted(context)) {
+            grantSecureSettingsPermission();
+        }
+
+        String command;
+        try {
+            command = "settings put secure biometric_keyguard_enabled " +(enabled? 1:0);
+            List<String> output = new ArrayList<>();
+            List<String> err = new ArrayList<>();
+            Shell.Pool.SU.run(command, output, err, false);
+            if (err.isEmpty()) {
+                for (String s : output) {
+                    log(s);
+                }
+            } else {
+                log("Error occurred while executing command (" + err + ")");
+            }
+        } catch (Exception e) {
+            log("Failed to disable biometric keyguard: " + e.getMessage());
+        }
+    }
 
     public void enableWiFi() {
         executeCommandWithRoot("svc wifi enable", (commandCode, exitCode, STDOUT, STDERR) -> {
@@ -887,6 +952,15 @@ public class ForceDozeService extends Service {
         wasMobileDataTurnedOn = wasMobileDataTurnedOn || Utils.isMobileDataEnabled(context) ;
         wasHotSpotTurnedOn = Utils.isHotspotEnabled(context);
 
+        if (turnOffAllSensorsInDoze) {
+            log("Disabling All sensors");
+            setAllSensorsState(context, false);
+        }
+        if (turnOffFingerprintInDoze) {
+            log("Disabling Fingerprint");
+            setFingerprintSensorState(context, false);
+        }
+
         if (turnOffWiFiInDoze && (!ignoreIfHotspot || !wasHotSpotTurnedOn) && wasWiFiTurnedOn && packageName == null) {
             log("Disabling WiFi");
             disableWiFi();
@@ -923,6 +997,14 @@ public class ForceDozeService extends Service {
                 enableWiFi();
             }
 
+        }
+        if (turnOffAllSensorsInDoze) {
+            log("Enabling All sensors");
+            setAllSensorsState(context, true);
+        }
+        if (turnOffFingerprintInDoze) {
+            log("Enabling fingerprint");
+            setFingerprintSensorState(context, true);
         }
 
         if (turnOffDataInDoze) {
