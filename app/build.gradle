@@ -58,4 +58,15 @@ dependencies {
     implementation 'androidx.localbroadcastmanager:localbroadcastmanager:1.1.0'
 
     compileOnly 'de.robv.android.xposed:api:82'
+
+//    def libsuVersion = '6.0.0'
+
+    // The core module that provides APIs to a shell
+//    implementation "com.github.topjohnwu.libsu:core:${libsuVersion}"
+
+    // Optional: APIs for creating root services. Depends on ":core"
+//    implementation "com.github.topjohnwu.libsu:service:${libsuVersion}"
+
+    // Optional: Provides remote file system support
+//    implementation "com.github.topjohnwu.libsu:nio:${libsuVersion}"
 }

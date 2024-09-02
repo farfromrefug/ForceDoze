@@ -65,7 +65,7 @@ public class ForceDozeService extends Service {
 //    boolean useXposedSensorWorkaround = false;
     boolean useNonRootSensorWorkaround = false;
     boolean turnOffAllSensorsInDoze = false;
-    boolean turnOffFingerprintInDoze = false;
+    boolean turnOffBiometricsInDoze = false;
     boolean turnOffWiFiInDoze = false;
     boolean ignoreIfHotspot = false;
     boolean turnOffDataInDoze = false;
@@ -162,10 +162,10 @@ public class ForceDozeService extends Service {
         ignoreIfHotspot = getDefaultSharedPreferences(getApplicationContext()).getBoolean("ignoreIfHotspot", true);
         turnOffWiFiInDoze = getDefaultSharedPreferences(getApplicationContext()).getBoolean("turnOffWiFiInDoze", false);
         turnOffAllSensorsInDoze = getDefaultSharedPreferences(getApplicationContext()).getBoolean("turnOffAllSensorsInDoze", false);
-        turnOffFingerprintInDoze = getDefaultSharedPreferences(getApplicationContext()).getBoolean("turnOffFingerprintInDoze", false);
+        turnOffBiometricsInDoze = getDefaultSharedPreferences(getApplicationContext()).getBoolean("turnOffBiometricsInDoze", false);
         whitelistMusicAppNetwork = getDefaultSharedPreferences(getApplicationContext()).getBoolean("whitelistMusicAppNetwork", false);
         ignoreLockscreenTimeout = getDefaultSharedPreferences(getApplicationContext()).getBoolean("ignoreLockscreenTimeout", true);
-        useXposedSensorWorkaround = getDefaultSharedPreferences(getApplicationContext()).getBoolean("useXposedSensorWorkaround", false);
+//        useXposedSensorWorkaround = getDefaultSharedPreferences(getApplicationContext()).getBoolean("useXposedSensorWorkaround", false);
         useNonRootSensorWorkaround = getDefaultSharedPreferences(getApplicationContext()).getBoolean("useNonRootSensorWorkaround", false);
         dozeEnterDelay = getDefaultSharedPreferences(getApplicationContext()).getInt("dozeEnterDelay", 0);
         useAutoRotateAndBrightnessFix = getDefaultSharedPreferences(getApplicationContext()).getBoolean("autoRotateAndBrightnessFix", false);
@@ -258,8 +258,8 @@ public class ForceDozeService extends Service {
         log("turnOffWiFiInDoze: " + turnOffWiFiInDoze);
         turnOffAllSensorsInDoze = getDefaultSharedPreferences(getApplicationContext()).getBoolean("turnOffAllSensorsInDoze", false);
         log("turnOffAllSensorsInDoze: " + turnOffAllSensorsInDoze);
-        turnOffFingerprintInDoze = getDefaultSharedPreferences(getApplicationContext()).getBoolean("turnOffFingerprintInDoze", false);
-        log("turnOffFingerprintInDoze: " + turnOffFingerprintInDoze);
+        turnOffBiometricsInDoze = getDefaultSharedPreferences(getApplicationContext()).getBoolean("turnOffBiometricsInDoze", false);
+        log("turnOffBiometricsInDoze: " + turnOffBiometricsInDoze);
         whitelistMusicAppNetwork = getDefaultSharedPreferences(getApplicationContext()).getBoolean("whitelistMusicAppNetwork", false);
         log("whitelistMusicAppNetwork: " + whitelistMusicAppNetwork);
         ignoreLockscreenTimeout = getDefaultSharedPreferences(getApplicationContext()).getBoolean("ignoreLockscreenTimeout", false);
@@ -873,7 +873,7 @@ public class ForceDozeService extends Service {
         }
     }
 
-    public void setFingerprintSensorState(Context context, boolean enabled) {
+    public void setBiometricsSensorState(Context context, boolean enabled) {
 
         if (!Utils.isSecureSensorPrivacyPermissionGranted(context)) {
             grantSecureSettingsPermission();
@@ -956,9 +956,9 @@ public class ForceDozeService extends Service {
             log("Disabling All sensors");
             setAllSensorsState(context, false);
         }
-        if (turnOffFingerprintInDoze) {
-            log("Disabling Fingerprint");
-            setFingerprintSensorState(context, false);
+        if (turnOffBiometricsInDoze) {
+            log("Disabling Biometrics");
+            setBiometricsSensorState(context, false);
         }
 
         if (turnOffWiFiInDoze && (!ignoreIfHotspot || !wasHotSpotTurnedOn) && wasWiFiTurnedOn && packageName == null) {
@@ -1002,9 +1002,9 @@ public class ForceDozeService extends Service {
             log("Enabling All sensors");
             setAllSensorsState(context, true);
         }
-        if (turnOffFingerprintInDoze) {
-            log("Enabling fingerprint");
-            setFingerprintSensorState(context, true);
+        if (turnOffBiometricsInDoze) {
+            log("Enabling biometrics");
+            setBiometricsSensorState(context, true);
         }
 
         if (turnOffDataInDoze) {

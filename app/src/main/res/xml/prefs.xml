@@ -12,9 +12,9 @@
             android:title="@string/disable_all_sensors_setting_title" />
         <CheckBoxPreference
             android:defaultValue="false"
-            android:key="turnOffFingerprintInDoze"
-            android:summary="@string/disable_fingerprint_setting_summary"
-            android:title="@string/disable_fingerprint_setting_title" />
+            android:key="turnOffBiometricsInDoze"
+            android:summary="@string/disable_biometrics_setting_summary"
+            android:title="@string/disable_biometrics_setting_title" />
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="disableWhenCharging"

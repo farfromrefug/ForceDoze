@@ -42,8 +42,8 @@
     <string name="enable_sensors_setting_summary">Don\'t disable device motion sensors when the device goes into Doze mode</string>
     <string name="disable_all_sensors_setting_title">Disable all sensors on screen off</string>
     <string name="disable_all_sensors_setting_summary">Disable all sensors when the device goes into Doze mode (motion, camera...)</string>
-    <string name="disable_fingerprint_setting_title">Disable fingerprint unlock while screen off</string>
-    <string name="disable_fingerprint_setting_summary">Disable fingerprint unlock while screen off</string>
+    <string name="disable_biometrics_setting_title">Disable biometrics unlock while screen off</string>
+    <string name="disable_biometrics_setting_summary">Disable biometrics unlock while screen off. Might not work on all devices</string>
     <string name="disable_when_charging_setting_summary">Turn off ForceDoze when device is plugged in to a charger</string>
     <string name="disable_when_charging_setting_title">Turn off while charging</string>
     <string name="rotate_brightness_fix_setting_summary">Workaround for auto-rotate and auto-brightness not working after screen on</string>

@@ -5,9 +5,9 @@ buildscript {
         jcenter()
         google()
     }
-    ext.kotlin_version = '2.0.0-RC1'
+    ext.kotlin_version = '2.0.0'
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.3.2'
+        classpath 'com.android.tools.build:gradle:8.4.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -16,5 +16,6 @@ allprojects {
     repositories {
         jcenter()
         google()
+        maven { url 'https://jitpack.io' }
     }
 }
