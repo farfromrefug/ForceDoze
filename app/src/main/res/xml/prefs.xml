@@ -41,8 +41,8 @@
             android:title="@string/whitelist_apps_setting_text">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:targetClass="com.suyashsrijan.forcedoze.WhitelistAppsActivity"
-                android:targetPackage="com.suyashsrijan.forcedoze" />
+                android:targetClass="com.akylas.enforcedoze.WhitelistAppsActivity"
+                android:targetPackage="com.akylas.enforcedoze" />
         </Preference>
     </PreferenceCategory>
     <PreferenceCategory android:title="Doze enhancements" android:key="dozeSettings">
@@ -71,7 +71,7 @@
             android:key="useNonRootSensorWorkaround"
             android:summary="@string/motion_sensing_disable_non_root_setting_summary"
             android:title="@string/motion_sensing_disable_non_root_setting_title" />
-        <com.suyashsrijan.forcedoze.NumberPickerPreference
+        <com.akylas.enforcedoze.NumberPickerPreference
             bindSummary="false"
             max="1800"
             min="0"
@@ -86,8 +86,8 @@
             android:title="@string/notif_blocklist_setting_title">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:targetClass="com.suyashsrijan.forcedoze.BlockNotificationsActivity"
-                android:targetPackage="com.suyashsrijan.forcedoze" />
+                android:targetClass="com.akylas.enforcedoze.BlockNotificationsActivity"
+                android:targetPackage="com.akylas.enforcedoze" />
         </Preference>
         <Preference
             android:key="blacklistApps"
@@ -95,8 +95,8 @@
             android:title="@string/app_blocklist_setting_title">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:targetClass="com.suyashsrijan.forcedoze.BlockAppsActivity"
-                android:targetPackage="com.suyashsrijan.forcedoze" />
+                android:targetClass="com.akylas.enforcedoze.BlockAppsActivity"
+                android:targetPackage="com.akylas.enforcedoze" />
         </Preference>
     </PreferenceCategory>
     <PreferenceCategory android:title="Other">
@@ -124,8 +124,8 @@
             android:title="@string/show_app_logs_setting_title">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:targetClass="com.suyashsrijan.forcedoze.LogActivity"
-                android:targetPackage="com.suyashsrijan.forcedoze" />
+                android:targetClass="com.akylas.enforcedoze.LogActivity"
+                android:targetPackage="com.akylas.enforcedoze" />
         </Preference>
         <Preference
             android:key="taskerBroadcasts"
@@ -133,16 +133,16 @@
             android:title="@string/tasker_broadcast_setting_title">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:targetClass="com.suyashsrijan.forcedoze.TaskerBroadcastsActivity"
-                android:targetPackage="com.suyashsrijan.forcedoze" />
+                android:targetClass="com.akylas.enforcedoze.TaskerBroadcastsActivity"
+                android:targetPackage="com.akylas.enforcedoze" />
         </Preference>
         <Preference
             android:key="aboutForceDoze"
             android:title="@string/about_forcedoze_setting_title">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetClass="com.suyashsrijan.forcedoze.AboutAppActivity"
-            android:targetPackage="com.suyashsrijan.forcedoze" />
+            android:targetClass="com.akylas.enforcedoze.AboutAppActivity"
+            android:targetPackage="com.akylas.enforcedoze" />
         </Preference>
     </PreferenceCategory>
 </PreferenceScreen>

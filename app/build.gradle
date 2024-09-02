@@ -14,12 +14,12 @@ android {
     }
 
     defaultConfig {
-        namespace "com.suyashsrijan.forcedoze"
-        applicationId "com.suyashsrijan.forcedoze"
+        namespace "com.akylas.enforcedoze"
+        applicationId "com.akylas.enforcedoze"
         minSdkVersion 23
         targetSdkVersion 34
-        versionCode 68
-        versionName "1.4.0"
+        versionCode 69
+        versionName "1.5.0"
         signingConfig signingConfigs.debug
     }
     buildTypes {

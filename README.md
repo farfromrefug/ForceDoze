@@ -5,7 +5,7 @@ EnforceDoze allows you to forcefully enable Doze right after you turn off your s
 
 [<img src="https://f-droid.org/badge/get-it-on.png"
      alt="Get it on F-Droid"
-     height="80">](https://f-droid.org/packages/com.suyashsrijan.forcedoze/)
+     height="80">](https://f-droid.org/packages/com.akylas.enforcedoze/)
 
 ## Coverage:
  * LifeHacker: https://lifehacker.com/how-to-squeeze-more-battery-out-of-your-phone-with-andr-1791336715
@@ -14,14 +14,16 @@ EnforceDoze allows you to forcefully enable Doze right after you turn off your s
 * Force Doze mode immediately after screen off or after a user specified delay
 * Add/remove apps or packages directly to system Doze whitelist
 * Disable motion sensors to prevent Doze from kicking in during movement
+* Disable Biometrics in doze mode to further improve battery life
 * Tasker support to turn on/off EnforceDoze and modify other features
 * Disable WiFi and mobile data completely during Doze
 * Enable Doze mode on devices where OEM has disabled it
 * No root mode so you can enjoy the core benefits without rooting your device
 * Free, no ads and open source
 
-# Download 
-Play Store link: https://play.google.com/store/apps/details?id=com.suyashsrijan.forcedoze&hl=en
+[//]: # (# Download )
+
+[//]: # (Play Store link: https://play.google.com/store/apps/details?id=com.akylas.enforcedoze&hl=en)
 
 ## Android
 ### Requirements for compiling source code and running the app:

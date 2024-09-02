@@ -6,8 +6,8 @@
         android:shortcutShortLabel="@string/settings_menu_item">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetPackage="com.suyashsrijan.forcedoze"
-            android:targetClass="com.suyashsrijan.forcedoze.SettingsActivity" />/>
+            android:targetPackage="com.akylas.enforcedoze"
+            android:targetClass="com.akylas.enforcedoze.SettingsActivity" />/>
     </shortcut>
     <shortcut
         android:shortcutId="launchBatteryStats"
@@ -16,7 +16,7 @@
         android:shortcutShortLabel="@string/doze_stats_menu_item">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetPackage="com.suyashsrijan.forcedoze"
-            android:targetClass="com.suyashsrijan.forcedoze.DozeBatteryStatsActivity" />/>
+            android:targetPackage="com.akylas.enforcedoze"
+            android:targetClass="com.akylas.enforcedoze.DozeBatteryStatsActivity" />/>
     </shortcut>
 </shortcuts>

@@ -14,7 +14,7 @@
     <string name="no_root_workaround_dialog_title">Обходной путь</string>
     <string name="okay_button_text">ОК</string>
     <string name="share_command_button_text">Поделиться командой</string>
-    <string name="no_root_workaround_dialog_text">Если устройство не рутировано, вы можете вручную разрешить \'android.permission.DUMP\' (и \'android.permission.WRITE_SECURE_SETTINGS\' если Android 7) этому приложению благодаря этой команде ADB на ПК (команда не разделена, пишется одной линеей):\n\n \"adb -d shell pm grant com.suyashsrijan.forcedoze android.permission.DUMP\" и выполните ту же команду, но с разрешением WRITE_SECURE_SETTINGS (если Android 7)\n\n Как только вы это сделаете, закройте это приложение и откройте его снова и вы сможете пользоваться приложением.</string>
+    <string name="no_root_workaround_dialog_text">Если устройство не рутировано, вы можете вручную разрешить \'android.permission.DUMP\' (и \'android.permission.WRITE_SECURE_SETTINGS\' если Android 7) этому приложению благодаря этой команде ADB на ПК (команда не разделена, пишется одной линеей):\n\n \"adb -d shell pm grant com.akylas.enforcedoze android.permission.DUMP\" и выполните ту же команду, но с разрешением WRITE_SECURE_SETTINGS (если Android 7)\n\n Как только вы это сделаете, закройте это приложение и откройте его снова и вы сможете пользоваться приложением.</string>
     <string name="lockscreen_timeout_dialog_title">Время отключения экрана</string>
     <string name="open_security_settings_button_text">Открыть настройки безопасности</string>
     <string name="lockscreen_timeout_dialog_text_p1">Время отключения экрана очень большое (</string>
@@ -27,7 +27,7 @@
     <string name="error_text">Ошибка</string>
     <string name="please_wait_text">Подождите</string>
     <string name="requesting_su_access_text">Получение рут-доступа...</string>
-    <string name="read_logcat_su_not_avail_or_denied_error_text">Рут-доступ отклонён или у вас его нет, приложение не может прочитать лог. \n\nРазрешите READ_LOGS через ADB: \'adb shell pm grant com.suyashsrijan.forcedoze android.permission.READ_LOGS\' (без кавычек)</string>
+    <string name="read_logcat_su_not_avail_or_denied_error_text">Рут-доступ отклонён или у вас его нет, приложение не может прочитать лог. \n\nРазрешите READ_LOGS через ADB: \'adb shell pm grant com.akylas.enforcedoze android.permission.READ_LOGS\' (без кавычек)</string>
     <string name="loading_installed_apps_text">Загрузка списка приложений...</string>
     <string name="whitelisting_text">Белый список</string>
     <string name="whitelisted_apps_restrictions_text">"Приложение в белом списке может получить доступ к Сети и к частичным WakeLocks во время Doze и App Standby. Но другие ограничения будут касаться этого приложения, как с обычными приложениями. Например, задания приложения будут отложены, и его AlarmManager не будет срабатывать. "</string>

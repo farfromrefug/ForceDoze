@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.suyashsrijan.forcedoze">
+    package="com.akylas.enforcedoze">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -32,13 +32,13 @@
         android:minSdkVersion="34" />
 
     <application
-        android:name=".MyApplication"
+        android:name="com.akylas.enforcedoze.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
+        <activity android:name="com.akylas.enforcedoze.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -51,13 +51,13 @@
             <meta-data android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
         </activity>
-        <receiver android:name=".BootCompleteReceiver"
+        <receiver android:name="com.akylas.enforcedoze.BootCompleteReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".AutoRestartOnUpdate"
+        <receiver android:name="com.akylas.enforcedoze.AutoRestartOnUpdate"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_REPLACED" />
@@ -66,55 +66,55 @@
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".EnableForceDozeService"
+            android:name="com.akylas.enforcedoze.EnableForceDozeService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.suyashsrijan.forcedoze.ENABLE_FORCEDOZE" />
+                <action android:name="com.akylas.enforcedoze.ENABLE_FORCEDOZE" />
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".DisableForceDozeService"
+            android:name="com.akylas.enforcedoze.DisableForceDozeService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.suyashsrijan.forcedoze.DISABLE_FORCEDOZE" />
+                <action android:name="com.akylas.enforcedoze.DISABLE_FORCEDOZE" />
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".AddWhiteListReceiver"
+            android:name="com.akylas.enforcedoze.AddWhiteListReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.suyashsrijan.forcedoze.ADD_WHITELIST" />
+                <action android:name="com.akylas.enforcedoze.ADD_WHITELIST" />
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".RemoveWhiteListReceiver"
+            android:name="com.akylas.enforcedoze.RemoveWhiteListReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.suyashsrijan.forcedoze.REMOVE_WHITELIST" />
+                <action android:name="com.akylas.enforcedoze.REMOVE_WHITELIST" />
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".SettingsChangeReceiver"
+            android:name="com.akylas.enforcedoze.SettingsChangeReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.suyashsrijan.forcedoze.CHANGE_SETTING" />
+                <action android:name="com.akylas.enforcedoze.CHANGE_SETTING" />
             </intent-filter>
         </receiver>
         <receiver
-            android:name=".ReenterDoze"
+            android:name="com.akylas.enforcedoze.ReenterDoze"
             android:enabled="true"
             android:exported="true" />
         <service
-            android:name=".ForceDozeService"
+            android:name="com.akylas.enforcedoze.ForceDozeService"
             android:enabled="true"
             android:exported="false" android:foregroundServiceType="specialUse"/>
         <service
-            android:name=".ForceDozeTileService"
+            android:name="com.akylas.enforcedoze.ForceDozeTileService"
             android:icon="@drawable/ic_power_settings_new_white_24dp"
             android:label="@string/tile_label"
             android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
@@ -127,7 +127,7 @@
                 android:value="true" />
         </service>
         <service
-            android:name=".NotificationService"
+            android:name="com.akylas.enforcedoze.NotificationService"
             android:exported="true"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
@@ -135,37 +135,37 @@
             </intent-filter>
         </service>
         <activity
-            android:name=".DozeStatsActivity"
+            android:name="com.akylas.enforcedoze.DozeStatsActivity"
             android:label="Doze battery stats (old)" />
         <activity
-            android:name=".DozeBatteryStatsActivity"
+            android:name="com.akylas.enforcedoze.DozeBatteryStatsActivity"
             android:label="Doze battery stats" />
         <activity
-            android:name=".WhitelistAppsActivity"
+            android:name="com.akylas.enforcedoze.WhitelistAppsActivity"
             android:label="Whitelist" />
         <activity
-            android:name=".BlockNotificationsActivity"
+            android:name="com.akylas.enforcedoze.BlockNotificationsActivity"
             android:label="Doze Notifications blocklist" />
         <activity
-            android:name=".BlockAppsActivity"
+            android:name="com.akylas.enforcedoze.BlockAppsActivity"
             android:label="Doze App blocklist" />
         <activity
-            android:name=".SettingsActivity"
+            android:name="com.akylas.enforcedoze.SettingsActivity"
             android:label="Settings" />
         <activity
-            android:name=".LogActivity"
+            android:name="com.akylas.enforcedoze.LogActivity"
             android:label="Debug log" />
         <activity
-            android:name=".PackageChooserActivity"
+            android:name="com.akylas.enforcedoze.PackageChooserActivity"
             android:label="Package chooser" />
         <activity
-            android:name=".AboutAppActivity"
+            android:name="com.akylas.enforcedoze.AboutAppActivity"
             android:label="About" />
         <activity
-            android:name=".TaskerBroadcastsActivity"
+            android:name="com.akylas.enforcedoze.TaskerBroadcastsActivity"
             android:label="Tasker broadcasts" />
         <activity
-            android:name=".DozeTunablesActivity"
+            android:name="com.akylas.enforcedoze.DozeTunablesActivity"
             android:label="Doze Tunables" />
     </application>
 
