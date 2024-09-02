@@ -99,18 +99,6 @@
                 android:targetPackage="com.suyashsrijan.forcedoze" />
         </Preference>
     </PreferenceCategory>
-    <PreferenceCategory android:title="Xposed" android:key="xposedSettings">
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="usePermanentDoze"
-            android:summary="@string/doze_unsupported_xposed_setting_summary"
-            android:title="@string/doze_unsupported_xposed_setting_title" />
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="useXposedSensorWorkaround"
-            android:summary="@string/doze_sensors_xposed_setting_summary"
-            android:title="@string/doze_sensors_xposed_setting_title" />
-    </PreferenceCategory>-->
     <PreferenceCategory android:title="Other">
         <CheckBoxPreference
             android:defaultValue="false"

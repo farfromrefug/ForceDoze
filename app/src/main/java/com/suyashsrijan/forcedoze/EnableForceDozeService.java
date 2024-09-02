@@ -9,7 +9,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 public class EnableForceDozeService extends BroadcastReceiver {
-    public static String TAG = "ForceDoze";
+    public static String TAG = "EnforceDoze";
     private static void log(String message) {
         logToLogcat(TAG, message);
     }

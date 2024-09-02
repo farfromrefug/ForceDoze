@@ -10,7 +10,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 public class BootCompleteReceiver extends BroadcastReceiver {
-    public static String TAG = "ForceDoze";
+    public static String TAG = "EnforceDoze";
     private static void log(String message) {
         logToLogcat(TAG, message);
     }

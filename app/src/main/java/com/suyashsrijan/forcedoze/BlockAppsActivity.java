@@ -33,7 +33,7 @@ public class BlockAppsActivity extends AppCompatActivity {
     AppsAdapter blockDozeApps;
     ArrayList<String> blockedPackages;
     ArrayList<AppsItem> listData;
-    public static String TAG = "ForceDoze";
+    public static String TAG = "EnforceDoze";
     boolean isSuAvailable = false;
     MaterialDialog progressDialog = null;
 

@@ -10,7 +10,7 @@ import android.util.Log;
 
 public class SettingsChangeReceiver extends BroadcastReceiver {
 
-    public static String TAG = "ForceDoze";private static void log(String message) {
+    public static String TAG = "EnforceDoze";private static void log(String message) {
         logToLogcat(TAG, message);
     }
 

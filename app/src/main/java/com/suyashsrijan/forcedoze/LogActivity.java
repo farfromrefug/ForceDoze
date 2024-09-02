@@ -31,7 +31,7 @@ import eu.chainfire.libsuperuser.Shell;
 
 public class LogActivity extends AppCompatActivity {
 
-    public static String TAG = "ForceDoze";
+    public static String TAG = "EnforceDoze";
     public List<String> log;
     boolean isSuAvailable;
     MaterialDialog progressDialog = null;

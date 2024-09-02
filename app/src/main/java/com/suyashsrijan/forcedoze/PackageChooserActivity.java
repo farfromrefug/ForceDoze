@@ -27,7 +27,7 @@ import java.util.List;
 public class PackageChooserActivity extends ListActivity {
     AppAdapter adapter = null;
     MaterialDialog progressDialog = null;
-    public static String TAG = "ForceDoze";
+    public static String TAG = "EnforceDoze";
     PackageManager pm;
 
     @Override

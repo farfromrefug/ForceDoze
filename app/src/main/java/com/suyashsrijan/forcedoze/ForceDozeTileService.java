@@ -64,7 +64,7 @@ public class ForceDozeTileService extends TileService {
         settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         serviceEnabled = settings.getBoolean("serviceEnabled", false);
         if (serviceEnabled) {
-            log("Disabling ForceDoze");
+            log("Disabling EnforceDoze");
             stopService(new Intent(this, ForceDozeService.class));
             updateTileState(false);
         } else {

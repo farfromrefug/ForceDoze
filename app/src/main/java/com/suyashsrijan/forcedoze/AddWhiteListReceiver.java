@@ -13,7 +13,7 @@ import java.util.List;
 import eu.chainfire.libsuperuser.Shell;
 
 public class AddWhiteListReceiver extends BroadcastReceiver {
-    public static String TAG = "ForceDoze";
+    public static String TAG = "EnforceDoze";
     private static void log(String message) {
         logToLogcat(TAG, message);
     }

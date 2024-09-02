@@ -1,18 +1,16 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <string name="app_name">ForceDoze</string>
-    <string name="service_active">ForceDoze Hizmeti Aktif oldu</string>
-    <string name="service_inactive">ForceDoze Hizmet devre dışı</string>
-    <string name="service_disabled">ForceDoze servisi Devre dışı</string>
+    <string name="app_name">EnforceDoze</string>
+    <string name="service_active">EnforceDoze Hizmeti Aktif oldu</string>
+    <string name="service_inactive">EnforceDoze Hizmet devre dışı</string>
+    <string name="service_disabled">EnforceDoze servisi Devre dışı</string>
     <string name="root_workaround_text">SU izniniz reddedildi veya mevcut değil! Eğer root\'unuz yoksa, root olmayan modu nasıl etkinleştireceğinizle ilgili talimatları almak için \'Root workaround\' a basın.</string>
     <string name="root_workaround_button_text">Root workaround</string>
     <string name="close_button_text">Kapat</string>
     <string name="lockscreen_timeout_snackbar_text">Cihazınızdaki kilit ekran zaman aşımı değeri çok yüksek!</string>
     <string name="more_info_text">Daha Fazla Bilgi </string>
-    <string name="doze_unsupported_more_info">Bağzı aygıtlarda Doze modu OEM tarafından devre dışı bırakılmıştır.Buseçenek,Doze modunu varsayılan olarak etkin olmayan çihazlarda etkinleştirebilir.\n\nNot: Doze\'yi kalıcı olarak etkinleştirmek için ForceDoze modülünü Xposed olarak açmanız gerekir. Xposed yüklü değilse, telefonunuzu her başlattığınızda bu seçeneği etkinleştirmeniz gerekir.</string>
+    <string name="doze_unsupported_more_info">Bağzı aygıtlarda Doze modu OEM tarafından devre dışı bırakılmıştır.Buseçenek,Doze modunu varsayılan olarak etkin olmayan çihazlarda etkinleştirebilir.\n\nNot: Doze\'yi kalıcı olarak etkinleştirmek için EnforceDoze modülünü Xposed olarak açmanız gerekir. Xposed yüklü değilse, telefonunuzu her başlattığınızda bu seçeneği etkinleştirmeniz gerekir.</string>
     <string name="doze_unsupported_more_info_title">Desteklenmeyen cihazda Doze\'yi etkinleştir</string>
     <string name="enable_doze_button_text">Etkinleştirmek Doze mode</string>
-    <string name="xposed_detected_dialog_title">Xposed Algılandı</string>
-    <string name="xposed_detected_dialog_text">"ForceDoze, Xposed\'in cihazınıza yüklendiğini tespit etti. Doze\'yi cihazınızda kalıcı kılmak için Xposed'teki ForceDoze modülünü açmanız gerekir. Modülü açmazsanız, cihaz yeniden başlatıldığında Doze işlevselliğini kaybedersiniz ve Doze'yi manuel olarak tekrar etkinleştirmeniz gerekir. "</string>
     <string name="no_root_workaround_dialog_title">No-root olmadı için geçiçi çözüm</string>
     <string name="okay_button_text">Tamam</string>
     <string name="share_command_button_text">Komutu paylaş</string>
@@ -52,10 +50,6 @@
     <string name="doze_delay_setting_title">Doze gecikmesi</string>
     <string name="whitelist_apps_setting_summary">Doze modunda uygulamaları beyaz listeye ekleme</string>
     <string name="whitelist_apps_setting_text">Beyaz liste uygualamsı</string>
-    <string name="doze_unsupported_xposed_setting_summary">Doze\'yi desteklenmeyen bir cihazda etkinleştir</string>
-    <string name="doze_unsupported_xposed_setting_title">Desteklenmeyen cihazda Doze\'yi etkinleştir</string>
-    <string name="doze_sensors_xposed_setting_summary">Doze\'nin hareket sensörlerine erişmesini önle (deneysel)</string>
-    <string name="doze_sensors_xposed_setting_title">Doze için hareket algılamayı devre dışı bırak(root)</string>
     <string name="reset_forcedoze_setting_summary">ForceDoze öğesini varsayılan duruma sıfırla</string>
     <string name="reset_forcedoze_setting_title">Reset ForceDoze</string>
     <string name="clear_doze_stats_setting_summary">Doze battery istasiklerini sıfırla</string>

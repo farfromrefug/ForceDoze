@@ -1,18 +1,16 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <string name="app_name">ForceDoze</string>
-    <string name="service_active">ForceDoze Service ist aktiv</string>
-    <string name="service_inactive">ForceDoze Service ist inaktiv</string>
-    <string name="service_disabled">ForceDoze Service ist deaktiviert</string>
+    <string name="app_name">EnforceDoze</string>
+    <string name="service_active">EnforceDoze Service ist aktiv</string>
+    <string name="service_inactive">EnforceDoze Service ist inaktiv</string>
+    <string name="service_disabled">EnforceDoze Service ist deaktiviert</string>
     <string name="root_workaround_text">SU Erlaubnis verweigert oder nicht verfügbar! Wenn du kein Root hast, dann drücke \'Root Workaround\', um zu erfahren, wie man den No-Root Modus aktiviert.</string>
     <string name="root_workaround_button_text">Root Workaround</string>
     <string name="close_button_text">Schließen</string>
     <string name="lockscreen_timeout_snackbar_text">Die Dauer bis zum automatischen Sperren ist auf deinem Gerät zu lang eingestellt!</string>
     <string name="more_info_text">Weitere Infos</string>
-    <string name="doze_unsupported_more_info">Auf manchen Geräten wurde der Doze Modus vom Hersteller deaktiviert. Diese Option kann den Doze Modus auf solchen Geräten aktivieren.\n\nHinweis: du musst das ForceDoze Modul in Xposed aktivieren, um Doze dauerhaft zu ermöglichen. Falls du Xposed nicht installiert hast, dann musst du diese Option jedes mal nach dem Hochfahren des Telefons erneut aktivieren.</string>
+    <string name="doze_unsupported_more_info">Auf manchen Geräten wurde der Doze Modus vom Hersteller deaktiviert. Diese Option kann den Doze Modus auf solchen Geräten aktivieren.\n\nHinweis: du musst das EnforceDoze Modul in Xposed aktivieren, um Doze dauerhaft zu ermöglichen. Falls du Xposed nicht installiert hast, dann musst du diese Option jedes mal nach dem Hochfahren des Telefons erneut aktivieren.</string>
     <string name="doze_unsupported_more_info_title">Ermögliche Doze auf nicht-unterstützten Geräten</string>
     <string name="enable_doze_button_text">Aktiviere Doze Modus</string>
-    <string name="xposed_detected_dialog_title">Xposed vorhanden</string>
-    <string name="xposed_detected_dialog_text">"ForceDoze has festgestellt, dass Xposed auf deinem Gerät installiert ist. Um Doze dauerhaft zu ermöglichen, musst du das ForceDoze Modul in Xposed aktivieren. Wenn du das Modul nicht aktiviert, wirst du die Doze Funktion nach einem Neustart verlieren und musst Doze manuell wieder aktivieren. "</string>
     <string name="no_root_workaround_dialog_title">No-Root Workaround</string>
     <string name="okay_button_text">OK</string>
     <string name="share_command_button_text">Teile Befehl</string>
@@ -22,7 +20,7 @@
     <string name="lockscreen_timeout_dialog_text_p1">Die Dauer bis zum automatischen Sperren ist auf deinem Gerät zu lang (</string>
     <string name="lockscreen_timeout_dialog_text_p2">" Minuten). Dadurch wird dein Gerät nicht "</string>
     <string name="lockscreen_timeout_dialog_text_p3">"automatisch gesperrt, wenn der Bildschirm ausgeht, bis "</string>
-    <string name="lockscreen_timeout_dialog_text_p4">" Minuten vergangen sind. Dadurch wird auch ForceDoze "</string>
+    <string name="lockscreen_timeout_dialog_text_p4">" Minuten vergangen sind. Dadurch wird auch EnforceDoze "</string>
     <string name="lockscreen_timeout_dialog_text_p5">"für "</string>
     <string name="lockscreen_timeout_dialog_text_p6">" Minuten warten, bis das Gerät in den Doze Modus geht, indem es einen temporären Wake Lock benutzt. Wenn du möchtest, dass ForcdDoze das Gerät schneller in den Doze Modus schickt, solltest du die Dauer bis zum automatischen Sperren in den Sicherheits-Einstellungen auf \'Sofort\' stellen. Wenn du möchtest, dass ForceDoze den Doze Modus unabhängig von dieser Einstellung startet, dann aktiviere die \'Ignoriere Dauer bis zum automatischen Sperren\' Option in den ForceDoze Einstellungen."</string>
     <string name="how_doze_works_dialog_text">Wie der Doze Modus auf deinem Gerät funktioniert:\n\nWenn der Benutzer das Gerät ohne Ladegerät und ohne es zu bewegen für eine bestimmte Zeit (30 Minuten) bei ausgeschaltetem Bildschirm liegen lässt, geht das Gerät in den Doze Modus. Im Doze Modus versucht das System Akku zu sparen, indem der App-Zugriff auf das Internet und CPU-intensive Dienste eingeschränkt werden. Es verhindert auch, dass Apps auf das Netzwerk zugreifen und stellt Aufgaben, Synchronisierungen und Standard-Alarme zurück.\n\nDas System verlässt regelmäßig für eine kurze Zeit den Doze Modus, um Apps zu ermöglichen, ihre zurückgestellten Aktivitäten zu erledigen. Während diesem Wartungsfenster führt das System alle unerledigten Synchronisierungen, Aufgaben und Alarme aus und erlaubt den Apps den Zugriff auf das Internet.\n\nAm Ende eines jeden Wartungsfensters geht das System wieder in den Doze Modus, indem es den Internet-Zugriff unterbricht und Aufgaben, Synchronisierungen und Alarme wieder zurückstellt. Mit der Zeit werden die Wartungsfenster immer seltener aufgerufen, wodurch bei längerer Inaktivität und ohne angeschlossenes Ladegerät Akku gespart wird.\n\nSobald der Benutzer das Gerät aufweckt, indem er es bewegt, den Bildschirm anschaltet oder es an ein Ladegerät anschließt, verläßt das System den Doze Modus und alle Apps kehren zu ihrer normalen Aktivität zurück.\n\nWie ForceDoze funktioniert:\n\nForceDoze bewirkt, dass das Gerät unmittelbar nach dem Ausschalten des Bildschirms (oder nach einer vom Benutzer definierten Zeitspanne) in den Doze Modus geht, anstatt 30 Minuten zu warten, dass das Gerät nicht bewegt wird. Zusätzlich schaltet ForceDoze die Bewegungssensoren aus, damit der Doze Modus nicht deaktiviert wird, wenn du dein Gerät bewegst. Der Doze Modus wird nur während eines Wartungsfensters (siehe oben) oder wenn du den Bilschirm anschaltest deaktiviert, wodurch dein Gerät viel länger im Doze Modus bleibt, selbst wenn das Gerät bei ausgeschaltetem Bildschirm nicht ruht. Dadurch wird deutlich mehr Akku gespart als im normalen Doze Modus.</string>
@@ -52,10 +50,6 @@
     <string name="doze_delay_setting_title">Doze Verzögerung</string>
     <string name="whitelist_apps_setting_summary">Setze Apps auf die Positivliste, um sie vom Doze Modus auszunehmen.</string>
     <string name="whitelist_apps_setting_text">Positivliste für Apps</string>
-    <string name="doze_unsupported_xposed_setting_summary">Ermöglicht Doze auf nicht-unterstützten Geräten.</string>
-    <string name="doze_unsupported_xposed_setting_title">Ermögliche Doze auf nicht-unterstützten Geräten</string>
-    <string name="doze_sensors_xposed_setting_summary">Verhindert, dass der Doze Modus auf die Bewegungssensoren zugreift (experimentell).</string>
-    <string name="doze_sensors_xposed_setting_title">Deaktiviere Bewegungserkennung für Doze (Root)</string>
     <string name="reset_forcedoze_setting_summary">Setzt ForceDoze auf seine Voreinstellung zurück.</string>
     <string name="reset_forcedoze_setting_title">Setze ForceDoze zurück</string>
     <string name="clear_doze_stats_setting_summary">Löscht die Doze Akku Statistik.</string>

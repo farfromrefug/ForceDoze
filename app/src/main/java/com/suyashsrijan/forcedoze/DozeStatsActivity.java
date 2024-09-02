@@ -36,7 +36,7 @@ public class DozeStatsActivity extends AppCompatActivity {
     ListView listView;
     BatteryConsumptionAdapter batteryConsumptionAdapter;
     MaterialDialog progressDialog = null;
-    public static String TAG = "ForceDoze";
+    public static String TAG = "EnforceDoze";
 
     private static void log(String message) {
         logToLogcat(TAG, message);

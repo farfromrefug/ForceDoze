@@ -27,7 +27,7 @@
                 android:layout_marginLeft="30dp"
                 android:layout_marginTop="40dp"
                 android:fontFamily="sans-serif-light"
-                android:text="ForceDoze for\nAndroid"
+                android:text="EnforceDoze for\nAndroid"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textSize="36sp"
                 android:textColor="#ffffff" />

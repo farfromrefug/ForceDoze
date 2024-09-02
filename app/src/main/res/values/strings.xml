@@ -1,18 +1,16 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <string name="app_name">ForceDoze</string>
-    <string name="service_active">ForceDoze service is active</string>
-    <string name="service_inactive">ForceDoze service is inactive</string>
+    <string name="app_name">EnforceDoze</string>
+    <string name="service_active">EnforceDoze service is active</string>
+    <string name="service_inactive">EnforceDoze service is inactive</string>
     <string name="service_disabled">ForceDoze service is disabled</string>
     <string name="root_workaround_text">SU permission denied or not available! If you don\'t have root, press \'Root workaround\' to get instructions on how to enable no-root mode</string>
     <string name="root_workaround_button_text">Root workaround</string>
     <string name="close_button_text">Close</string>
     <string name="lockscreen_timeout_snackbar_text">The lockscreen timeout value on your device is too high!</string>
     <string name="more_info_text">More info</string>
-    <string name="doze_unsupported_more_info">Some devices have Doze mode disabled by the OEM. This option can enable Doze mode on devices which do not have it enabled by default.\n\nNote: You need to turn on the ForceDoze module in Xposed in order to permanently enable Doze. If you don\'t have Xposed installed, you will have to turn this option on every time you restart your phone.</string>
+    <string name="doze_unsupported_more_info">Some devices have Doze mode disabled by the OEM. This option can enable Doze mode on devices which do not have it enabled by default.\n\nNote: You will have to turn this option on every time you restart your phone.</string>
     <string name="doze_unsupported_more_info_title">Enable Doze on unsupported device</string>
     <string name="enable_doze_button_text">Enable Doze mode</string>
-    <string name="xposed_detected_dialog_title">Xposed detected</string>
-    <string name="xposed_detected_dialog_text">"ForceDoze has detected that Xposed is installed on your device. In order to make Doze permanently enabled on your device, you need to turn on the ForceDoze module in Xposed. If you don't turn on the module, you will lose Doze functionality on device restart and will have to manually enable Doze again. "</string>
     <string name="no_root_workaround_dialog_title">No-root workaround</string>
     <string name="okay_button_text">Okay</string>
     <string name="share_command_button_text">Share command</string>
@@ -56,10 +54,6 @@
     <string name="doze_delay_setting_title">Doze delay</string>
     <string name="whitelist_apps_setting_summary">Whitelist apps from Doze mode</string>
     <string name="whitelist_apps_setting_text">Whitelist apps</string>
-    <string name="doze_unsupported_xposed_setting_summary">Enables Doze on an unsupported device</string>
-    <string name="doze_unsupported_xposed_setting_title">Enable Doze on unsupported device</string>
-    <string name="doze_sensors_xposed_setting_summary">Prevent Doze from accessing motion sensors (experimental)</string>
-    <string name="doze_sensors_xposed_setting_title">Disable motion sensing for Doze (root)</string>
     <string name="reset_forcedoze_setting_summary">Reset ForceDoze to the default state</string>
     <string name="reset_forcedoze_setting_title">Reset ForceDoze</string>
     <string name="clear_doze_stats_setting_summary">Clear Doze battery stats</string>

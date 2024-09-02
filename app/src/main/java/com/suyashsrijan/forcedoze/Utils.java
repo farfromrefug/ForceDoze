@@ -220,7 +220,7 @@ public class Utils {
     public static boolean doesSettingExist(String settingName) {
         String[] updatableSettings = {"ignoreIfHotspot", "turnOffDataInDoze", "turnOffWiFiInDoze", "ignoreLockscreenTimeout",
                 "dozeEnterDelay", "useAutoRotateAndBrightnessFix", "enableSensors", "disableWhenCharging",
-                "showPersistentNotif", "useXposedSensorWorkaround", "useNonRootSensorWorkaround"};
+                "showPersistentNotif", "useNonRootSensorWorkaround"};
         return Arrays.asList(updatableSettings).contains(settingName);
     }
 
@@ -239,17 +239,6 @@ public class Utils {
             return false;
         } else return true;
     }
-
-//    public static boolean isXposedInstalled(Context context) {
-//        PackageManager packageManager = context.getPackageManager();
-//        List<ApplicationInfo> applicationInfoList = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
-//        for (ApplicationInfo applicationInfo : applicationInfoList) {
-//            if (applicationInfo.packageName.equals("de.robv.android.xposed.installer")) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
 
     public static boolean isScreenOn(Context context) {
         DisplayManager dm = (DisplayManager) context.getSystemService(Context.DISPLAY_SERVICE);

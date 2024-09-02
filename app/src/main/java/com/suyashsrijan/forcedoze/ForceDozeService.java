@@ -62,7 +62,6 @@ public class ForceDozeService extends Service {
     boolean useAutoRotateAndBrightnessFix = false;
     boolean showPersistentNotif = true;
     boolean ignoreLockscreenTimeout = false;
-//    boolean useXposedSensorWorkaround = false;
     boolean useNonRootSensorWorkaround = false;
     boolean turnOffAllSensorsInDoze = false;
     boolean turnOffBiometricsInDoze = false;
@@ -165,7 +164,6 @@ public class ForceDozeService extends Service {
         turnOffBiometricsInDoze = getDefaultSharedPreferences(getApplicationContext()).getBoolean("turnOffBiometricsInDoze", false);
         whitelistMusicAppNetwork = getDefaultSharedPreferences(getApplicationContext()).getBoolean("whitelistMusicAppNetwork", false);
         ignoreLockscreenTimeout = getDefaultSharedPreferences(getApplicationContext()).getBoolean("ignoreLockscreenTimeout", true);
-//        useXposedSensorWorkaround = getDefaultSharedPreferences(getApplicationContext()).getBoolean("useXposedSensorWorkaround", false);
         useNonRootSensorWorkaround = getDefaultSharedPreferences(getApplicationContext()).getBoolean("useNonRootSensorWorkaround", false);
         dozeEnterDelay = getDefaultSharedPreferences(getApplicationContext()).getInt("dozeEnterDelay", 0);
         useAutoRotateAndBrightnessFix = getDefaultSharedPreferences(getApplicationContext()).getBoolean("autoRotateAndBrightnessFix", false);
@@ -247,7 +245,7 @@ public class ForceDozeService extends Service {
     }
 
     public void reloadSettings() {
-        log("ForceDoze settings reloaded ----------------------------------");
+        log("EnforceDoze settings reloaded ----------------------------------");
         dozeUsageData = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getStringSet("dozeUsageDataAdvanced", new LinkedHashSet<String>());
         log("dozeUsageData: " + "Total Entries -> " + dozeUsageData.size());
         turnOffDataInDoze = getDefaultSharedPreferences(getApplicationContext()).getBoolean("turnOffDataInDoze", false);
@@ -280,8 +278,6 @@ public class ForceDozeService extends Service {
         log("disableWhenCharging: " + disableWhenCharging);
         showPersistentNotif = getDefaultSharedPreferences(getApplicationContext()).getBoolean("showPersistentNotif", false);
         log("showPersistentNotif: " + showPersistentNotif);
-//        useXposedSensorWorkaround = getDefaultSharedPreferences(getApplicationContext()).getBoolean("useXposedSensorWorkaround", false);
-//        log("useXposedSensorWorkaround: " + useXposedSensorWorkaround);
         useNonRootSensorWorkaround = getDefaultSharedPreferences(getApplicationContext()).getBoolean("useNonRootSensorWorkaround", false);
         log("useNonRootSensorWorkaround: " + useNonRootSensorWorkaround);
         log("ForceDoze settings reloaded ----------------------------------");
@@ -404,7 +400,6 @@ public class ForceDozeService extends Service {
                     saveDozeDataStats();
                 }
 
-//                if (!useXposedSensorWorkaround) {
                 if (!enableSensors) {
                     disableSensorsTimer = new Timer();
                     disableSensorsTimer.schedule(new TimerTask() {
@@ -423,9 +418,6 @@ public class ForceDozeService extends Service {
                 } else {
                     log("Not disabling motion sensors because enableSensors=true");
                 }
-//                } else {
-//                    log("Xposed Sensor workaround selected, not disabling sensors");
-//                }
                 enterDozeHandleNetwork(context);
 
             } else {
@@ -477,7 +469,6 @@ public class ForceDozeService extends Service {
             }
         }
 
-//        if (!useXposedSensorWorkaround) {
         if (!enableSensors) {
             enableSensorsTimer = new Timer();
             enableSensorsTimer.schedule(new TimerTask() {
@@ -489,7 +480,6 @@ public class ForceDozeService extends Service {
                 }
             }, 2000);
         }
-//        }
 
         if (useNonRootSensorWorkaround) {
             try {

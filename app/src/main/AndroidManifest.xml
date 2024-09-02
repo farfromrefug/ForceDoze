@@ -167,15 +167,6 @@
         <activity
             android:name=".DozeTunablesActivity"
             android:label="Doze Tunables" />
-        <meta-data
-            android:name="xposedmodule"
-            android:value="true" />
-        <meta-data
-            android:name="xposeddescription"
-            android:value="Enable more ForceDoze features" />
-        <meta-data
-            android:name="xposedminversion"
-            android:value="72" />
     </application>
 
 </manifest>

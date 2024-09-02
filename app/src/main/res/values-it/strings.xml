@@ -1,18 +1,16 @@
 <resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
-    <string name="app_name">ForceDoze</string>
-    <string name="service_active">ForceDoze servizio attivo</string>
-    <string name="service_inactive">ForceDoze servizio in pausa</string>
-    <string name="service_disabled">ForceDoze service disattivato</string>
+    <string name="app_name">EnforceDoze</string>
+    <string name="service_active">EnforceDoze servizio attivo</string>
+    <string name="service_inactive">EnforceDoze servizio in pausa</string>
+    <string name="service_disabled">EnforceDoze service disattivato</string>
     <string name="root_workaround_text">Permessi SU negati o non disponibili! Se non hai il ROOT, premi \'Modo alternativo\' per ricevere le istruzioni su come abilitare la modalità senza ROOT</string>
     <string name="root_workaround_button_text">Modo alternativo</string>
     <string name="close_button_text">Chiudi</string>
     <string name="lockscreen_timeout_snackbar_text">Il tempo del blocco schermo del dispositivo è troppo elevato!</string>
     <string name="more_info_text">Più informazioni</string>
-    <string name="doze_unsupported_more_info">Alcuni dispositivi hanno la modalità Doze disattivata dal produttore. Questa opzione può attivare la modalità Doze sui dispositivi che non ce l\'hanno abilitata di defaullt.\n\nNota: Devi abilitare il modulo ForceDoze in Xposed per mantenere attivo Doze. Se non hai Xposed installato, dovrai attivare questa opzione ogni volta che riavvierai il dispositivo.</string>
+    <string name="doze_unsupported_more_info">Alcuni dispositivi hanno la modalità Doze disattivata dal produttore. Questa opzione può attivare la modalità Doze sui dispositivi che non ce l\'hanno abilitata di defaullt.\n\nNota: Devi abilitare il modulo EnforceDoze in Xposed per mantenere attivo Doze. Se non hai Xposed installato, dovrai attivare questa opzione ogni volta che riavvierai il dispositivo.</string>
     <string name="doze_unsupported_more_info_title">Attiva Doze su un dispositivo non supportato</string>
     <string name="enable_doze_button_text">Attiva modalità Doze</string>
-    <string name="xposed_detected_dialog_title">Xposed rilevato</string>
-    <string name="xposed_detected_dialog_text">"ForceDoze ha rilevato che Xposed è installato sul tuo dispositivo. Per mantenere Doze permanentemente attivo, devi abilitare il modulo ForceDoze dentro Xposed. Se non attivi il modulo, perderai le funzioni Doze al riavvio del dispositivo e dovrai attivarle di nuovo manualmente. "</string>
     <string name="no_root_workaround_dialog_title">Modo alternativo No-root</string>
     <string name="okay_button_text">Ok</string>
     <string name="share_command_button_text">Condividi comando</string>
@@ -22,7 +20,7 @@
     <string name="lockscreen_timeout_dialog_text_p1">Il tempo del blocco schermo del dispositivo è troppo elevato (</string>
     <string name="lockscreen_timeout_dialog_text_p2">" minuti). Questo significa che il dispositivo non si "</string>
     <string name="lockscreen_timeout_dialog_text_p3">"bloccherà automaticamente dopo lo spegnimento dello schermo fino "</string>
-    <string name="lockscreen_timeout_dialog_text_p4">" a quando i minuti non saranno passati. Questo significa anche che ForceDoze aspetterà "</string>
+    <string name="lockscreen_timeout_dialog_text_p4">" a quando i minuti non saranno passati. Questo significa anche che EnforceDoze aspetterà "</string>
     <string name="lockscreen_timeout_dialog_text_p5">"per "</string>
     <string name="lockscreen_timeout_dialog_text_p6">" minuti prima di far entrare il tuo dispositivo in modalità Doze usando un wake lock temporaneo. Se vuoi che ForceDoze faccia entrare il dispositivo il prima possibile in modalià Doze, considera di ridurre il tempo di blocco schermo su Immediatamente nelle Impostazioni Sicurezza del dispositivo. Se vuoi che ForceDoze faccia entrare il dispositivo in modalità Doze indipendentemente dal tempo di blocco dello schermo, attiva l\'opzione \'Ignora tempo blocco schermo\' nelle impostazioni di ForceDoze."</string>
     <string name="how_doze_works_dialog_text">Come funziona Doze sul tuo dispositivo:\n\nSe lasci il dispositivo staccato dalla corrente e immobile per un determinato periodo (30 minuti), con lo schermo spento, il dispositivo entra in modalità Doze. In modalità Doze, il sistema tenterà di conservare batteria limitando l\'accesso alla rete e i servizi ad alto utilizzo di CPU delle app. Inoltre evita che le app utilizzino la rete dati e pospone i suoi lavori, sincronizzazioni e allarmi standard\n\nPeriodicamente, il sistema esce per un breve periodo dalla modalità Doze per consentire alle app di completare le attività rinviate. Durante questa finestra di manutenzione, il sistema esegue tutte le sincronizzazioni, lavori, e allarmi in coda, e permette alle app di collegarsi alla rete dati\n\nAlla conclusione di ogni finestra di manutenzione, il sistema entra nuovamente in modalità Doze, sospendendo l\'accesso alla rete dati e posticipando lavori, sincronizzazioni, e allarmi. Col passare del tempo, il sistema programma meno finestre di manutenzione e per un minor tempo, aiutando a ridurre il consumo di batteria nel caso di inattività per lunghi periodi di tempo in assenza di collegamento alla rete elettrica.\n\nAppena l\'utente attiva il dispositivo muovendolo, accendendo lo schermo, o collegandolo alla rete elettrica, il sistema esce dalla modalità Doze e tutte le app riprendono le loro attività\n\nCome lavora ForceDoze:\n\nForceDoze permette al dispositivo di entrare subito in modalità Doze appena spegni lo schermo (o dopo un determinato periodo specificato dall\'utente), invece di aspettare per 30 minuti che il dispositivo rimanga stazionario. Inoltre, ForceDoze disattiva i sensori di movimento del dispositivo, così Doze non si disattiva quando muovi il dispositivo. Doze si disattiva soltanto durante le finestre di manutenzione (come spiegato prima) o quando accendi lo schermo, il che significa che il dispositivo starà in modalità Doze per molto più tempo rispetto a se il dispositivo fosse a schermo spento ma in movimento, e quindi il risparmio della batteria sarà molto maggiore rispetto al normale Doze.</string>
@@ -52,10 +50,6 @@
     <string name="doze_delay_setting_title">Ritardo Doze</string>
     <string name="whitelist_apps_setting_summary">Lista bianca dalla modalità Doze</string>
     <string name="whitelist_apps_setting_text">App in lista bianca</string>
-    <string name="doze_unsupported_xposed_setting_summary">Attiva Doze su un dispositivo non supportato</string>
-    <string name="doze_unsupported_xposed_setting_title">Attiva Doze su dispositivi non supportati</string>
-    <string name="doze_sensors_xposed_setting_summary">Previene l\'uso dei sensori di movimento da parte di Doze (sperimentale)</string>
-    <string name="doze_sensors_xposed_setting_title">Disattiva i sensori di movimento per Doze (root)</string>
     <string name="reset_forcedoze_setting_summary">Resetta ForceDoze alle impostazioni originali</string>
     <string name="reset_forcedoze_setting_title">Resetta ForceDoze</string>
     <string name="clear_doze_stats_setting_summary">Cancella le statistiche della batteria di Doze</string>

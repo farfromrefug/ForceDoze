@@ -101,7 +101,6 @@ public class SettingsActivity extends AppCompatActivity {
 
             addPreferencesFromResource(R.xml.prefs);
             PreferenceScreen preferenceScreen = (PreferenceScreen) findPreference("preferenceScreen");
-            PreferenceCategory xposedSettings = (PreferenceCategory) findPreference("xposedSettings");
             PreferenceCategory mainSettings = (PreferenceCategory) findPreference("mainSettings");
             PreferenceCategory dozeSettings = (PreferenceCategory) findPreference("dozeSettings");
             Preference resetForceDozePref = (Preference) findPreference("resetForceDoze");
@@ -110,7 +109,6 @@ public class SettingsActivity extends AppCompatActivity {
             Preference usePermanentDoze = (Preference) findPreference("usePermanentDoze");
             Preference dozeNotificationBlocklist = (Preference) findPreference("blacklistAppNotifications");
             Preference dozeAppBlocklist = (Preference) findPreference("blacklistApps");
-            final Preference xposedSensorWorkaround = (Preference) findPreference("useXposedSensorWorkaround");
             final Preference nonRootSensorWorkaround = (Preference) findPreference("useNonRootSensorWorkaround");
             final Preference enableSensors = (Preference) findPreference("enableSensors");
             Preference turnOffDataInDoze = (Preference) findPreference("turnOffDataInDoze");
@@ -196,56 +194,16 @@ public class SettingsActivity extends AppCompatActivity {
                 return true;
             });
 
-            xposedSensorWorkaround.setOnPreferenceChangeListener((preference, o) -> {
-                final boolean newValue = (boolean) o;
-                if (isSuAvailable) {
-                    SharedPreferences sharedPreferences12 = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                    SharedPreferences.Editor editor = sharedPreferences12.edit();
-                    if (newValue) {
-                        editor.putBoolean("enableSensors", true);
-                        editor.putBoolean("useNonRootSensorWorkaround", false);
-                        editor.apply();
-                        enableSensors.setEnabled(false);
-                        autoRotateBrightnessFix.setEnabled(false);
-                        nonRootSensorWorkaround.setEnabled(false);
-                    } else {
-                        enableSensors.setEnabled(true);
-                        autoRotateBrightnessFix.setEnabled(true);
-                        nonRootSensorWorkaround.setEnabled(true);
-                    }
-                    log("Phone is rooted and SU permission granted");
-                    executeCommand("chmod 664 /data/data/com.suyashsrijan.forcedoze/shared_prefs/com.suyashsrijan.forcedoze_preferences.xml");
-                    executeCommand("chmod 755 /data/data/com.suyashsrijan.forcedoze/shared_prefs");
-                    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
-                    builder.setTitle(getString(R.string.reboot_required_dialog_title));
-                    builder.setMessage(getString(R.string.reboot_required_dialog_text));
-                    builder.setPositiveButton(getString(R.string.okay_button_text), (dialogInterface, i) -> dialogInterface.dismiss());
-                    builder.show();
-                    return true;
-                } else {
-                    log("SU permission denied or not available");
-                    MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
-                    builder.setTitle(getString(R.string.error_text));
-                    builder.setMessage(getString(R.string.su_perm_denied_msg));
-                    builder.setPositiveButton(getString(R.string.close_button_text), (dialogInterface, i) -> dialogInterface.dismiss());
-                    builder.show();
-                    return false;
-                }
-            });
-
             nonRootSensorWorkaround.setOnPreferenceChangeListener((preference, o) -> {
                 boolean newValue = (boolean) o;
                 SharedPreferences sharedPreferences1 = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 SharedPreferences.Editor editor = sharedPreferences1.edit();
                 if (newValue) {
                     editor.putBoolean("enableSensors", true);
-                    editor.putBoolean("useXposedSensorWorkaround", false);
                     editor.apply();
-                    xposedSensorWorkaround.setEnabled(false);
                     autoRotateBrightnessFix.setEnabled(false);
                     enableSensors.setEnabled(false);
                 } else {
-                    xposedSensorWorkaround.setEnabled(true);
                     autoRotateBrightnessFix.setEnabled(true);
                     enableSensors.setEnabled(true);
                 }
@@ -320,33 +278,11 @@ public class SettingsActivity extends AppCompatActivity {
                 return true;
             });
 
-            if (!Utils.isXposedInstalled(getContext())) {
-                preferenceScreen.removePreference(xposedSettings);
-            }
-
-            if (sharedPreferences.getBoolean("useXposedSensorWorkaround", false)) {
-                enableSensors.setEnabled(false);
-                autoRotateBrightnessFix.setEnabled(false);
-                nonRootSensorWorkaround.setEnabled(false);
-                sharedPreferences.edit().putBoolean("autoRotateAndBrightnessFix", false).apply();
-                sharedPreferences.edit().putBoolean("enableSensors", false).apply();
-                sharedPreferences.edit().putBoolean("useNonRootSensorWorkaround", false).apply();
-            }
-
-            if (Utils.isXposedInstalled(getContext())) {
-                if (Utils.checkForAutoPowerModesFlag()) {
-                    usePermanentDoze.setEnabled(false);
-                    usePermanentDoze.setSummary(R.string.device_supports_doze_text);
-                }
-            }
-
             if (sharedPreferences.getBoolean("useNonRootSensorWorkaround", false)) {
-                xposedSensorWorkaround.setEnabled(false);
                 autoRotateBrightnessFix.setEnabled(false);
                 enableSensors.setEnabled(false);
                 sharedPreferences.edit().putBoolean("autoRotateAndBrightnessFix", false).apply();
                 sharedPreferences.edit().putBoolean("enableSensors", false).apply();
-                sharedPreferences.edit().putBoolean("useXposedSensorWorkaround", false).apply();
             }
 
             turnOffDataInDoze.setEnabled(false);
