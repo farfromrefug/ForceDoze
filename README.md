@@ -28,7 +28,6 @@ Play Store link: https://play.google.com/store/apps/details?id=com.suyashsrijan.
 * Android smartphone running 6.0 (Marshmallow)
 * Android Studio
 * Root (can work with limited functionality in non-root mode)
-* Xposed (for extra functionality)
 
 # License
 

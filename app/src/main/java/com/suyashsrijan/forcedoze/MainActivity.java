@@ -421,27 +421,27 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                     executeCommand("dumpsys deviceidle disable");
                     executeCommand("dumpsys deviceidle enable");
                 }
-                if (Utils.isXposedInstalled(getApplicationContext())) {
-                    showEnableXposedModuleDialog();
-                }
+//                if (Utils.isXposedInstalled(getApplicationContext())) {
+//                    showEnableXposedModuleDialog();
+//                }
                 dialogInterface.dismiss();
             }
         });
         builder.show();
     }
 
-    public void showEnableXposedModuleDialog() {
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
-        builder.setTitle(getString(R.string.xposed_detected_dialog_title));
-        builder.setMessage(getString(R.string.xposed_detected_dialog_text));
-        builder.setPositiveButton(getString(R.string.close_button_text), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-        builder.show();
-    }
+//    public void showEnableXposedModuleDialog() {
+//        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+//        builder.setTitle(getString(R.string.xposed_detected_dialog_title));
+//        builder.setMessage(getString(R.string.xposed_detected_dialog_text));
+//        builder.setPositiveButton(getString(R.string.close_button_text), new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialogInterface, int i) {
+//                dialogInterface.dismiss();
+//            }
+//        });
+//        builder.show();
+//    }
 
     public void showRootWorkaroundInstructions() {
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);

@@ -240,16 +240,16 @@ public class Utils {
         } else return true;
     }
 
-    public static boolean isXposedInstalled(Context context) {
-        PackageManager packageManager = context.getPackageManager();
-        List<ApplicationInfo> applicationInfoList = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
-        for (ApplicationInfo applicationInfo : applicationInfoList) {
-            if (applicationInfo.packageName.equals("de.robv.android.xposed.installer")) {
-                return true;
-            }
-        }
-        return false;
-    }
+//    public static boolean isXposedInstalled(Context context) {
+//        PackageManager packageManager = context.getPackageManager();
+//        List<ApplicationInfo> applicationInfoList = packageManager.getInstalledApplications(PackageManager.GET_META_DATA);
+//        for (ApplicationInfo applicationInfo : applicationInfoList) {
+//            if (applicationInfo.packageName.equals("de.robv.android.xposed.installer")) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
 
     public static boolean isScreenOn(Context context) {
         DisplayManager dm = (DisplayManager) context.getSystemService(Context.DISPLAY_SERVICE);

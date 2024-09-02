@@ -62,7 +62,7 @@ public class ForceDozeService extends Service {
     boolean useAutoRotateAndBrightnessFix = false;
     boolean showPersistentNotif = true;
     boolean ignoreLockscreenTimeout = false;
-    boolean useXposedSensorWorkaround = false;
+//    boolean useXposedSensorWorkaround = false;
     boolean useNonRootSensorWorkaround = false;
     boolean turnOffAllSensorsInDoze = false;
     boolean turnOffFingerprintInDoze = false;
@@ -280,8 +280,8 @@ public class ForceDozeService extends Service {
         log("disableWhenCharging: " + disableWhenCharging);
         showPersistentNotif = getDefaultSharedPreferences(getApplicationContext()).getBoolean("showPersistentNotif", false);
         log("showPersistentNotif: " + showPersistentNotif);
-        useXposedSensorWorkaround = getDefaultSharedPreferences(getApplicationContext()).getBoolean("useXposedSensorWorkaround", false);
-        log("useXposedSensorWorkaround: " + useXposedSensorWorkaround);
+//        useXposedSensorWorkaround = getDefaultSharedPreferences(getApplicationContext()).getBoolean("useXposedSensorWorkaround", false);
+//        log("useXposedSensorWorkaround: " + useXposedSensorWorkaround);
         useNonRootSensorWorkaround = getDefaultSharedPreferences(getApplicationContext()).getBoolean("useNonRootSensorWorkaround", false);
         log("useNonRootSensorWorkaround: " + useNonRootSensorWorkaround);
         log("ForceDoze settings reloaded ----------------------------------");
@@ -404,28 +404,28 @@ public class ForceDozeService extends Service {
                     saveDozeDataStats();
                 }
 
-                if (!useXposedSensorWorkaround) {
-                    if (!enableSensors) {
-                        disableSensorsTimer = new Timer();
-                        disableSensorsTimer.schedule(new TimerTask() {
-                            @Override
-                            public void run() {
-                                log("Disabling motion sensors");
-                                if (sensorWhitelistPackage.equals("")) {
-                                    executeCommand("dumpsys sensorservice restrict");
-                                } else {
-                                    log("Package " + sensorWhitelistPackage + " is whitelisted from sensorservice");
-                                    log("Note: Packages that get whitelisted are supposed to request sensor access again, if the app doesn't work, email the dev of that app!");
-                                    executeCommand("dumpsys sensorservice restrict " + sensorWhitelistPackage);
-                                }
+//                if (!useXposedSensorWorkaround) {
+                if (!enableSensors) {
+                    disableSensorsTimer = new Timer();
+                    disableSensorsTimer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            log("Disabling motion sensors");
+                            if (sensorWhitelistPackage.equals("")) {
+                                executeCommand("dumpsys sensorservice restrict");
+                            } else {
+                                log("Package " + sensorWhitelistPackage + " is whitelisted from sensorservice");
+                                log("Note: Packages that get whitelisted are supposed to request sensor access again, if the app doesn't work, email the dev of that app!");
+                                executeCommand("dumpsys sensorservice restrict " + sensorWhitelistPackage);
                             }
-                        }, 2000);
-                    } else {
-                        log("Not disabling motion sensors because enableSensors=true");
-                    }
+                        }
+                    }, 2000);
                 } else {
-                    log("Xposed Sensor workaround selected, not disabling sensors");
+                    log("Not disabling motion sensors because enableSensors=true");
                 }
+//                } else {
+//                    log("Xposed Sensor workaround selected, not disabling sensors");
+//                }
                 enterDozeHandleNetwork(context);
 
             } else {
@@ -477,19 +477,19 @@ public class ForceDozeService extends Service {
             }
         }
 
-        if (!useXposedSensorWorkaround) {
-            if (!enableSensors) {
-                enableSensorsTimer = new Timer();
-                enableSensorsTimer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        log("Re-enabling motion sensors");
-                        executeCommand("dumpsys sensorservice enable");
-                        autoRotateBrightnessFix();
-                    }
-                }, 2000);
-            }
+//        if (!useXposedSensorWorkaround) {
+        if (!enableSensors) {
+            enableSensorsTimer = new Timer();
+            enableSensorsTimer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    log("Re-enabling motion sensors");
+                    executeCommand("dumpsys sensorservice enable");
+                    autoRotateBrightnessFix();
+                }
+            }, 2000);
         }
+//        }
 
         if (useNonRootSensorWorkaround) {
             try {
