@@ -110,8 +110,8 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="#9BA0AA"
                 android:textStyle="bold"
-                android:layout_below="@+id/textView8"
-                android:layout_alignStart="@+id/textView8" />
+                android:layout_below="@+id/textView7"
+                android:layout_alignStart="@+id/textView7" />
 
         </RelativeLayout>
 

@@ -38,7 +38,7 @@
     <string name="hi_text">Ciao!</string>
     <string name="enable_sensors_setting_title">Non disattivare i sensori allo spegnimento dello schermo</string>
     <string name="enable_sensors_setting_summary">Non disattivare i sensori del dispositivo quando entra in modalità Doze</string>
-    <string name="disable_when_charging_setting_summary">Disattiva ForceDoze quando il dispositivo è collegato alla rete elettrica</string>
+    <string name="disable_when_charging_setting_summary">Disattiva EnforceDoze quando il dispositivo è collegato alla rete elettrica</string>
     <string name="disable_when_charging_setting_title">Disattiva quando in carica</string>
     <string name="rotate_brightness_fix_setting_summary">Soluzione temporanea per rotazione automatica e luminosità automatica non funzionante dopo l\'accensione dello schermo</string>
     <string name="rotate_brightness_fix_setting_title">Fix rotazione automatica/luminosità automatica </string>
@@ -50,8 +50,8 @@
     <string name="doze_delay_setting_title">Ritardo Doze</string>
     <string name="whitelist_apps_setting_summary">Lista bianca dalla modalità Doze</string>
     <string name="whitelist_apps_setting_text">App in lista bianca</string>
-    <string name="reset_forcedoze_setting_summary">Resetta ForceDoze alle impostazioni originali</string>
-    <string name="reset_forcedoze_setting_title">Resetta ForceDoze</string>
+    <string name="reset_forcedoze_setting_summary">Resetta EnforceDoze alle impostazioni originali</string>
+    <string name="reset_forcedoze_setting_title">Resetta EnforceDoze</string>
     <string name="clear_doze_stats_setting_summary">Cancella le statistiche della batteria di Doze</string>
     <string name="clear_doze_stats_setting_title">Cancella statistiche</string>
     <string name="show_app_logs_setting_summary">Mostra i registri di debug</string>
@@ -66,7 +66,7 @@
     <string name="doze_stats_menu_item">Statistiche batteria Doze</string>
     <string name="more_info_menu_item">Maggiori informazioni</string>
     <string name="forcedoze_active_dialog_title">Fatto</string>
-    <string name="forcedoze_active_dialog_text">ForceDoze è abilitato e la durata della batteria in standby sarà incrementata di molto!</string>
+    <string name="forcedoze_active_dialog_text">EnforceDoze è abilitato e la durata della batteria in standby sarà incrementata di molto!</string>
     <string name="donate_dialog_title">Supporta il mio lavoro</string>
     <string name="donate_dialog_text">ForceDoze è un programma open-source completamente gratuito e privo di pubblicità ed io ci ho messo tanto impegno per crearla e migliorarla, con aggiornamenti settimanali per sistemare i vari bug e aggiungere nuove funzioni. Se apprezzi il mio lavoro, considera l\'idea di una donazione per motivarmi nel lavorare sodo per creare altre app utili!</string>
     <string name="donate_dialog_button_text">Voglio donare</string>

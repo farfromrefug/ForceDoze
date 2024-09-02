@@ -68,7 +68,7 @@ public class ForceDozeTileService extends TileService {
             stopService(new Intent(this, ForceDozeService.class));
             updateTileState(false);
         } else {
-            log("Enabling ForceDoze");
+            log("Enabling EnforceDoze");
             startService(new Intent(this, ForceDozeService.class));
             updateTileState(true);
         }

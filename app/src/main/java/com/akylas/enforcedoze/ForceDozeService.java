@@ -332,8 +332,8 @@ public class ForceDozeService extends Service {
                 PendingIntent intent = PendingIntent.getActivity(getApplicationContext(), 0,
                         notificationIntent, PendingIntent.FLAG_IMMUTABLE);
                 Notification n = new NotificationCompat.Builder(this, CHANNEL_TIPS)
-                        .setContentTitle("ForceDoze")
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText("ForceDoze needs to be added to the Doze whitelist in order to work reliably. Please click on this notification to open the battery optimisation view, click on 'ForceDoze' and select 'Don't' Optimize'"))
+                        .setContentTitle("EnforceDoze")
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText("EnforceDoze needs to be added to the Doze whitelist in order to work reliably. Please click on this notification to open the battery optimisation view, click on 'EnforceDoze' and select 'Don't' Optimize'"))
                         .setSmallIcon(R.drawable.ic_battery_health)
                         .setPriority(1)
                         .setContentIntent(intent)

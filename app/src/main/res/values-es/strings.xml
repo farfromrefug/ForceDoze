@@ -39,7 +39,7 @@
     <string name="hi_text">Hola!</string>
     <string name="enable_sensors_setting_title">No deshabilitar los sensores cuando se apaga la pantalla</string>
     <string name="enable_sensors_setting_summary">No deshabilitar los sensores del dispositivo cuando este entra en modo Doze</string>
-    <string name="disable_when_charging_setting_summary">Desactivar ForceDoze cuando el dispositivo está conectado a un cargador</string>
+    <string name="disable_when_charging_setting_summary">Desactivar EnforceDoze cuando el dispositivo está conectado a un cargador</string>
     <string name="disable_when_charging_setting_title">Desactivar mientras se carga</string>
     <string name="rotate_brightness_fix_setting_summary">Modo alternativo para auto-rotación y auto-brillo no funcionales después de encender la pantalla</string>
     <string name="rotate_brightness_fix_setting_title">Fix de auto-rotación/brillo</string>
@@ -51,8 +51,8 @@
     <string name="doze_delay_setting_title">Retardo de Doze</string>
     <string name="whitelist_apps_setting_summary">Lista de aplicaciones excluidas del modo Doze</string>
     <string name="whitelist_apps_setting_text">Lista de aplicaciones excluidas</string>
-    <string name="reset_forcedoze_setting_summary">Resetear ForceDoze a valores por defecto</string>
-    <string name="reset_forcedoze_setting_title">Resetear ForceDoze</string>
+    <string name="reset_forcedoze_setting_summary">Resetear EnforceDoze a valores por defecto</string>
+    <string name="reset_forcedoze_setting_title">Resetear EnforceDoze</string>
     <string name="clear_doze_stats_setting_summary">Borrar estadísticas de batería en modo Doze</string>
     <string name="clear_doze_stats_setting_title">Borrar estadísticas</string>
     <string name="show_app_logs_setting_summary">Mostrar debug logs de la aplicación</string>
@@ -67,11 +67,11 @@
     <string name="doze_stats_menu_item">Estadísticas de batería en modo Doze</string>
     <string name="more_info_menu_item">Más Info</string>
     <string name="forcedoze_active_dialog_title">Eso es todo</string>
-    <string name="forcedoze_active_dialog_text">ForceDoze está ahora habilitado y su vida de batería en reposo se verá muy beneficiada!</string>
+    <string name="forcedoze_active_dialog_text">EnforceDoze está ahora habilitado y su vida de batería en reposo se verá muy beneficiada!</string>
     <string name="donate_dialog_title">Colabora en mi trabajo</string>
-    <string name="donate_dialog_text">ForceDoze es una aplicación gratis, de código abierto y sin publicidad. He dedicado mucho tiempo en crearla y mejorarla, con actualizaciones semanales para corregir bugs y agregar o mejorar funcionalidades. Si le gusta mi trabajo, por favor considere una donación de modo de motivarme para trabajar más tiempo y producir aplicaciones mejores y más productivas!</string>
+    <string name="donate_dialog_text">EnforceDoze es una aplicación gratis, de código abierto y sin publicidad. He dedicado mucho tiempo en crearla y mejorarla, con actualizaciones semanales para corregir bugs y agregar o mejorar funcionalidades. Si le gusta mi trabajo, por favor considere una donación de modo de motivarme para trabajar más tiempo y producir aplicaciones mejores y más productivas!</string>
     <string name="donate_dialog_button_text">Quiero donar</string>
-    <string name="about_forcedoze_setting_title">Sobre ForceDoze</string>
+    <string name="about_forcedoze_setting_title">Sobre EnforceDoze</string>
     <string name="about_app_opensrc_text">ForceDoze para Android fue creado utilizando software de código abierto:</string>
     <string name="version_num_text">1.4.0 rev 68</string>
     <string name="translation_credits_dialog_title">Créditos de traducción</string>
