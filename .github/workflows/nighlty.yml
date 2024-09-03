@@ -43,8 +43,9 @@ jobs:
         run: |
           name=`ls app/build/outputs/apk/release/*.apk | awk -F '(/|.apk)' '{print $6}'` && echo "name=${name}" >> $GITHUB_OUTPUT
 
-      - name: Upload built apk
-        uses: actions/upload-artifact@v4
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
         with:
-          name: EnforceDoze-release.apk
+          name: EnforceDoze-nightly.apk
           path: app/build/outputs/apk/release/*.apk
+          retention-days: 7

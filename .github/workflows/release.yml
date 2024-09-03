@@ -1,0 +1,41 @@
+name: Release Upload
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.release.tag_name }}
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: 21
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          validate-wrappers: true
+          gradle-home-cache-cleanup: true
+
+      - name: Build APK
+        run: ./gradlew assembleRelease -PuseExternalSigning
+        env:
+          RELEASE_KEYSTORE: ../keystore.jks
+          RELEASE_KEYSTORE_PASSWORD: '${{ secrets.KEY_STORE_PASSWORD }}'
+          RELEASE_KEYSTORE_ALIAS: '${{ secrets.KEY_ALIAS }}'
+          RELEASE_KEY_PASSWORD: '${{ secrets.KEY_PASSWORD }}'
+      
+      - name: Upload to release
+        uses: Shopify/upload-to-release@v1.0.1
+        with:
+          name: EnforceDoze-${{ github.event.release.tag_name }}.apk
+          path: app/build/outputs/apk/release/app-release.apk
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
