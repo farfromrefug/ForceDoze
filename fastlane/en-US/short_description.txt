@@ -1,0 +1,1 @@
+Enable Doze mode immediately after screen off and turn off motion sensing
