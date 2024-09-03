@@ -44,7 +44,7 @@ jobs:
         run: ls -la app/build/outputs/apk/release
 
       - name: Upload to release
-        uses: Shopify/upload-to-release@v2
+        uses: Shopify/upload-to-release
         with:
           name: EnforceDoze-${{ github.event.release.tag_name }}.apk
           path: app/build/outputs/apk/release/app-release.apk
