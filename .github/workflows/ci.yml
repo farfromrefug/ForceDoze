@@ -13,10 +13,9 @@ jobs:
           fetch-depth: 0
 
       - name: Set up signing key
-        if: github.ref == 'refs/heads/main'
         run: |
           if [ ! -z "${{ secrets.KEY_STORE }}" ]; then
-            echo ${{ secrets.KEY_STORE }} | base64 --decode > keystore.jks
+            echo ${{ secrets.KEY_STORE }} | base64 --decode > ./keystore.jks
           fi
 
       - name: Set up JDK
