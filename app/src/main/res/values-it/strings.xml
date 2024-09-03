@@ -8,7 +8,6 @@
     <string name="close_button_text">Chiudi</string>
     <string name="lockscreen_timeout_snackbar_text">Il tempo del blocco schermo del dispositivo è troppo elevato!</string>
     <string name="more_info_text">Più informazioni</string>
-    <string name="doze_unsupported_more_info">Alcuni dispositivi hanno la modalità Doze disattivata dal produttore. Questa opzione può attivare la modalità Doze sui dispositivi che non ce l\'hanno abilitata di defaullt.\n\nNota: Devi abilitare il modulo EnforceDoze in Xposed per mantenere attivo Doze. Se non hai Xposed installato, dovrai attivare questa opzione ogni volta che riavvierai il dispositivo.</string>
     <string name="doze_unsupported_more_info_title">Attiva Doze su un dispositivo non supportato</string>
     <string name="enable_doze_button_text">Attiva modalità Doze</string>
     <string name="no_root_workaround_dialog_title">Modo alternativo No-root</string>

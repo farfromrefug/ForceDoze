@@ -8,7 +8,6 @@
     <string name="close_button_text">Kapat</string>
     <string name="lockscreen_timeout_snackbar_text">Cihazınızdaki kilit ekran zaman aşımı değeri çok yüksek!</string>
     <string name="more_info_text">Daha Fazla Bilgi </string>
-    <string name="doze_unsupported_more_info">Bağzı aygıtlarda Doze modu OEM tarafından devre dışı bırakılmıştır.Buseçenek,Doze modunu varsayılan olarak etkin olmayan çihazlarda etkinleştirebilir.\n\nNot: Doze\'yi kalıcı olarak etkinleştirmek için EnforceDoze modülünü Xposed olarak açmanız gerekir. Xposed yüklü değilse, telefonunuzu her başlattığınızda bu seçeneği etkinleştirmeniz gerekir.</string>
     <string name="doze_unsupported_more_info_title">Desteklenmeyen cihazda Doze\'yi etkinleştir</string>
     <string name="enable_doze_button_text">Etkinleştirmek Doze mode</string>
     <string name="no_root_workaround_dialog_title">No-root olmadı için geçiçi çözüm</string>

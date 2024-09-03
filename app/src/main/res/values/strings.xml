@@ -8,7 +8,6 @@
     <string name="close_button_text">Close</string>
     <string name="lockscreen_timeout_snackbar_text">The lockscreen timeout value on your device is too high!</string>
     <string name="more_info_text">More info</string>
-    <string name="doze_unsupported_more_info">Some devices have Doze mode disabled by the OEM. This option can enable Doze mode on devices which do not have it enabled by default.\n\nNote: You will have to turn this option on every time you restart your phone.</string>
     <string name="doze_unsupported_more_info_title">Enable Doze on unsupported device</string>
     <string name="enable_doze_button_text">Enable Doze mode</string>
     <string name="no_root_workaround_dialog_title">No-root workaround</string>

@@ -8,7 +8,6 @@
     <string name="close_button_text">Schließen</string>
     <string name="lockscreen_timeout_snackbar_text">Die Dauer bis zum automatischen Sperren ist auf deinem Gerät zu lang eingestellt!</string>
     <string name="more_info_text">Weitere Infos</string>
-    <string name="doze_unsupported_more_info">Auf manchen Geräten wurde der Doze Modus vom Hersteller deaktiviert. Diese Option kann den Doze Modus auf solchen Geräten aktivieren.\n\nHinweis: du musst das EnforceDoze Modul in Xposed aktivieren, um Doze dauerhaft zu ermöglichen. Falls du Xposed nicht installiert hast, dann musst du diese Option jedes mal nach dem Hochfahren des Telefons erneut aktivieren.</string>
     <string name="doze_unsupported_more_info_title">Ermögliche Doze auf nicht-unterstützten Geräten</string>
     <string name="enable_doze_button_text">Aktiviere Doze Modus</string>
     <string name="no_root_workaround_dialog_title">No-Root Workaround</string>

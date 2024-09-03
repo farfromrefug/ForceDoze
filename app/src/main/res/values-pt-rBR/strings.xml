@@ -9,7 +9,6 @@
     <string name="close_button_text">Fechar</string>
     <string name="lockscreen_timeout_snackbar_text">O tempo de espera para o bloqueio da tela está muito alto!</string>
     <string name="more_info_text">Mais informações</string>
-    <string name="doze_unsupported_more_info">Alguns dispositivos possuem o modo Doze desativado pelo fabricante. Esta opção ativa o modo Doze em dispositivos que não têm a opção ativada por padrão.\n\nNota: Você tem que ativar o módulo Forcedoze no Xposed para ativar Doze permanentemente. Se o Xposed não estiver instalado, você terá que ativar essa opção a cada vez que o telefone for reiniciado.</string>
     <string name="doze_unsupported_more_info_title">Ativar Doze em dispositivos sem suporte</string>
     <string name="enable_doze_button_text">Ativar modo Doze</string>
     <string name="no_root_workaround_dialog_title">Modo alternativo sem root</string>

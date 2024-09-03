@@ -8,7 +8,6 @@
     <string name="close_button_text">Закрыть</string>
     <string name="lockscreen_timeout_snackbar_text">Время отключения экрана очень большое!</string>
     <string name="more_info_text">Подробнее</string>
-    <string name="doze_unsupported_more_info">На некоторых устройствах Doze отключен производителем. Эта опция может включить Doze на устройствах, на которых этот режим был выключенным.\n\nВнимание: Вам нужно включить модуль EnforceDoze в Xposed для полноценного включения Doze. Если у вас не установлен , вам нужно отмечать эту опцию каждый раз после перезагрузки.</string>
     <string name="doze_unsupported_more_info_title">Включить Doze на неподдерживаемых устройствах</string>
     <string name="enable_doze_button_text">Включить Doze</string>
     <string name="no_root_workaround_dialog_title">Обходной путь</string>
