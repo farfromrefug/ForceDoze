@@ -25,6 +25,12 @@ jobs:
           validate-wrappers: true
           gradle-home-cache-cleanup: true
 
+      - name: Set up signing key
+        run: |
+          if [ ! -z "${{ secrets.KEY_STORE }}" ]; then
+            echo ${{ secrets.KEY_STORE }} | base64 --decode > ./keystore.jks
+          fi
+
       - name: Build APK
         run: ./gradlew assembleRelease -PuseExternalSigning
         env:
