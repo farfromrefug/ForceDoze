@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
+    def useExternalSigning = project.hasProperty('useExternalSigning')
     compileSdk 34
 
     compileOptions {
@@ -22,8 +23,22 @@ android {
         versionName "1.5.0"
         signingConfig signingConfigs.debug
     }
+    if (useExternalSigning) {
+        signingConfigs {
+            release {
+                storeFile file(System.getenv("RELEASE_KEYSTORE"))
+                storePassword System.getenv("RELEASE_KEYSTORE_PASSWORD")
+                keyAlias System.getenv("RELEASE_KEYSTORE_ALIAS")
+                keyPassword System.getenv("RELEASE_KEY_PASSWORD")
+            }
+        }
+    }
+
     buildTypes {
         release {
+            if (useExternalSigning) {
+                signingConfig signingConfigs.release
+            }
             multiDexEnabled false
             minifyEnabled true
             // Enables resource shrinking, which is performed by the
@@ -32,6 +47,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
 
 }
 

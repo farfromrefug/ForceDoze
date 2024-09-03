@@ -16,11 +16,7 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: |
           if [ ! -z "${{ secrets.KEY_STORE }}" ]; then
-            echo keyStorePassword='${{ secrets.KEY_STORE_PASSWORD }}' >> signing.properties
-            echo keyAlias='${{ secrets.KEY_ALIAS }}' >> signing.properties
-            echo keyPassword='${{ secrets.KEY_PASSWORD }}' >> signing.properties
-            echo keyStore='${{ github.workspace }}/key.jks' >> signing.properties
-            echo ${{ secrets.KEY_STORE }} | base64 --decode > ${{ github.workspace }}/key.jks
+            echo ${{ secrets.KEY_STORE }} | base64 --decode > keystore.jks
           fi
 
       - name: Set up JDK
@@ -36,7 +32,12 @@ jobs:
           gradle-home-cache-cleanup: true
 
       - name: Build with Gradle
-        run: ./gradlew assembleRelease
+        run: ./gradlew assembleRelease -PuseExternalSigning
+        env:
+          RELEASE_KEYSTORE: ../keystore.jks
+          RELEASE_KEYSTORE_PASSWORD: '${{ secrets.KEY_STORE_PASSWORD }}'
+          RELEASE_KEYSTORE_ALIAS: '${{ secrets.KEY_ALIAS }}'
+          RELEASE_KEY_PASSWORD: '${{ secrets.KEY_PASSWORD }}'
 
       - name: Get release name
         id: release-name
