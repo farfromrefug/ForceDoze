@@ -78,27 +78,24 @@ public class WhitelistAppsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id) {
-            case R.id.action_add_whitelist:
-                startActivityForResult(new Intent(WhitelistAppsActivity.this, PackageChooserActivity.class), 999);
-                break;
-            case R.id.action_remove_whitelist:
-                startActivityForResult(new Intent(WhitelistAppsActivity.this, PackageChooserActivity.class), 998);
-                break;
-            case R.id.action_add_whitelist_package:
-                showManuallyAddPackageDialog();
-                break;
-            case R.id.action_remove_whitelist_package:
-                showManuallyRemovePackageDialog();
-                break;
-            case R.id.action_whitelist_more_info:
-                displayDialog(getString(R.string.whitelisting_text), getString(R.string.whitelisted_apps_restrictions_text));
-                break;
-            case R.id.action_launch_system_whitelist:
-                startActivity(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS));
-            case android.R.id.home:
-                onBackPressed();
-                return true;
+        if (id == R.id.action_add_whitelist) {
+            startActivityForResult(new Intent(WhitelistAppsActivity.this, PackageChooserActivity.class), 999);
+        } else if (id == R.id.action_remove_whitelist) {
+            startActivityForResult(new Intent(WhitelistAppsActivity.this, PackageChooserActivity.class), 998);
+        } else if (id == R.id.action_add_whitelist_package) {
+            showManuallyAddPackageDialog();
+        } else if (id == R.id.action_remove_whitelist_package) {
+            showManuallyRemovePackageDialog();
+        } else if (id == R.id.action_whitelist_more_info) {
+            displayDialog(getString(R.string.whitelisting_text), getString(R.string.whitelisted_apps_restrictions_text));
+        } else if (id == R.id.action_launch_system_whitelist) {
+            startActivity(new Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS));
+
+            onBackPressed();
+            return true;
+        } else if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -77,25 +77,19 @@ public class BlockNotificationsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id) {
-            case R.id.action_add_notification_blocklist:
-                startActivityForResult(new Intent(BlockNotificationsActivity.this, PackageChooserActivity.class), 503);
-                break;
-            case R.id.action_remove_notification_blocklist:
-                startActivityForResult(new Intent(BlockNotificationsActivity.this, PackageChooserActivity.class), 504);
-                break;
-            case R.id.action_add_notification_blocklist_package:
-                showManuallyAddPackageDialog();
-                break;
-            case R.id.action_remove_notification_blocklist_package:
-                showManuallyRemovePackageDialog();
-                break;
-            case R.id.action_notification_blacklist_more_info:
-                displayDialog(getString(R.string.notif_blocklist_dialog_title), getString(R.string.notif_blocklist_dialog_text));
-                break;
-            case android.R.id.home:
-                onBackPressed();
-                return true;
+        if (id == R.id.action_add_notification_blocklist) {
+            startActivityForResult(new Intent(BlockNotificationsActivity.this, PackageChooserActivity.class), 503);
+        } else if (id == R.id.action_remove_notification_blocklist) {
+            startActivityForResult(new Intent(BlockNotificationsActivity.this, PackageChooserActivity.class), 504);
+        } else if (id == R.id.action_add_notification_blocklist_package) {
+            showManuallyAddPackageDialog();
+        } else if (id == R.id.action_remove_notification_blocklist_package) {
+            showManuallyRemovePackageDialog();
+        } else if (id == R.id.action_notification_blacklist_more_info) {
+            displayDialog(getString(R.string.notif_blocklist_dialog_title), getString(R.string.notif_blocklist_dialog_text));
+        } else if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

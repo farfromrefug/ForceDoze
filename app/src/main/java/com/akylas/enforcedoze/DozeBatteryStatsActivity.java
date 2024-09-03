@@ -143,19 +143,15 @@ public class DozeBatteryStatsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id) {
-            case R.id.action_clear_stats:
-                clearStats();
-                break;
-            case R.id.action_switch_stats_ui:
-                startActivity(new Intent(this, DozeStatsActivity.class));
-                break;
-            case R.id.action_stats_more_info:
-                showMoreInfoDialog();
-                break;
-            case android.R.id.home:
-                onBackPressed();
-                return true;
+        if (id == R.id.action_clear_stats) {
+            clearStats();
+        } else if (id == R.id.action_switch_stats_ui) {
+            startActivity(new Intent(this, DozeStatsActivity.class));
+        } else if (id == R.id.action_stats_more_info) {
+            showMoreInfoDialog();
+        } else if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

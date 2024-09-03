@@ -310,26 +310,18 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id) {
-            case R.id.action_toggle_doze:
-                showEnableDozeOnUnsupportedDeviceDialog();
-                break;
-            case R.id.action_donate_dev:
-                openDonatePage();
-                break;
-            case R.id.action_doze_batterystats:
-                startActivity(new Intent(MainActivity.this, DozeBatteryStatsActivity.class));
-                break;
-            case R.id.action_app_settings:
-                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-                break;
-            case R.id.action_doze_more_info:
-                showMoreInfoDialog();
-                break;
-            case R.id.action_show_doze_tunables:
-                showDozeTunablesActivity();
-                break;
-
+        if (id == R.id.action_toggle_doze) {
+            showEnableDozeOnUnsupportedDeviceDialog();
+        } else if (id == R.id.action_donate_dev) {
+            openDonatePage();
+        } else if (id == R.id.action_doze_batterystats) {
+            startActivity(new Intent(MainActivity.this, DozeBatteryStatsActivity.class));
+        } else if (id == R.id.action_app_settings) {
+            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+        } else if (id == R.id.action_doze_more_info) {
+            showMoreInfoDialog();
+        } else if (id == R.id.action_show_doze_tunables) {
+            showDozeTunablesActivity();
         }
         return super.onOptionsItemSelected(item);
     }

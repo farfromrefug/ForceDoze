@@ -77,25 +77,19 @@ public class BlockAppsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id) {
-            case R.id.action_add_app_doze_blocklist:
-                startActivityForResult(new Intent(BlockAppsActivity.this, PackageChooserActivity.class), 505);
-                break;
-            case R.id.action_remove_app_doze_blocklist:
-                startActivityForResult(new Intent(BlockAppsActivity.this, PackageChooserActivity.class), 506);
-                break;
-            case R.id.action_add_app_doze_blocklist_package:
-                showManuallyAddPackageDialog();
-                break;
-            case R.id.action_remove_app_doze_blocklist_package:
-                showManuallyRemovePackageDialog();
-                break;
-            case R.id.action_app_doze_blacklist_more_info:
-                displayDialog(getString(R.string.app_blocklist_dialog_title), getString(R.string.app_blocklist_dialog_text));
-                break;
-            case android.R.id.home:
-                onBackPressed();
-                return true;
+        if (id == R.id.action_add_app_doze_blocklist) {
+            startActivityForResult(new Intent(BlockAppsActivity.this, PackageChooserActivity.class), 505);
+        } else if (id == R.id.action_remove_app_doze_blocklist) {
+            startActivityForResult(new Intent(BlockAppsActivity.this, PackageChooserActivity.class), 506);
+        } else if (id == R.id.action_add_app_doze_blocklist_package) {
+            showManuallyAddPackageDialog();
+        } else if (id == R.id.action_remove_app_doze_blocklist_package) {
+            showManuallyRemovePackageDialog();
+        } else if (id == R.id.action_app_doze_blacklist_more_info) {
+            displayDialog(getString(R.string.app_blocklist_dialog_title), getString(R.string.app_blocklist_dialog_text));
+        } else if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

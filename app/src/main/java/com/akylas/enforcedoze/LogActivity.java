@@ -68,21 +68,18 @@ public class LogActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id) {
-            case R.id.action_share_log:
-                saveAndShareLog();
-                break;
-            case R.id.action_share_fulllog:
-                progressDialog = new MaterialDialog.Builder(this)
-                        .title("Please wait")
-                        .content("Requesting SU access and fetching log...")
-                        .progress(true, 0)
-                        .show();
-                getFullLogcat();
-                break;
-            case android.R.id.home:
-                onBackPressed();
-                return true;
+        if (id == R.id.action_share_log) {
+            saveAndShareLog();
+        } else if (id == R.id.action_share_fulllog) {
+            progressDialog = new MaterialDialog.Builder(this)
+                    .title("Please wait")
+                    .content("Requesting SU access and fetching log...")
+                    .progress(true, 0)
+                    .show();
+            getFullLogcat();
+        } else if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

@@ -103,16 +103,12 @@ public class DozeTunablesActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch (id) {
-            case R.id.action_apply_tunables:
-                applyTunables();
-                break;
-            case R.id.action_copy_tunables:
-                showCopyTunableDialog();
-                break;
-            case android.R.id.home:
-                onBackPressed();
-                break;
+        if (id == R.id.action_apply_tunables) {
+            applyTunables();
+        } else if (id == R.id.action_copy_tunables) {
+            showCopyTunableDialog();
+        } else if (id == android.R.id.home) {
+            onBackPressed();
         }
         return super.onOptionsItemSelected(item);
     }
