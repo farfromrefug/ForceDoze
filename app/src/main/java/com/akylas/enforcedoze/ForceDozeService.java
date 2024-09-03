@@ -55,7 +55,7 @@ public class ForceDozeService extends Service {
     private static Shell.Interactive nonRootSession;
     boolean isSuAvailable = false;
     boolean disableWhenCharging = true;
-    boolean enableSensors = false;
+    boolean disableMotionSensors = true;
     boolean useAutoRotateAndBrightnessFix = false;
     boolean showPersistentNotif = true;
     boolean ignoreLockscreenTimeout = false;
@@ -165,7 +165,7 @@ public class ForceDozeService extends Service {
         dozeEnterDelay = getDefaultSharedPreferences(getApplicationContext()).getInt("dozeEnterDelay", 0);
         useAutoRotateAndBrightnessFix = getDefaultSharedPreferences(getApplicationContext()).getBoolean("autoRotateAndBrightnessFix", false);
         sensorWhitelistPackage = getDefaultSharedPreferences(getApplicationContext()).getString("sensorWhitelistPackage", "");
-        enableSensors = getDefaultSharedPreferences(getApplicationContext()).getBoolean("enableSensors", false);
+        disableMotionSensors = getDefaultSharedPreferences(getApplicationContext()).getBoolean("disableMotionSensors", true);
         disableStats = getDefaultSharedPreferences(getApplicationContext()).getBoolean("disableStats", false);
         disableLogcat = getDefaultSharedPreferences(getApplicationContext()).getBoolean("disableLogcat", false);
         disableWhenCharging = getDefaultSharedPreferences(getApplicationContext()).getBoolean("disableWhenCharging", true);
@@ -216,7 +216,7 @@ public class ForceDozeService extends Service {
         this.unregisterReceiver(localDozeReceiver);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(reloadSettingsReceiver);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(pendingIntentDozeReceiver);
-        if (!enableSensors) {
+        if (disableMotionSensors) {
             executeCommand("dumpsys sensorservice enable");
         }
         if (rootSession != null) {
@@ -265,8 +265,8 @@ public class ForceDozeService extends Service {
         log("useAutoRotateAndBrightnessFix: " + useAutoRotateAndBrightnessFix);
         sensorWhitelistPackage = getDefaultSharedPreferences(getApplicationContext()).getString("sensorWhitelistPackage", "");
         log("sensorWhitelistPackage: " + sensorWhitelistPackage);
-        enableSensors = getDefaultSharedPreferences(getApplicationContext()).getBoolean("enableSensors", false);
-        log("enableSensors: " + enableSensors);
+        disableMotionSensors = getDefaultSharedPreferences(getApplicationContext()).getBoolean("disableMotionSensors", true);
+        log("disableMotionSensors: " + disableMotionSensors);
         disableStats = getDefaultSharedPreferences(getApplicationContext()).getBoolean("disableStats", false);
         log("disableStats: " + disableStats);
         disableLogcat = getDefaultSharedPreferences(getApplicationContext()).getBoolean("disableLogcat", false);
@@ -397,7 +397,7 @@ public class ForceDozeService extends Service {
                     saveDozeDataStats();
                 }
 
-                if (!enableSensors) {
+                if (disableMotionSensors) {
                     disableSensorsTimer = new Timer();
                     disableSensorsTimer.schedule(new TimerTask() {
                         @Override
@@ -466,7 +466,7 @@ public class ForceDozeService extends Service {
             }
         }
 
-        if (!enableSensors) {
+        if (disableMotionSensors) {
             enableSensorsTimer = new Timer();
             enableSensorsTimer.schedule(new TimerTask() {
                 @Override

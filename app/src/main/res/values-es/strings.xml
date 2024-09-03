@@ -37,8 +37,6 @@
     <string name="app_not_whitelisted_text">La aplicación que trata de quitar no existe en su lista!</string>
     <string name="force_doze_info">EnforceDoze activa Doze en el momento que se apaga su pantalla. También deshabilita los sensores de movimiento así Doze no se desactiva accidentalmente excepto cuando es tiempo de ejecutar tareas de mantenimiento, logrando ahorros de bateria mayores que la función estándar Doze</string>
     <string name="hi_text">Hola!</string>
-    <string name="enable_sensors_setting_title">No deshabilitar los sensores cuando se apaga la pantalla</string>
-    <string name="enable_sensors_setting_summary">No deshabilitar los sensores del dispositivo cuando este entra en modo Doze</string>
     <string name="disable_when_charging_setting_summary">Desactivar EnforceDoze cuando el dispositivo está conectado a un cargador</string>
     <string name="disable_when_charging_setting_title">Desactivar mientras se carga</string>
     <string name="rotate_brightness_fix_setting_summary">Modo alternativo para auto-rotación y auto-brillo no funcionales después de encender la pantalla</string>

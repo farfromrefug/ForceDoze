@@ -1,21 +1,6 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" android:key="preferenceScreen">
     <PreferenceCategory android:title="Main" android:key="mainSettings">
         <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="enableSensors"
-            android:summary="@string/enable_sensors_setting_summary"
-            android:title="@string/enable_sensors_setting_title" />
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="turnOffAllSensorsInDoze"
-            android:summary="@string/disable_all_sensors_setting_summary"
-            android:title="@string/disable_all_sensors_setting_title" />
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="turnOffBiometricsInDoze"
-            android:summary="@string/disable_biometrics_setting_summary"
-            android:title="@string/disable_biometrics_setting_title" />
-        <CheckBoxPreference
             android:defaultValue="true"
             android:key="disableWhenCharging"
             android:summary="@string/disable_when_charging_setting_summary"
@@ -66,6 +51,21 @@
             android:key="whitelistMusicAppNetwork"
             android:summary="@string/whitelist_music_app_network_setting_summary"
             android:title="@string/whitelist_music_app_network_setting_title" />
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="disableMotionSensors"
+            android:summary="@string/disable_motion_sensors_setting_summary"
+            android:title="@string/disable_motion_sensors_setting_title" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="turnOffAllSensorsInDoze"
+            android:summary="@string/disable_all_sensors_setting_summary"
+            android:title="@string/disable_all_sensors_setting_title" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="turnOffBiometricsInDoze"
+            android:summary="@string/disable_biometrics_setting_summary"
+            android:title="@string/disable_biometrics_setting_title" />
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="useNonRootSensorWorkaround"

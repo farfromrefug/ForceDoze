@@ -36,8 +36,6 @@
     <string name="app_not_whitelisted_text">Kaldırmaya çalıştığınız uygulama beyaz listede yok</string>
     <string name="force_doze_info">EnforceDoze, ekranınızı kapattığınız andan itibaren Doze\'yi etkinleştirir. Ayrıca hareket algılamayı devre dışı bırakır, böylece Doze\'nin bakım işlerini yerine getirmesi için yanlışlıkla devre dışı bırakılmaz, böylece standart pil ömrü standart Doze işlevselliğinden çok daha yüksek olur</string>
     <string name="hi_text">Merhaba!</string>
-    <string name="enable_sensors_setting_title">Ekrandaki sensörleri devre dışı bırakmayın</string>
-    <string name="enable_sensors_setting_summary">Cihaz Doze moduna girdiğinde cihaz sensörlerini devre dışı bırakmayın</string>
     <string name="disable_when_charging_setting_summary">Cihaz bir şarj cihazına takıldığında EnforceDoze özelliğini kapat</string>
     <string name="disable_when_charging_setting_title">Şarj olurken kapat</string>
     <string name="rotate_brightness_fix_setting_summary">Ekranın açılmasından sonra otomatik döndürme ve otomatik parlaklık çalışmama sorunu çöz</string>

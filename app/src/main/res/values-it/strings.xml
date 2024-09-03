@@ -36,8 +36,6 @@
     <string name="app_not_whitelisted_text">L\'app che stai tentando di rimuovere non è presente in lista bianca</string>
     <string name="force_doze_info">EnforceDoze attiva Doze nel momento in cui spegni lo schermo. Inoltre disattiva i sensori di movimento per evitare che Doze sia disattivato per sbaglio prima della sua finestra di manutenzione, rendendo il risparmio di batteria molto più alto rispetto al Doze standard</string>
     <string name="hi_text">Ciao!</string>
-    <string name="enable_sensors_setting_title">Non disattivare i sensori allo spegnimento dello schermo</string>
-    <string name="enable_sensors_setting_summary">Non disattivare i sensori del dispositivo quando entra in modalità Doze</string>
     <string name="disable_when_charging_setting_summary">Disattiva EnforceDoze quando il dispositivo è collegato alla rete elettrica</string>
     <string name="disable_when_charging_setting_title">Disattiva quando in carica</string>
     <string name="rotate_brightness_fix_setting_summary">Soluzione temporanea per rotazione automatica e luminosità automatica non funzionante dopo l\'accensione dello schermo</string>

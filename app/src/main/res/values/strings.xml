@@ -36,10 +36,10 @@
     <string name="app_not_whitelisted_text">The app you\'re trying to remove does not exist in the whitelist</string>
     <string name="force_doze_info">EnforceDoze enables Doze the moment you turn off your screen. It also disables motion sensing so Doze doesn\'t accidentally deactivate unless it\'s time to execute maintenance jobs, making battery savings much higher than standard Doze functionality</string>
     <string name="hi_text">Hi!</string>
-    <string name="enable_sensors_setting_title">Don\'t disable motion sensors on screen off</string>
-    <string name="enable_sensors_setting_summary">Don\'t disable device motion sensors when the device goes into Doze mode</string>
+    <string name="disable_motion_sensors_setting_title">Disable motion sensors on screen off</string>
+    <string name="disable_motion_sensors_setting_summary">Disable device motion sensors when the device goes into Doze mode</string>
     <string name="disable_all_sensors_setting_title">Disable all sensors on screen off</string>
-    <string name="disable_all_sensors_setting_summary">Disable all sensors when the device goes into Doze mode (motion, camera...)</string>
+    <string name="disable_all_sensors_setting_summary">Disable seall sensors when the device goes into Doze mode (motion, camera...)</string>
     <string name="disable_biometrics_setting_title">Disable biometrics unlock while screen off</string>
     <string name="disable_biometrics_setting_summary">Disable biometrics unlock while screen off. Might not work on all devices</string>
     <string name="disable_when_charging_setting_summary">Turn off EnforceDoze when device is plugged in to a charger</string>

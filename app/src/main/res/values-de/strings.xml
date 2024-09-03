@@ -36,8 +36,6 @@
     <string name="app_not_whitelisted_text">Die App, die du entfernen möchtest, existiert nicht auf der Positivliste.</string>
     <string name="force_doze_info">EnforceDoze aktiviert den Doze Modus, sobald du den Bildschirm ausschaltest. Es deaktiviert auch die Bewegungssensoren, damit der Doze Modus bis zum nächsten Wartungsfenster nicht versehentlich deaktiviert wird, wodurch die Akkuersparnis deutlich höher ausfällt als mit der normalen Doze Funktion.</string>
     <string name="hi_text">Hallo!</string>
-    <string name="enable_sensors_setting_title">Lasse die Sensoren bei ausgeschaltetem Bildschirm an</string>
-    <string name="enable_sensors_setting_summary">Lässt die Sensoren an, wenn das Gerät in den Doze Modus geht.</string>
     <string name="disable_when_charging_setting_summary">Schaltet EnforceDoze aus, wenn das Gerät am Ladegerät hängt.</string>
     <string name="disable_when_charging_setting_title">Schalte während des Ladens aus</string>
     <string name="rotate_brightness_fix_setting_summary">Workaround, wenn automatisches Drehen und Helligkeit nach dem Anschalten des Bildschirms nicht funktioniert.</string>

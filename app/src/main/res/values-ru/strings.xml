@@ -36,8 +36,6 @@
     <string name="app_not_whitelisted_text">Это приложение не в списке, его невозможно убрать.</string>
     <string name="force_doze_info">ForceDoze включает Doze при выключенном экране. Он отключает датчики движения, и режим Doze будет работать, пока не придет время промежутков, увеличивая жизнь батареи больше, чем обычный Doze.</string>
     <string name="hi_text">Привет!</string>
-    <string name="enable_sensors_setting_title">Не выключать сенсоры</string>
-    <string name="enable_sensors_setting_summary">Не выключать сенсоры, когда устройство входит в Doze</string>
     <string name="disable_when_charging_setting_summary">Выключать ForceDoze, когда устройство заряжается</string>
     <string name="disable_when_charging_setting_title">Выключать при зарядке</string>
     <string name="rotate_brightness_fix_setting_summary">Исправление авто-поворота и авто-яркости после включения экрана</string>

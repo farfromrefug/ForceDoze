@@ -37,8 +37,6 @@
     <string name="app_not_whitelisted_text">O aplicativo que está tentando adicionar não se encontra na lista!</string>
     <string name="force_doze_info">EnforceDoze ativa o modo Doze no momento em que sua tela desliga. Também desabilita os sensores de movimento, assim o modo Doze não se desativa acidentalmente, exceto quando está no momento de executar as tarefas de manutenção, realizando maior economia de bateria do que a função Doze padrão</string>
     <string name="hi_text">Olá!</string>
-    <string name="enable_sensors_setting_title">Não desativar os sensores</string>
-    <string name="enable_sensors_setting_summary">Não desativa os sensores do dispositivo quando entrar em modo Doze</string>
     <string name="disable_when_charging_setting_summary">Desativa EnforceDoze enquanto o dispositivo estiver carregando</string>
     <string name="disable_when_charging_setting_title">Desativar enquanto estiver carregando</string>
     <string name="rotate_brightness_fix_setting_summary">Modo alternativo para quando a rotação automática e brilho automático não funcionarem após ligar a tela</string>
