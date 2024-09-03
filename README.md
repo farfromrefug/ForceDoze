@@ -36,3 +36,21 @@ EnforceDoze allows you to forcefully enable Doze right after you turn off your s
 # License
 
 This code is licensed under GPL v3
+
+### Having issues, suggestions and feedback?
+
+You can,
+- [Create an issue here](https://github.com/farfromrefug/EnforceDoze/issues)
+
+### Languages: [<img align="right" src="https://hosted.weblate.org/widgets/enforcedoze/-/287x66-white.png" alt="Übersetzungsstatus" />](https://hosted.weblate.org/engage/enforcedoze/?utm_source=widget)
+
+[<img src="https://hosted.weblate.org/widgets/enforcedoze/-/multi-auto.svg" alt="Übersetzungsstatus" />](https://hosted.weblate.org/engage/enforcedoze/)
+
+The Translations are hosted by [Weblate.org](https://hosted.weblate.org/engage/enforcedoze/).
+
+
+<p align="center">
+  <a href="https://raw.githubusercontent.com/farfromrefug/sponsorkit/main/sponsors.svg">
+	<img src='https://raw.githubusercontent.com/farfromrefug/sponsorkit/main/sponsors.svg'/>
+  </a>
+</p>
