@@ -3,9 +3,13 @@ EnforceDoze is a fork of [ForceDoze](https://github.com/theblixguy/ForceDoze) wh
 
 EnforceDoze allows you to forcefully enable Doze right after you turn off your screen, and on top of that, it also disables motion sensors so Doze stays active even if your device is not stationary while screen off. Doze will only deactivate periodically to execute maintenance jobs (like getting notifications, etc), otherwise it will remain active as long as your screen is off. This brings a lot more battery savings than standard Doze functionality, because even with screen off and Doze enabled, Doze is still periodically checking for movement, and disabling motion sensing improves battery life further.
 
-[<img src="https://f-droid.org/badge/get-it-on.png"
+<!-- [<img src="https://f-droid.org/badge/get-it-on.png"
      alt="Get it on F-Droid"
-     height="80">](https://f-droid.org/packages/com.akylas.enforcedoze/)
+     height="80">](https://f-droid.org/packages/com.akylas.enforcedoze/) -->
+
+[<img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png"
+     alt="Get it on F-Droid"
+     height="80">](https://apt.izzysoft.de/fdroid/index/apk/com.akylas.enforcedoze)
 
 ## Coverage:
  * LifeHacker: https://lifehacker.com/how-to-squeeze-more-battery-out-of-your-phone-with-andr-1791336715
