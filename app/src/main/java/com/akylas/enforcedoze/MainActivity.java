@@ -389,7 +389,7 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
                         .setShowTitle(true)
                         .setExitAnimation(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
                         .setToolbarColor(R.color.colorPrimary))
-                .openUrl("https://www.paypal.me/suyashsrijan", this);
+                .openUrl("https://github.com/farfromrefug", this);
     }
 
     public void showEnableDozeOnUnsupportedDeviceDialog() {
