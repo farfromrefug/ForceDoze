@@ -570,6 +570,9 @@ public class ForceDozeService extends Service {
     }
 
     public void printShellOutput(List<String> output) {
+        if (disableLogcat) {
+            return;
+        }
         if (output != null && !output.isEmpty()) {
             for (String s : output) {
                 log(s);
