@@ -51,6 +51,7 @@ public class ForceDozeService extends Service {
 
     private static final String CHANNEL_STATS = "CHANNEL_STATS";
     private static final String CHANNEL_TIPS = "CHANNEL_TIPS";
+    private static final int PERSISTENT_NOTIF_ID = 1234;
 
     private static Shell.Interactive rootSession;
     private static Shell.Interactive nonRootSession;
@@ -58,7 +59,7 @@ public class ForceDozeService extends Service {
     boolean disableWhenCharging = true;
     boolean disableMotionSensors = true;
     boolean useAutoRotateAndBrightnessFix = false;
-    boolean showPersistentNotif = true;
+    boolean showPersistentNotif = false;
     boolean ignoreLockscreenTimeout = false;
     boolean useNonRootSensorWorkaround = false;
     boolean turnOffAllSensorsInDoze = false;
@@ -171,7 +172,7 @@ public class ForceDozeService extends Service {
         disableLogcat = getDefaultSharedPreferences(getApplicationContext()).getBoolean("disableLogcat", false);
         disableWhenCharging = getDefaultSharedPreferences(getApplicationContext()).getBoolean("disableWhenCharging", true);
         isSuAvailable = getDefaultSharedPreferences(getApplicationContext()).getBoolean("isSuAvailable", false);
-        showPersistentNotif = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("showPersistentNotif", true);
+        showPersistentNotif = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("showPersistentNotif", false);
         dozeUsageData = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getStringSet("dozeUsageDataAdvanced", new LinkedHashSet<String>());
         dozeNotificationBlocklist = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getStringSet("notificationBlockList", new LinkedHashSet<String>());
         dozeAppBlocklist = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getStringSet("dozeAppBlockList", new LinkedHashSet<String>());
@@ -236,6 +237,8 @@ public class ForceDozeService extends Service {
         log("Service has now started");
         if (showPersistentNotif) {
             showPersistentNotification();
+        } else {
+            hidePersistentNotification();
         }
         addSelfToDozeWhitelist();
         lastKnownState = getDeviceIdleState();
@@ -279,6 +282,11 @@ public class ForceDozeService extends Service {
         useNonRootSensorWorkaround = getDefaultSharedPreferences(getApplicationContext()).getBoolean("useNonRootSensorWorkaround", false);
         log("useNonRootSensorWorkaround: " + useNonRootSensorWorkaround);
         log("EnforceDoze settings reloaded ----------------------------------");
+        if (showPersistentNotif) {
+            showPersistentNotification();
+        } else {
+            hidePersistentNotification();
+        }
     }
 
     public void reloadNotificationBlockList() {
@@ -490,15 +498,15 @@ public class ForceDozeService extends Service {
             }
         }
 
-        Timer updateNotif = new Timer();
-        updateNotif.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (showPersistentNotif) {
+        if (showPersistentNotif) {
+            Timer updateNotif = new Timer();
+            updateNotif.schedule(new TimerTask() {
+                @Override
+                public void run() {
                     updatePersistentNotification(lastScreenOff, Utils.diffInMins(timeEnterDoze, timeExitDoze), (lastDozeEnterBatteryLife - lastDozeExitBatteryLife));
                 }
-            }
-        }, 2000);
+            }, 2000);
+        }
 
     }
 
@@ -623,7 +631,8 @@ public class ForceDozeService extends Service {
     }
 
     public void showPersistentNotification() {
-        Intent notificationIntent = new Intent(getApplicationContext(), MainActivity.class);
+        Context context = getApplicationContext();
+        Intent notificationIntent = new Intent(context, MainActivity.class);
         notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent intent = PendingIntent.getActivity(getApplicationContext(), 0,
                 notificationIntent, PendingIntent.FLAG_IMMUTABLE);
@@ -637,9 +646,9 @@ public class ForceDozeService extends Service {
                 .setOngoing(true)
                 .build();
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-            startForeground(1234, n);
+            startForeground(PERSISTENT_NOTIF_ID, n);
         } else {
-            startForeground(1234, n,
+            startForeground(PERSISTENT_NOTIF_ID, n,
                     ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE);
         }
     }
@@ -660,7 +669,13 @@ public class ForceDozeService extends Service {
                 .setContentIntent(intent)
                 .setOngoing(true)
                 .build();
-        startForeground(1234, n);
+        startForeground(PERSISTENT_NOTIF_ID, n);
+    }
+
+    public void hidePersistentNotification() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            stopForeground(Service.STOP_FOREGROUND_REMOVE);
+        }
     }
 
     public void setMobileNetwork(Context context, int targetState) {
