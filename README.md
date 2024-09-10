@@ -25,6 +25,18 @@ EnforceDoze allows you to forcefully enable Doze right after you turn off your s
 * No root mode so you can enjoy the core benefits without rooting your device
 * Free, no ads and open source
 
+Here is a table of features 
+
+| Feature              | Non Root | Root    |
+|-------------------------------|-------|--------|
+| **Disable Wifi**              | Android  < 29    | ✅      |
+| **Disable Mobile data**             | ❌     | ✅      |
+| **Disable Biometrics**                   | ❌     | Depending on device      |
+| **Disable Sensors**               | Depending on device     | ✅      | 
+| **Disable All sensors**(equivalent to the dev tile)             | ❌     | ✅  |
+| **Ignore disable with hotspot** | ✅ | ✅ |
+| **Whitelist music app**                      | ✅     | ✅      |
+
 [//]: # (# Download )
 
 [//]: # (Play Store link: https://play.google.com/store/apps/details?id=com.akylas.enforcedoze&hl=en)
