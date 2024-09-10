@@ -841,9 +841,9 @@ public class ForceDozeService extends Service {
         if (!isSuAvailable) {
             return;
         }
-        if (!Utils.isSecureSensorPrivacyPermissionGranted(context)) {
-            grantSensorPrivacyPermission();
-        }
+//        if (!Utils.isSecureSensorPrivacyPermissionGranted(context)) {
+//            grantSensorPrivacyPermission();
+//        }
 
         String command;
         try {
@@ -853,6 +853,7 @@ public class ForceDozeService extends Service {
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 transactionCode = 8;
             }
+//            executeCommandWithRoot("service call sensor_privacy " + transactionCode + " i32 " +(enabled? 0:1));
             command = "service call sensor_privacy " + transactionCode + " i32 " +(enabled? 0:1);
             List<String> output = new ArrayList<>();
             List<String> err = new ArrayList<>();
