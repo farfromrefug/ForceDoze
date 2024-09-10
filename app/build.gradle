@@ -19,8 +19,8 @@ android {
         applicationId "com.akylas.enforcedoze"
         minSdkVersion 23
         targetSdkVersion 34
-        versionCode 69
-        versionName "1.5.0"
+        versionCode 70
+        versionName "1.5.1"
         signingConfig signingConfigs.debug
     }
     if (useExternalSigning) {
