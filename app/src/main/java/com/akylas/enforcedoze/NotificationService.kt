@@ -32,7 +32,7 @@ class NotificationService : NotificationListenerService() {
             emptyList()
         }
     }
-    fun getPlayingPackageName(callback: (String?) -> Unit) {
+    fun getPlayingPackageName(callback: (String?) -> (Unit)) {
         try {
             val notifications = getNotifications().filter {
                 it.notification.category == Notification.CATEGORY_TRANSPORT || it.notification.category == Notification.CATEGORY_SERVICE

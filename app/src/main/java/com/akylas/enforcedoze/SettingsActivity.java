@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
@@ -58,7 +59,9 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (rootSession != null) {
-            rootSession.close();
+            if (rootSession.isRunning()) {
+                rootSession.close();
+            }
             rootSession = null;
         }
         if (nonRootSession != null) {
@@ -105,7 +108,7 @@ public class SettingsActivity extends AppCompatActivity {
             Preference dozeNotificationBlocklist = (Preference) findPreference("blacklistAppNotifications");
             Preference dozeAppBlocklist = (Preference) findPreference("blacklistApps");
             final Preference nonRootSensorWorkaround = (Preference) findPreference("useNonRootSensorWorkaround");
-            final Preference enableSensors = (Preference) findPreference("enableSensors");
+            final Preference disableMotionSensors = (Preference) findPreference("disableMotionSensors");
             Preference turnOffDataInDoze = (Preference) findPreference("turnOffDataInDoze");
             Preference whitelistMusicAppNetwork = (Preference) findPreference("whitelistMusicAppNetwork");
             final Preference autoRotateBrightnessFix = (Preference) findPreference("autoRotateAndBrightnessFix");
@@ -194,13 +197,13 @@ public class SettingsActivity extends AppCompatActivity {
                 SharedPreferences sharedPreferences1 = PreferenceManager.getDefaultSharedPreferences(getActivity());
                 SharedPreferences.Editor editor = sharedPreferences1.edit();
                 if (newValue) {
-                    editor.putBoolean("enableSensors", true);
+                    editor.putBoolean("disableMotionSensors", false);
                     editor.apply();
                     autoRotateBrightnessFix.setEnabled(false);
-                    enableSensors.setEnabled(false);
+                    disableMotionSensors.setEnabled(false);
                 } else {
                     autoRotateBrightnessFix.setEnabled(true);
-                    enableSensors.setEnabled(true);
+                    disableMotionSensors.setEnabled(true);
                 }
                 return true;
             });
@@ -273,12 +276,12 @@ public class SettingsActivity extends AppCompatActivity {
                 return true;
             });
 
-            if (sharedPreferences.getBoolean("useNonRootSensorWorkaround", false)) {
-                autoRotateBrightnessFix.setEnabled(false);
-                enableSensors.setEnabled(false);
-                sharedPreferences.edit().putBoolean("autoRotateAndBrightnessFix", false).apply();
-                sharedPreferences.edit().putBoolean("enableSensors", false).apply();
-            }
+//            if (sharedPreferences.getBoolean("useNonRootSensorWorkaround", false)) {
+//                autoRotateBrightnessFix.setEnabled(true);
+//                disableMotionSensors.setEnabled(true);
+//                sharedPreferences.edit().putBoolean("autoRotateAndBrightnessFix", false).apply();
+//                sharedPreferences.edit().putBoolean("disableMotionSensors", true).apply();
+//            }
 
             turnOffDataInDoze.setEnabled(false);
             turnOffDataInDoze.setSummary(getString(R.string.root_required_text));
@@ -343,6 +346,8 @@ public class SettingsActivity extends AppCompatActivity {
                     Preference turnOffDataInDoze = (Preference) findPreference("turnOffDataInDoze");
                     Preference dozeNotificationBlocklist = (Preference) findPreference("blacklistAppNotifications");
                     Preference dozeAppBlocklist = (Preference) findPreference("blacklistApps");
+                    Preference turnOffAllSensorsInDoze = (Preference) findPreference("turnOffAllSensorsInDoze");
+                    Preference turnOffBiometricsInDoze = (Preference) findPreference("turnOffBiometricsInDoze");
                     if (enabled) {
                         turnOffDataInDoze.setEnabled(true);
                         turnOffDataInDoze.setSummary(getString(R.string.disable_data_during_doze_setting_summary));
@@ -350,6 +355,15 @@ public class SettingsActivity extends AppCompatActivity {
                         dozeNotificationBlocklist.setSummary(getString(R.string.notif_blocklist_setting_summary));
                         dozeAppBlocklist.setEnabled(true);
                         dozeAppBlocklist.setSummary(getString(R.string.app_blocklist_setting_summary));
+                        turnOffAllSensorsInDoze.setEnabled(true);
+                        turnOffAllSensorsInDoze.setSummary(getString(R.string.disable_all_sensors_setting_summary));
+                        turnOffBiometricsInDoze.setEnabled(true);
+                        turnOffBiometricsInDoze.setSummary(getString(R.string.disable_biometrics_setting_summary));
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            Preference turnOffWiFiInDoze = (Preference) findPreference("turnOffWiFiInDoze");
+                            turnOffWiFiInDoze.setEnabled(true);
+                            turnOffWiFiInDoze.setSummary(getString(R.string.disable_wifi_during_doze_setting_summary));
+                        }
                     } else {
                         turnOffDataInDoze.setEnabled(false);
                         turnOffDataInDoze.setSummary(getString(R.string.root_required_text));
@@ -357,6 +371,26 @@ public class SettingsActivity extends AppCompatActivity {
                         dozeNotificationBlocklist.setSummary(getString(R.string.root_required_text));
                         dozeAppBlocklist.setEnabled(false);
                         dozeAppBlocklist.setSummary(getString(R.string.root_required_text));
+                        turnOffAllSensorsInDoze.setEnabled(false);
+                        turnOffAllSensorsInDoze.setSummary(getString(R.string.root_required_text));
+                        turnOffBiometricsInDoze.setEnabled(false);
+                        turnOffBiometricsInDoze.setSummary(getString(R.string.root_required_text));
+                        PreferenceManager.getDefaultSharedPreferences(getContext())
+                                .edit()
+                                .putBoolean("turnOffAllSensorsInDoze", false)
+                                .putBoolean("turnOffBiometricsInDoze", false)
+                                .apply();
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            Preference turnOffWiFiInDoze = (Preference) findPreference("turnOffWiFiInDoze");
+                            turnOffWiFiInDoze.setEnabled(false);
+                            turnOffWiFiInDoze.setSummary(getString(R.string.root_required_text));
+                            PreferenceManager.getDefaultSharedPreferences(getContext())
+                                    .edit()
+                                    .putBoolean("turnOffWiFiInDoze", false)
+                                    .apply();
+                        }
+
                     }
                 });
             }

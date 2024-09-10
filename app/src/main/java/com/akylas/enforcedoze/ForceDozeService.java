@@ -15,6 +15,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ServiceInfo;
+import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.IBinder;
@@ -413,7 +414,7 @@ public class ForceDozeService extends Service {
                         }
                     }, 2000);
                 } else {
-                    log("Not disabling motion sensors because enableSensors=true");
+                    log("Not disabling motion sensors because disableMotionSensors=false");
                 }
                 enterDozeHandleNetwork(context);
 
@@ -512,6 +513,7 @@ public class ForceDozeService extends Service {
                         onResult.onCommandResult(commandCode, exitCode, STDOUT, STDERR);
                     }
                     printShellOutput(STDOUT);
+                    printShellOutput(STDERR);
                 });
             } else {
                 nonRootSession = new Shell.Builder().
@@ -544,6 +546,7 @@ public class ForceDozeService extends Service {
                         onResult.onCommandResult(commandCode, exitCode, STDOUT, STDERR);
                     }
                     printShellOutput(STDOUT);
+                    printShellOutput(STDERR);
                 });
             } else {
                 rootSession = new Shell.Builder().
@@ -824,14 +827,20 @@ public class ForceDozeService extends Service {
     }
 
     public void disableWiFi() {
-        executeCommandWithRoot("svc wifi disable", (commandCode, exitCode, STDOUT, STDERR) -> {
+        if (isSuAvailable) {
+            executeCommandWithRoot("svc wifi disable", (commandCode, exitCode, STDOUT, STDERR) -> {
+                log("disableWiFi: " + Utils.isWiFiEnabled(getApplicationContext()));
+            });
+        } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            wifi.setWifiEnabled(false);
             log("disableWiFi: " + Utils.isWiFiEnabled(getApplicationContext()));
-        });
-//        WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-//        wifi.setWifiEnabled(false);
+        }
     }
     public void setAllSensorsState(Context context, boolean enabled) {
-
+        if (!isSuAvailable) {
+            return;
+        }
         if (!Utils.isSecureSensorPrivacyPermissionGranted(context)) {
             grantSensorPrivacyPermission();
         }
@@ -861,35 +870,25 @@ public class ForceDozeService extends Service {
     }
 
     public void setBiometricsSensorState(Context context, boolean enabled) {
-
-        if (!Utils.isSecureSensorPrivacyPermissionGranted(context)) {
+        if (!isSuAvailable) {
+            return;
+        }
+        if (!Utils.isSecureSettingsPermissionGranted(context)) {
             grantSecureSettingsPermission();
         }
-
-        String command;
-        try {
-            command = "settings put secure biometric_keyguard_enabled " +(enabled? 1:0);
-            List<String> output = new ArrayList<>();
-            List<String> err = new ArrayList<>();
-            Shell.Pool.SU.run(command, output, err, false);
-            if (err.isEmpty()) {
-                for (String s : output) {
-                    log(s);
-                }
-            } else {
-                log("Error occurred while executing command (" + err + ")");
-            }
-        } catch (Exception e) {
-            log("Failed to disable biometric keyguard: " + e.getMessage());
-        }
+        executeCommandWithRoot("settings put secure biometric_keyguard_enabled " +(enabled? 1:0));
     }
 
     public void enableWiFi() {
-        executeCommandWithRoot("svc wifi enable", (commandCode, exitCode, STDOUT, STDERR) -> {
+        if (isSuAvailable) {
+            executeCommandWithRoot("svc wifi enable", (commandCode, exitCode, STDOUT, STDERR) -> {
+                log("enableWiFi: " + Utils.isWiFiEnabled(getApplicationContext()));
+            });
+        } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            wifi.setWifiEnabled(true);
             log("enableWiFi: " + Utils.isWiFiEnabled(getApplicationContext()));
-        });
-//        WifiManager wifi = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-//        wifi.setWifiEnabled(true);
+        }
     }
 
     class ReloadSettingsReceiver extends BroadcastReceiver {
@@ -961,7 +960,7 @@ public class ForceDozeService extends Service {
     public void enterDozeHandleNetwork(Context context) {
         if (whitelistMusicAppNetwork) {
             try {
-                Objects.requireNonNull(NotificationService.Companion.getInstance()).getPlayingPackageName((String packageName)->{
+                NotificationService.Companion.getInstance().getPlayingPackageName((String packageName)->{
                     actualEnterDozeHandleNetwork(context, packageName);
                     return null;
                 });

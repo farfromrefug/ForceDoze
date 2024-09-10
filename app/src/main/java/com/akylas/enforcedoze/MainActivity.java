@@ -3,6 +3,8 @@ package com.akylas.enforcedoze;
 import static com.akylas.enforcedoze.Utils.logToLogcat;
 
 import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -418,17 +420,28 @@ public class MainActivity extends AppCompatActivity implements CompoundButton.On
     }
 
     public void showRootWorkaroundInstructions() {
+        String command = "adb -d shell pm grant com.akylas.enforcedoze android.permission.DUMP";
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
         builder.setTitle(getString(R.string.no_root_workaround_dialog_title));
         builder.setMessage(getString(R.string.no_root_workaround_dialog_text));
         builder.setPositiveButton(getString(R.string.okay_button_text), null);
+        builder.setNeutralButton(getString(R.string.copy_command_button_text), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("Copied text", command);
+                clipboard.setPrimaryClip(clip);
+
+            }
+        });
         builder.setNegativeButton(getString(R.string.share_command_button_text), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, "adb -d shell pm grant com.akylas.enforcedoze android.permission.DUMP");
+                sendIntent.putExtra(Intent.EXTRA_TEXT, command);
                 sendIntent.setType("text/plain");
                 startActivity(sendIntent);
 

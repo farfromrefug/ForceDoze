@@ -13,6 +13,7 @@
     <string name="enable_doze_button_text">Enable Doze mode</string>
     <string name="no_root_workaround_dialog_title">No-root workaround</string>
     <string name="okay_button_text">Okay</string>
+    <string name="copy_command_button_text">Copy Command</string>
     <string name="share_command_button_text">Share command</string>
     <string name="no_root_workaround_dialog_text">If your device isn\'t rooted, you can manually grant the permission \'android.permission.DUMP\' (and \'android.permission.WRITE_SECURE_SETTINGS\' if you\'re on Nougat) to this app by executing the following ADB command from your PC (the command is one-line, not separated):\n\n \"adb -d shell pm grant com.akylas.enforcedoze android.permission.DUMP\" and the same with WRITE_SECURE_SETTINGS permission (if on Nougat)\n\n Once you have done, please close this app and start again and you will then be able to access the app properly.</string>
     <string name="lockscreen_timeout_dialog_title">Lockscreen timeout</string>
